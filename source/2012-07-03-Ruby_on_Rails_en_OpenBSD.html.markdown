@@ -3,25 +3,11 @@ title: Ruby_on_Rails_en_OpenBSD
 date: 2012-07-03
 tags:
 ---
-En adJ 5.6 es sencillo usar ruby 2.2 con Ruby on Rails 4.2.  Lo básico se instala de paquetes de OpenBSD y lo más reciente en Ruby directamente como gemas.
+En adJ 5.7 es sencillo usar ruby 2.2 con Ruby on Rails 4.2.  Lo básico se instala de paquetes de OpenBSD y lo más reciente en Ruby directamente como gemas.
 
-#1. Antes de instalar
+#1. Instalación y configuración
 
-Si su adJ 5.6 se instaló sobre un adJ 5.2 y de la versión anterior aún tiene paquetes de ruby, elimínelos, por ejemplo:
-<pre>
-for i in ruby19-railties-3.1.3 ruby19-actionmailer-3.1.3 ruby19-actionpack-3.1.3 \
-  ruby19-erubis-2.7.0 ruby19-tzinfo-0.3.29 ruby19-activeresource-3.1.3 \
-  ruby19-rack-ssl-1.3.2 ruby19-activerecord-3.1.3 ruby19-activemodel-3.1.3 \
-  ruby19-railties-3.1.3 ruby19-hike-1.2.1 ruby19-arel-2.2.1 ruby19-rack-mount-0.8.3 \
-  ruby19-thor-0.14.6p1 ruby19-activesupport-3.1.3 ruby19-actionmailer-3.1.3 \
-  ruby19-sprockets-2.0.3 ruby19-rack-cache-1.1 ruby19-actionpack-3.1.3 ; do
-        sudo pkg_delete $i
-done
-</pre>
-
-#2. Instalación y configuración
-
-Asegúrese de tener instalados los paquetes  ruby 2.2.0, libv8 y node, incluidos en el DVD de adJ 5.6
+Asegúrese de tener instalados los paquetes  ruby 2.2.2, libv8 y node, incluidos en el DVD de adJ 5.7
 
 Asegúrese de tener enlaces al interprete de ruby y herramientas (como describe el paquete ruby):
 <pre>
@@ -57,15 +43,15 @@ sudo gem update --system
 sudo QMAKE=qmake4 make=gmake MAKE=gmake !NOKOGIRI_USE_SYSTEM_LIBRARIES=1 gem pristine --all
 </pre>
 
-Para instalar a la versión estable más reciente de Rails (4.2.1 en el momento de este escrito), ejecute
+Para instalar a la versión estable más reciente de Rails (4.2.3 en el momento de este escrito), ejecute
 
 <pre>
 sudo make=gmake MAKE=gmake !NOKOGIRI_USE_SYSTEM_LIBRARIES=1 gem install rails
 </pre>
 
-Como interprete de !JavaScript recomendamos ```node.js``` (ver {1}) incluido en DVD de adJ 5.6 y que se configurará automáticamente.
+Como interprete de !JavaScript recomendamos ```node.js``` (ver {1}) incluido en DVD de adJ 5.7 y que se configurará automáticamente.
 
-La gran mayoría de gemas instalarán de la misma forma que se explicó (en adJ 5.6 con ruby 2.2 para instalar nokogiri se requería ```sudo !NOKOGIRI_USE_SYSTEM_LIBRARIES=1 gem install nokogiri``` y para instalar capybara-webkit requiere ```sudo QMAKE=qmake4 MAKE=gmake gem install capybara-webkit```).
+La gran mayoría de gemas instalarán de la misma forma que se explicó (en adJ 5.6 con ruby 2.2 para instalar ```nokogiri``` se requería ```sudo !NOKOGIRI_USE_SYSTEM_LIBRARIES=1 gem install nokogiri``` y para instalar ```capybara-webkit``` requiere ```sudo QMAKE=qmake4 MAKE=gmake gem install capybara-webkit```).
 
 Para emplear ```vim``` como editor se recomienda asegurarse de haber ejecutado:
 <pre>
@@ -85,7 +71,7 @@ setlocal tabstop=2
 set expandtab   
 </pre>
 
-#3. Documentación
+#2. Documentación
 
 Puede aprender por ejemplo con los tutoriales interactivos de
 https://rubymonk.com
@@ -104,9 +90,9 @@ gem server
 </pre>
 y con un navegador consultando ```http://localhost:8808```
 
-#4. Uso
+#3. Uso
 
-##4.1 Nueva aplicación usando SQLite
+##3.1 Nueva aplicación usando SQLite
 
 Genere una nueva aplicación asegurando que las gemas requeridas se instalan globalmente, pero después ajuste permisos:
 <pre>
@@ -179,7 +165,7 @@ Notará que se genera:
 
 
 
-!4.1.1 Generar un recurso
+!3.1.1 Generar un recurso
 
 Puede crear un primer recurso (digamos ```Departamento```) con modelo, controlador simple y vistas para operaciones CRUD y RESTful con:
 <pre>
@@ -221,7 +207,7 @@ Por convención de Ruby on Rails:
 * La tabla incluirá automáticamente los campos ```created_at``` y ```updated_at``` de tipo ```datetime```.  
 * La tabla será creada con una migración (cuya fuente quedará en ```db/migrate/```) y el registro de las migraciones ya aplicadas se lleva en una tabla ```schema_migrations``` creada automáticamente en la base de datos.
 
-!4.1.2 Página de inicio
+!3.1.2 Página de inicio
 
 La página inicial de su aplicación puede crearla generando un controlador con vista, modificando la vista y especificando la ruta:
 
@@ -266,7 +252,7 @@ Al modificar fuentes en general no necesita volver a lanzar el servidor de rails
 
 Examine desde un navegador ```http://127.0.0.1/```.   Verá lo que escribió en ```app/views/hogar/index.html.erb``` en el ambiente HTML que tenga diseñado en ```app/views/layouts/application.html.erb```.
 
-!4.1.3 Interacción con la base de datos
+!3.1.3 Interacción con la base de datos
 
 Puede examinar la tabla creada e interactuar con la base de datos con la interfaz texto de SQLite como se ejemplifca a continuación:
 <pre>
@@ -279,7 +265,7 @@ CREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version"
 );
 </pre>
 
-##4.2 Ayudas para usar una base de datos PostgreSQL existente:
+##3.2 Ayudas para usar una base de datos PostgreSQL existente:
 
 Se recomienda emplear UTF8 como codificación de PostgreSQL (si emplea otra codificación convierta sacando un respaldo eliminando la base, volviendola a crear con ```-E UTF8``` y restaurando los datos).
 
@@ -332,7 +318,7 @@ annotate21
 * Si desea ayuda en la generación de controladores y vistas para sus tablas, instale ```sudo gem install schema_to_scaffold```, genere (puede ser momentaneamente) el archivo ```db/schema.rb``` con ```rake db:schema:dump``` y ejecute ```scaffold21``` para ver las instrucciones que debe dar a rails para generar modelos, controladores y vistas para las tablas de la base de datos.
 
 
-!4.2.1 Detalles para tener en cuenta al migrar aplicaciones
+!3.2.1 Detalles para tener en cuenta al migrar aplicaciones
 
 RoR tiene sus propias convenciones respecto a SQL, nombres de tablas y demás, en ocasiones puede ser mejor intercambiar datos JSON con una aplicación ya existente que interactúe con la base de datos.  Sin embargo si desea emplear RoR tanto como pueda para interactuar con la base de datos, tenga en cuenta:
 
@@ -388,7 +374,7 @@ end
 </pre>
 
 
-#5. Depuración
+#4. Depuración
 
 Como se explica en {5}, desde la aplicación en rails puede entrar a depurar:
 * Instale la gema 
@@ -399,7 +385,7 @@ Como se explica en {5}, desde la aplicación en rails puede entrar a depurar:
 Ruby también ofrece facilidades para medir tiempos como se resume en {4}.
 
 
-#6. Referencias
+#5. Referencias
 
 * {1} http://guides.rubyonrails.org/getting_started.html
 * {2} http://stackoverflow.com/questions/7092107/rails-3-1-error-could-not-find-a-javascript-runtime
