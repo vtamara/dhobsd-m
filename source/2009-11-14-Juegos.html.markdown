@@ -1,0 +1,402 @@
+---
+title: Juegos
+date: 2009-11-14
+tags:
+---
+Entre los portes de OpenBSD 4.6 hay diversos juegos, aunque bastantes son violentos, también hay bastantes no violentos, ni ofensivos contra cristianos, que funcionan y pueden ser aptos para niñ@s. A continuación se describen algunos.
+
+!amoebax
+
+Una especie de tetris, pero para formar  4 en cadena de cada color.   Usa SDL y bonita animación.
+
+[http://www.emma-soft.com/games/amoebax/screenshots/normal.png]
+
+!batrachians
+
+Una rana que debe cazar más moscas que su rana oponente operada por el computador
+[http://perso.b2b2c.ca/sarrazip/dev/images/batrachians-1.png]
+
+!childsplay
+
+Diversos juegos educativos para niños desde los 2 años (según el autor de childsplay).
+
+[http://childsplay.sourceforge.net/images/screenshots/main.jpg]
+
+
+!burgerspace
+
+Formar hamburgesas evandiendo los enemigos o hechandoles un poco de pimienta
+
+[http://perso.b2b2c.ca/sarrazip/dev/images/burgerspace-1.png]		 
+
+!cgoban
+
+Para jugar Go bien localmente o con oponentes en red.
+
+!circuit
+
+El objetivo es unir todos los círculos que tienen terminales, intente inicialmnete con ```circuit 2 3```
+
+!cosmosmash
+
+Evitar que meteoritos destruyan su estación.
+
+[http://perso.b2b2c.ca/sarrazip/dev/images/cosmosmash-1.png]
+
+!crack-attack
+
+Una especie de tetris con objetivo de formar 3 en línea
+
+[http://perso.b2b2c.ca/sarrazip/dev/images/cosmosmash-1.png]
+
+!csmash
+
+Tenis de mesa 3D
+[http://cannonsmash.sourceforge.net/game2.jpg]
+
+!eboard
+
+Instalelo junto con gnuchess y configure en Peers->Other engine para jugar contra ese.
+
+
+!enigma
+Clon de Oxyd/Rock'n'Roll
+
+!f1spirit
+
+[http://www.braingames.getput.com/f1spirit/pics/thumb_screenshot5.jpg]
+
+Reconstrucción del juego de Konami F1-Spirit
+
+
+!forcedattack	
+[http://forcedattack.sourceforge.net/screenshots/thumb_ingame_player1won.png]
+
+Cuatro en línea
+
+
+!freeciv
+
+[http://images1.wikia.nocookie.net/__cb20070205210651/freeciv/es/images/c/c8/Canvas_closeup.png]
+
+Clon para X11 de Cvilization; para multiples jugadores en red.
+
+!freedroid
+[http://taufanlubis.files.wordpress.com/2008/03/linux-game-freedroid.png]
+
+Robot que defiende fortaleza
+
+!freedroidrpg		 
+[http://www.freedroid.org/typo3temp/pics/12b3e3a02e.jpg]
+Inspirado en Freedroido pero en 3D.
+
+!frotz	
+
+Interprete en modo texto (basado en curses) para juegos compatibles con Infocom. Hay algunos juegos disponibles http://wiki.laptop.org/go/Frotz/Games
+
+!gcompris		 
+[http://gcompris.net/screenshots/root.jpg]
+
+Juegos para niños entre 2 y 10 años.
+
+!gtkballs		 
+[http://gtkballs.antex.ru/shots/eng/gtkballs_screenshot.jpg]
+
+Formar secuencias de 5 en línea del mismo color 
+
+!heroes		 graphically improved game of yore
+[http://heroes.sourceforge.net/img/snap4.png]
+
+Andar por un mapa con una larga "cola" evitando chocarse con la de otros y haciendolos chocar.
+
+!icebreaker
+[http://mattdm.org/icebreaker/screenshot.png]
+
+Partir el tablero en partes pequeñas sin que los pingüinos toquen las líneas mientras parten.
+
+
+!jbrickshooter		 
+
+[http://imagenes.es.sftcdn.net/es/scrn/82000/82643/jbrickshooter-9.jpg]
+
+Poner 3 ladrillos del mismo color juntos.
+
+!kbilliards
+
+[http://dailypackage.fedorabook.com/uploads/2007-08-03-kbilliards.png]
+
+
+Billar
+
+!kobodeluxe
+
+[http://olofson.net/kobodl/images/about-shot2-full.png]
+
+Destruir estaciones espaciales enemigas.
+
+!komi
+
+[http://komi.sourceforge.net/graphics/komiscreen.png]
+
+Que la rana recolecte bolitas amarillas estirando la lengua sin ser interceptada por enemigos.
+
+!late
+[http://late.sourceforge.net/Screenshot-1.png]
+
+Similar a icebreaker
+
+!lbreakout2
+
+[http://lgames.sourceforge.net/LBreakout2/ss0.jpg]
+
+Haga rebotar la bolita
+
+!lincity-ng		
+
+[http://lincity-ng.berlios.de/wiki/images/thumb/0/0b/Lincity-ng-2.0.png/512px-Lincity-ng-2.0.png]
+
+Simula crecimiento de ciudades
+
+
+londonlaw		 online multiplayer version of the Scotland Yard game
+
+!lostpixels
+
+[http://a.fsdn.com/con/app/proj/blinkensisters/screenshots/54530.jpg]
+
+Estilo Mario Bros
+
+!maelstrom
+
+[http://majorslack.com/pics/screenshots/maelstrom.jpg]
+
+Destruir los asteroides
+
+!micropolis
+
+[http://wiki.laptop.org/images/1/1b/Simcityscreenshot.png]
+
+
+Simulación de una ciudad
+
+!moon-buggy
+
+Manejar un carro en la luna. Es en modo texto.
+
+!moonlander
+
+[http://os4depot.net/filedata/snapshot/2120_1_snap.jpg]
+
+Aterrizar en la luna
+
+!moria
+
+Juego basado en texto
+
+!nethack
+
+Juego basedo en texto
+
+!netris
+
+Tetris en modo texto
+
+
+!numptyphysics		 
+
+[http://numptyphysics.garage.maemo.org/images/np_l2.jpg]
+
+Juego de dibujar basado en física
+
+omega		 complex rogue-style game of dungeon exploration
+
+openarena		 OpenArena client
+
+
+opensonic		 game based on the Sonic the Hedgehog universe
+
+
+openttd		 open source clone of the game Transport Tycoon Deluxe
+
+
+pathological		 enriched clone of the game Logical by Rainbow Arts
+
+
+pingus		 free Lemmings-like game
+
+pioneers		 Settlers of Catan for GNOME/Gtk
+
+pokerth		 Qt4 poker game with online capabilities
+
+prboom		 enhanced clone of Id Software's Doom game; multiplayer
+
+qgo		 go client and fully featured sgf editor
+
+qstat		 displays the status of multi-player Internet Game servers
+
+rftg		 race for the galaxy card game, automated player
+
+roadfighter		 remake of Konami's Road Fighter
+
+rocksndiamonds		 maze game resembling boulderdash
+
+scummvm		 graphical adventure game interpreter
+
+scummvm-tools		 collection of various tools for scummvm
+
+sdlroids		 essentially an Asteroids clone
+
+sdlzombies		 zombies clone
+
+singularity		 simulation of a true AI
+
+ski		 skiing simulation game
+
+sl		 Steam Locomotive
+
+slash		 dungeon explorin', hackin' game, but harder than nethack
+
+slash-em		 dungeon explorin', hackin', game. Hard
+
+snipe2d		 overhead shooting game
+
+spacehulk		 total conversion of the Space Hulk board game
+
+spatial		 3d tetris
+
+
+spider		 challenging double decked solitaire game
+
+starlanes		 classic space-age stock trading game
+
+sudognu		 sudoku solver and creator
+
+sudoku		 console based sudoku
+
+sudoku-solver		 sudoku puzzle solver with cli, gui, and web ui
+
+taxipilot		 silly little game based on Spacetaxi for the C64
+
+teeworlds		 platform game featuring buggers equipped with weapons
+
+tetrinetx		 tetrinet server
+
+toppler		 Nebulous rewrite of Tower Toppler
+
+tornado		 Ouranos (Weather War) clone; multiplayer
+
+tutris		 graphical tetris clone
+
+tuxkart		 tuxkart is a simple Go-Kart racing game.
+
+tuxpaint		 drawing program for children
+
+tuxpaint-config		 graphical tool to change Tux Paint's settings
+
+tuxpaint-stamps		 rubber stamps collection for Tux Paint
+
+uqm		 ur-quan masters: sdl port of star control 2; multiplayer
+
+vectoroids		 vector-based, pretty, Asteroids clone
+
+vitetris		 terminal-based tetris clone in vein of nintendo tetris
+
+vodovod		 combine pipes to lead water from the house to the tank
+
+wesnoth		 fantasy turn-based strategy game
+
+wmminichess		 wm-dockapp; chess game
+
+wmtictactoe		 wm-dockapp; TicTacToe game
+
+wormux		 free software clone of Worms(R) game concept
+
+wtf		 translate common internet acronyms
+
+xasteroids		 X11-based asteroids-style arcade
+
+xbattle		 concurrent multi-player battle strategy game
+
+xbill		 save your computers from the evil clutches of Bill
+
+xbl		 3D block-dropping game
+
+xblast		 graphical multi-player real-time strategy game for X11
+
+xboard		 X11 frontend for GNU Chess and the Internet Chess Server
+
+xboing		 blockout style game for X11
+
+xbreaky		 breakout game for the X Window System
+
+xbubble		 x bust a move clone
+
+xchomp		 Pac-man-like game under X11
+
+xcowsay		 displays a cute cow and message on your desktop
+
+xcubes		 cube puzzle for X11
+
+xdeblock		 block action game
+
+xdino		 dino puzzle game for X11
+
+xevil		 side-view, fast-action, kill everything type of game
+
+xgolgo		 watch what you are doing -- are you hostile
+
+xjewel		 dropping jewels game for X11
+
+xjig		 jigsaw puzzle game for X11
+
+xkobo		 multi-way scrolling shoot'em up for X11, addictive
+
+xlife		 John Horton Conway's Game of Life
+
+xmahjongg		 colorful solitaire Mah Jongg game for X11
+
+xmine		 Athena port of xminesweeper
+
+xminehunter		 Motif minesweeper game
+
+xminesweep		 Windows minesweeper
+
+xmj		 Mahjongg game for X11
+
+xmoto		 challenging 2D motocross platform game
+
+xmris		 Mr Do video arcade game for X11
+
+xneko		 classic BSD4.4 cat-and-mouse
+
+xonix		 win land without colliding with 'flyers' and 'eaters'
+
+xpat2		 X11 solitaire with 14 variations
+
+xpilot		 multiplayer 2d space battles game
+
+xroach		 cockroaches hide under your windows
+
+xscavenger		 Lode Runner clone
+
+xscorch		 Scorched Earth-clone
+
+xscrabble		 X11 version of the popular board game
+
+xteddy		 cuddlesome teddy for the X11 desktop
+
+xwelltris		 2.5 dimensional tetris-like game
+
+zangband		 Zangband (Zelazny Angband) with color, X11 support
+
+zoom		 Z-code interpreter for X11
+
+ztrack		 ncurses based pseudo-3D driving game
+
+-----
+
+Por otra parte hay excelentes juegos con javascript que funcionan muy bien en variedad de navegadores en:
+
+http://www.gamecraft.de/
+
+Las fuentes son limpias e incluso hay algunos buenos tutoriales.

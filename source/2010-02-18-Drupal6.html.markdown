@@ -1,0 +1,422 @@
+---
+title: Drupal6
+date: 2010-02-18
+tags:
+---
+Drupal 6 es un manejador de contenidos (CMS) muy popular, para el cual hay un paquete para OpenBSD.  Este artículo describe la instalación multisitio con posibilidad de un administrador general y un administrador por cada sitio suponiendo una instalación estándar de adJ (con Apache corriendo chroot, y PostgreSQL con socket en /var/www/tmp).
+
+
+Aunque hay diversos manejadores de contenido, preferimos Drupal sobre Joomla porque:
+
+# Es más seguro, en el momento de este escrito http://www.joomlaexploit.com/ lista más de 200 vulnerabilidades en Joomla. Mientras http://www.drupalexploit.com lista menos de 30.
+# Joomla solo puede usarse con MySQL, mientras que Drupal puede usarse con MySQL o con PostgreSQL, y hemos evidenciado más estabilidad en PostgreSQL que en MySQL.
+
+
+#1. Instalación de Drupal 
+
+##1.1 Preparación
+
+Aunque hay un paquete de Drupal 6 para OpenBSD, no se recomienda emplearlo porque:
+* Drupal tiene actualizaciones de seguridad frecuentes y los paquetes para OpenBSD no alcanzan a seguirlas
+* Al hacer actualizaciones grandes de PostgreSQL (e.g de 8.3 a 8.4) debe desinstalarse el paquete PostgreSQL y reinstalarse después de sacar copia de todos los datos.  No puede usarse la opción -r en estos casos por lo que también debe desinstalarse el paquete drupal y pueden perderse actualizaciones a fuentes que se hubieran hechos.
+
+Por esto recomendamos descargar la versión más reciente de Drupal 6 de www.drupal.org e instalarla en ```/var/www/htdocs/drupal6```
+
+Para posibilitar URLs limpios y asegurar un poco la instalación se recomienda descargar la versión más reciente del archivo drupal.conf incluido en el paquete oficial de OpenBSD:
+http://www.openbsd.org/cgi-bin/cvsweb/ports/www/drupal6/core/files/drupal.conf
+
+Ubiquela en /var/www/conf/modules.sample/drupal6.conf
+y cree un enlace:
+<pre>
+sudo ln -s /var/www/conf/modules.sample/drupal6.conf \
+       /var/www/conf/modules 
+</pre>
+
+Para posibilitar subir archivos debe existir ```/var/www/tmp``` escribible por el servidor web (usuario ```www```, grupo ```www```), y para que Drupal pueda revisar actualizaciones automáticamente se requiere el archivo /etc/resolv.conf en la jaula chroot de Apache:
+<pre>
+sudo mkdir -p /var/www/tmp
+sudo chmod a+rwx /var/www/tmp
+sudo mkdir -p /var/www/etc
+sudo cp /etc/resolv.conf /var/www/etc/
+</pre>
+
+Reinicie el servidor web con:
+<pre>
+sudo apachectl stop
+sudo sh /etc/rc.local
+</pre>
+
+Es necesario crear un usuario para PostgreSQL, por ejemplo ```drupal6``` con:
+<pre>
+sudo su - _postgresql
+createuser -h/var/www/tmp -Upostgres drupal6
+</pre>
+No se requiere que sea superusuario, ni que pueda crear nuevos roles, aunque si que pueda crear bases de datos nuevas.
+
+A continuación desde la misma cuenta _postgresql, establezca una clave para el usuario recien creado con:
+<pre>
+psql -h/var/www/tmp -Upostgres template1
+...
+template1=# alter user drupal6 with password  'miclave';
+</pre>
+
+
+Desde la misma cuenta (```_postgresql```) cree la base de datos con codificación UTF8.  Por ejemplo si la base se llama ```drupal6```:
+<pre>
+createdb -h/var/www/tmp -Upostgres -Odrupal6 -E UTF8 drupal6
+</pre>
+A continuación, puede salir de la cuenta _postgresql (con ```exit```).
+
+Para que tenga la posibilidad de realizar la instalación de nuevos sitios en español descargue la localización en Español de http://drupal.org/project/es e instalela (cambie la version por la más reciente en el siguiente ejmplo):
+<pre>
+mkdir -p ~/servidor/drupal
+cd ~/servidor/drupal
+ftp http://ftp.drupal.org/files/projects/es-6.x-1.4.tar.gz
+cd /var/www/htdocs/drupal6/
+tar xvfz ~/servidor/drupal/es-6.x-1.4.tar.gz
+</pre>
+
+Ya podrá instalar su primer sitio que también le permitira comprobar la instalación.
+
+
+##1.2. Creación de un nuevo sitio 
+
+Supongamos  que su Drupal está en un servidor con IP en la red interna 192.168.1.1 y con IP en Internet 200.200.200.200.
+
+Con la misma instalación de Drupal puede manejar varios sitios, incluso con la misma base de datos.  
+
+A cada uno de sus sitios podrá ingresar con diversos URLs, por ejemplo si a futuro empleará el dominio www.misitiodrupal6.org, pero no lo ha comprado, y planea emplear mientras tanto misitiodrupal6.pasosdeJesus.org, e incluso antes de configurar el dominio pasosdeJesus.org planea hacer pruebas desde el servidor con el URL !http://127.0.0.1/misitiodrupal6/install.php, desde la red interna a su nuevo sitio con el URL !http://192.168.1.1/misitiodrupal6/install.php y desde Internet con !http://200.200.200.200/misitiodrupal6/install.php :
+
+<pre>
+cd /var/www/htdocs/drupal6/sites
+cp -rf default www.misitiodrupal6.org
+mkdir -p www.misitiodrupal6.org/files
+chown -R www:www www.misitiodrupal6.org/files
+</pre>
+
+Cree tantos enlaces como formas tendrá de acceder al sitio tanto desde red interna como desde internet (cambiando barras de dividido por punto), por ejemplo:
+<pre>
+sudo ln -s www.misitiodrupal6.org 127.0.0.1.misitiodrupal6
+sudo ln -s www.misitiodrupal6.org 192.168.1.1.misitiodrupal6
+sudo ln -s www.misitiodrupal6.org 200.200.200.200.misitiodrupal6
+sudo ln -s www.misitiodrupal6.org misitiodrupal6.pasosdeJesus.org 
+sudo ln -s www.misitiodrupal6.org misitiodrupal6.pasosdejesus.org 
+sudo ln -s www.misitiodrupal6.org www.misitiodrupal6.pasosdeJesus.org
+sudo ln -s www.misitiodrupal6.org www.misitiodrupal6.pasosdejesus.org
+</pre>
+
+Con los enlaces anteriores podrá ingresar a su sitio una vez configure
+Apache con Alias empleando IPs.  Una vez configure los dominios y Apache con servidores virtuales (!VirtualHost) también podrá ingresar con los nombres de dominio.
+
+A continuación edite el archivo ```www.misitiodrupal6.org/settings.php``` y remplace la línea ```db_url``` para que sea algo como:
+<pre>
+$db_url = '!pgsql://drupal6:miclave@127.0.0.1/drupal6';
+</pre>
+que indica que usara una base de datos PostgreSQL llamada ```drupal6``` cuyo usuario es ```drupal6``` con clave ```miclave```.
+
+Para que sea una instalación multisitio con un sólo administrador general de todos los sitios y un administrador por sitio, sugerimos que a continuación de esa línea incluya unas como:
+
+<pre>
+$db_prefix = array(
+'default'   => 'misitiodrupal6_',
+'users'     => '',
+'sessions'  => '',
+'role'      => '',
+'authmap'   => '',
+'sequences' => '',
+);
+</pre>
+
+Que especifica el prefijo para las tablas del sitio que está creando, pero manteniendo comunes las tablas de usuarios.
+
+Para que su sitio pueda consultarse con IPs, debe configurar Apache en el archivo ```/var/www/conf/httpd.conf``` creando un Alias en la sección donde estos están:
+
+<pre>
+Alias /misitiodrupal6/ "/var/www/htdocs/drupal6/"
+</pre>
+
+Al reiniciar Apache debe poder ingresar a su sitio desde internet con !http://200.200.200.200/misitiodrupal6/install.php, desde la red local con el URL !http://192.168.1.1/misitiodrupal6/install.php  y desde el mismo servidor con !http://127.0.0.1/misitiodrupal6/install.php
+
+Para que su sitio pueda accederse con un dominio, debe configurar el dominio agregando registros que apunten a la IP pública (o si configura un DNS interno a la IP privada), por ejemplo en el archivo de zona pasosdeJesus.org (```/var/named/master/pasosdeJesus.org```) se agregaría la línea:
+
+<pre>
+misitiodrupal6 A 200.200.200.200
+</pre>
+
+O en el archivo de la zona ```misitiodrupal6.org``` una vez lo adquiera y administre, agregaría:
+
+<pre>
+www A 200.200.200.200
+</pre>
+
+Además de configurar sus zonas DNS deberá crear un servidor virtual en el archivo de configuración de Apache, algo como:
+
+<pre>
+<!VirtualHost 200.200.200.200:80 192.168.1.1:80>
+    !ServerAdmin !admin@misitiodrupal6.org
+    !DocumentRoot /var/www/htdocs/drupal6
+    !ServerName www.misitiodrupal6.org
+    !ServerAlias misitiodrupal6.pasosdeJesus.org
+
+    !ErrorLog logs/misitiodrupal6-error_log
+    !CustomLog logs/misitiodrupal6-access_log combined
+    Options !ExecCgi Includes !MultiViews Indexes !FollowSymlinks !SymLinksIfOwnerMatch
+    !IndexOptions !FancyIndexing
+</!VirtualHost>  
+</pre>
+
+También se recomienda que active SSL en Apache si no la hecho y active un dominio virtual que lo use, así los administradores podrán ingresar usando HTTPS para que sus claves se transmitan encriptadas.
+
+<pre>
+<!VirtualHost 200.200.200.200:443 192.168.1.1:443>
+    !ServerAdmin !admin@misitiodrupal6.org
+    !DocumentRoot /var/www/htdocs/drupal6
+    !ServerName www.misitiodrupal6.org
+    !ServerAlias misitiodrupal6.pasosdeJesus.org
+
+    SSLEngine on
+    !SSLCertificateFile    /etc/ssl/server.crt
+    !SSLCertificateKeyFile /etc/ssl/private/server.key
+
+    !ErrorLog logs/misitiodrupal6-error_log
+    !CustomLog logs/ssl_request_log \
+          "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"  
+</!VirtualHost>  
+</pre>
+
+Antes de probar reinicie Apache con:
+<pre>
+apachectl stop
+sudo sh /etc/rc.local
+</pre>
+
+
+Cuando intente acceder a uno de los URLs configurados, debe ver el programa de instalación de Drupal o puede solicitarlo explicitamente con un URL de la forma ```!http://192.168.1.1/misitiodrupal6/install.php```
+
+Si instaló el soporte de español como se presentó en la sección anterior debe poder elegir ese idioma incluso para la instalación.
+Al instalar el nuevo sitio emplee el mismo usuario administrador y clave de los demás.  
+
+Una vez instalado y operando es importante realizar diversas tareas comunes (como se explica en secciones posteriores):
+* Actualizar Drupal a la versión más reciente 
+* Configurar permisos para evitar fallas de seguridad y permitir que el administrador del sitio realice todas las operaciones que necesite.
+* Instalar módulos y/o actualizarlos a la versión más reciente. Después desde el menú Modulos, activar todos los módulos que considerá requerirá (particularmente smtp y statistics, upload, fckeditor e imce)
+* Crear el rol admin, y darle permiso de realizar todas las operaciones excepto administrar permisos y administrar usuarios.
+* Crear un usuario que administre de forma particular el nuevo sitio y ponerle el rol admin.
+* Configurar la manera como el administrador y los editores subirán contenido, se recomienda FCKEditor con IMCE para subir imágenes.
+
+
+#2. Operaciones típicas para el administrador de todos los sitios
+
+##2.1 Actualizar la version de Drupal
+__Muy importante__ para cerrar fallas de seguridad.  Descargue la más reciente de http://www.drupal.org por ejemplo:
+<pre>
+cd ~/servidor/drupal/
+ftp http://ftp.drupal.org/files/projects/drupal-6.20.tar.gz
+tar xvfz drupal-6.20.tar.gz
+cp -rf drupal-6.20/* /var/www/htdocs/drupal6/
+</pre>
+
+Tras cada actualización debe ejecutar el script update.php desde alguno de los URLs que haya configurado por ejemplo !http://192.168.1.1/misitiodrupal6/update.php
+
+##2.2 Administrar usuarios y permisos
+
+Para la configuración multisitio sugerida, habrá un superadministrador que podrá modificar todos los sitios y cada sitio tendrá un administrador que podrá hacer cambios a su sitio.  
+
+Para esto cree el rol admin y cuando cree un nuevo sitio con su nuevo administrador, ponga el nuevo administrador en el rol admin y en el nuevo sitio modifique los permisos del rol admin para permitirle todo --excepto administrar permisos o administrar usuarios (antes de modificar el rol se sugiera activar todos los módulos que usara en el sitio).
+
+Con respecto al sistema de archivos en el sistema cada administrador debe tener una cuenta de usuario, si por ejemplo el sitio www.misitiodrupal6.org será administrado por el usuario Juan, creele una cuenta con:
+<pre>
+adduser
+</pre> 
+Como login emplee por ejemplo juan.
+
+Cree directorios para que ese administrador ubique módulos y temas particulares:
+<pre>
+mkdir /var/www/htdocs/drupal6/sites/www.misitiodrupal6.org/{modules,themes}
+</pre>
+Y asegure que los permisos son correctos:
+<pre>
+chown -R juan:juan /var/www/htdocs/drupal6/sites/www.misitiodrupal6.org/{modules,themes}
+chown root /var/www/htdocs/drupal6/sites/www.misitiodrupal6.org
+chown root /var/www/htdocs/drupal6/sites/www.misitiodrupal6.org/settings.php
+chmod go-w /var/www/htdocs/drupal6/sites/www.misitiodrupal6.org/
+chmod go-w /var/www/htdocs/drupal6/sites/www.misitiodrupal6.org/settings.php
+chmod a+rx /var/www/htdocs/drupal6/sites/www.misitiodrupal6.org/
+chmod a+rx /var/www/htdocs/drupal6/sites/www.misitiodrupal6.org/settings.php
+chown www:www -R /var/www/htdocs/drupal6/sites/www.misitiodrupal6.org/files/
+</pre>
+
+
+##2.3 Instalar módulos/temas comunes para todos los módulos
+
+El procedimiento de instalación es el mismo que para administradores y diseñadores de un sitio (ver secciones 3 y 4), sólo que para que sean compartidos debe ubicarse en ```/var/www/htdocs/drupal6/sites/all/modules``` o ```/var/www/htdocs/drupal6/sites/all/themes```
+
+
+Los módulos que recomendamos instalar/activar en todo sitio son:
+
+|__Módulo__|__Descripción__|
+|Aggregator| Integra contenidos sindicados |
+|upload| Permite adjuntar archivos a artículos o páginas|
+|statistics| Lleva estadísticas de visitas|
+| smtp | Permite enviar correos con SMTP sin emplear función mail de php, por lo que activa funcionalidad de correo aun en jaula chroot de Apache |
+| fckeditor | Para remplazar cajas de texto HTML con un editor gráfico |
+| imce | Integrado con fckeditor permite subir con facilidad imagenes |
+
+
+!2.3.1 smtp
+
+Descargar el más reciente de http://drupal.org/project/smtp
+<pre>
+cd ~/servidor/drupal
+ftp http://ftp.drupal.org/files/projects/smtp-6.x-1.0-beta4.tar.gz
+cd /var/www/htdocs/drupal6/sites/all/modules/ 
+tar xvfz /home/vtamara/servidor/drupal/smtp-6.x-1.0-beta4.tar.gz
+</pre>
+
+Siguiendo las instrucciones del archivo README incluido a continuación
+debe descargarse PHPMailer de ```http://sourceforge.net/projects/phpmailer/files/phpmailer for php5_6/``` y copiar un par de archivos al módulo:
+<pre>
+cd  ~/servidor/drupal/
+ftp "http://downloads.sourceforge.net/sourceforge/phpmailer/PHPMailer_v5.1.tar.gz"
+tar xvfz PHPMailer_v5.1.tar.gz
+cp -rf PHPMailer_v5.1 /var/www/htdocs/drupal6/sites/all/modules/smtp/phpmailer/
+</pre>
+
+!2.3.2 fckeditor con imce
+
+Instale los módulos y sus requerimientos (consulte los archivos README.txt), a continuación se presenta un ejemplo:
+
+<pre>
+ftp http://ftp.drupal.org/files/projects/fckeditor-6.x-2.1.tar.gz
+tar xvfz fckeditor-6.x-2.1.tar.gz
+sudo cp -rf fckeditor /var/www/htdocs/drupal6/sites/all/modules/
+rm fckeditor
+ftp "http://downloads.sourceforge.net/souorceforge/fckeditor/FCKeditor_2.6.6.tar.gz"
+tar xvfz FCKeditor_2.6.6.tar.gz
+sudo cp -rf fckeditor/* /var/www/htdocs/drupal6/sites/all/modules/fckeditor/
+ftp http://ftp.drupal.org/files/projects/imce-6.x-2.0-rc1.tar.gz
+tar xvfz imce-6.x-2.0-rc1.tar.gz
+sudo cp -rf imce /var/www/htdocs/drupal6/sites/all/modules/
+</pre>
+
+
+Después se recomienda:
+
+* Dar  permiso al rol admin para administrar, usar y subir archivos con FCKeditor desde Adminsitrar->Roles y editar permisos de admin.
+* Permitir la etiqueta ```img``` en los formatos de entrada HTML filtrado. Se hace desde Administrar->Formatos de entrada. Configurar Filtered HTML Input.  Pestaña Configurar. Añadir <img> al final de Etiquetas HTML Permitidas. Guardar la configuración.
+* Configure el módulo FCKeditor (Administrar->FCKEditor) para que el perfil avanzado (Editar Advanced) emplee IMCE como visualizador de archivos (en la sección File Browser settings elegir IMCE en File Browser Type). Y que ese perfil lo use el rol admin por lo menos (Seccion Basic Setup marcar admin  en roles que pueden usar este perfil).
+* Configure IMCE (Administrar->IMCE) para que el perfil de usuario lo emplee el rol admin (Al rol admin asignele perfil User-1).
+
+##2.4 Activar URLs limpios
+
+Para esto debe editar el archivo de configuración de Apache ```/var/www/conf/httpd.conf``` y quitar comentario a la línea que carga el módulo mod_rewrite de forma que quede:
+<pre>
+!LoadModule rewrite_module       /usr/lib/apache/modules/mod_rewrite.so
+</pre>
+
+Después de esto ya estará habilitada la opción de activar URLs limpios desde el ```admin/settings/clean-urls```
+
+
+
+#3. Operaciones típicas para el administrador de un sitio
+
+Como administrador de un sitio (digamos www.misitiodrupal6.org) tendrá acceso a la gran mayoría de funciones administrativas de su sitio y debe tener permisos de escritura en el sistema de archivos en los directorios ```/var/www/htdocs/drupal6/sites/www.misitiodrupal6.org/modules``` y
+```/var/www/htdocs/drupal6/sites/www.misitiodrupal6.org/themes```
+
+
+##3.1 Instalar módulos
+
+Es posible que el administrador de todos los sitios haya instalado el módulo que requiere y baste activarlo desde el menú Modulos.
+
+Si ya verificó que el módulo no existe, puede instalarlo para su sitio por ejemplo en ```/var/www/htdocs/drupal6/sites/www.misitiodrupal6.org/modules```. 
+
+Para esto debe descargar la versión más reciente del módulo de http://www.drupal.org, ubicarlo en el directorio de su sitio y seguir las instrucciones particulares que incluya el módulo típicamente en un archivo ```README.txt```.
+
+
+##3.2 Actualizar un módulo
+
+Descargue el módulo actualizado y copielo sobre el anterior, por ejemplo si instaló el módulo advanced_help:
+
+<pre>
+cd  ~/servidor/drupal/
+ftp http://ftp.drupal.org/files/projects/advanced_help-6.x-1.2.tar.gz
+tar xvfz advanced_help-6.x-1.2.tar.gz
+cd advanced_help
+cp -rf * /var/www/htdocs/drupal6/sites/all/modules/advanced_help/
+</pre>
+
+Tras cada actualización debe ejecutar el script update.php
+
+
+#4. Operaciones típicas para el diseñador de un sitio
+
+El diseñador de un sitio debe tener permisos de administración para instalar temas.  Lo necesario en nuevos sitios es:
+
+* Buscar un tema apropiado en http://drupal.org/project/themes e instalarlo.
+* Realizar configuraciones generales al tema desde Drupal.
+* Establecer taxonomia con secciones del sitio que corresponden a secciones donde van noticias.  
+* Las parte estáticas dejarlas como páginas.
+* Definir el menú principal haciendo referencias a taxonomias en casos de secciones que constan de noticias o a nodos en caso de páginas estáticas.
+* Modificar una plantilla, por ejemplo refinando el CSS del tema
+
+##4.1 Instalar un tema
+
+Si ha coordinado con el/la administrador(a) de su sitio, es posible que ya esté instalado el tema y baste activarlo y configurarlo desde el menú ```Temas```.
+
+Si requiere instalar:
+* Descargue la versión más reciente 
+* Descomprimalo en su computador
+* Trasmita la carpeta descomprimida al servidor y dejela en  ```/var/www/htdocs/drupal6/sites/www.misitiodrupal6.org/themes```.   Note que para transmitir la carpeta al servidor requiere una cuenta y un programa como Filezilla.
+
+
+##4.2 Actualizar un tema
+
+Es muy poco común que requiera actualizarse un tema, en caso de requerirlo basta seguir el mismo procedimiento de instalación, pero sacando copias antes de los archivos que haya modificado, porque serán remplazados y después de actualizar tendrá que volver a aplicar los cambios.
+
+##4.3 Modificaciones a una plantilla
+
+Para cambiar fondos, tipos de letra y elementos de estilo es posible que baste modificar el CSS.  Para determinar el cambio por realizar es muy útil la extensión Firebug del navegador Mozilla-Firefox.  Con dicha extensión puede ubicar en las fuentes HTML y CSS el sitio preciso donde se define el estilo y podrá experimentar cambios.   Una vez determine el cambio por realizar debe aplicarlo a las fuentes ---por ejemplo a una copia que mantenga en su computador y que trasmita al servidor con !FileZilla una vez la modifique.
+
+Si requiere modificar la plantilla con PHP/HTML, vea por ejemplo http://www.informit.com/articles/article.aspx?p=1336146  y tenga en cuenta:
+* Algunos temas mantienen un cache de elementos del tema en el directorio ```colors``` del directorio de su sitio.  Para regenerarlo ingresar a Temas->su tema->configuración y guardar nuevamente la configuración.
+
+##4.4 Menús y Estructura Lógica del Sitio
+
+Desde Administrar Menus se puede definir uno o más menús.  La mayoría de plantillas asumen que el menú principal es Enlaces Primarios.   Para agregar elementos al menú además de especificar el nombre que tendrá y la ubicación debe definir la ruta destino.  Esta ruta típicamente es una página (que hace al Crear nuevo Contenido y definir Página) o una taxonomia.
+
+Será una taxonomia si necesita que el enlace llegué a una página donde se agrupen ciertas noticias.
+
+Será una página si el enlace debe llegar a una página donde no se agregan noticias (por ejemplo ¿Quienes somos?.
+
+
+##4.5 Taxonomia
+
+Una taxonomia (también llamado vocabulario) le permite especificar categorias (también llamados términos) por las cuales se puede clasificar cada artículo que publique.   
+
+En la ruta de un término  encontrará todos los artículos que haya publicado clasificandolos con ese término.
+
+Inicialmente se recomienda hacer un sólo vocabulario cuyos términos sean las secciones de la página, este lo puede editar seg?n sus necesidades, aunque debe reclasificar los artículos que ya haya publicado empleando los términos que use.
+
+
+#5. Operaciones típicas para los periodistas/editores de un sitio
+
+##5.1 Publicar una noticia con una imagen
+
+Autentiquese sobre HTTPS agregando ```?q=user``` al URL base, por ejemplo si su portal es http://www.misitiodrupal6.org autentiquese con el URL https://www.misitiodrupal6.org/?q=user
+
+Cree contenido nuevo, emplee el ícono de imagen para poner una imagen, se recomienda que la dimensión más alta (ancho o largo) sea máximo de 200px. Deje espacio alrededor de la imagen de 5px.  Alineela a la izquierda.  Escriba el resumen a la derecha de la imagen.  Inserte espacios verticales al comienzo del resumen hasta que el fondo del resumen coincida con el fondo de la imagen en la vista preliminar ---así evitara que se mezcle la imagen con el contenido de la noticia o con otras noticias.  
+
+Después de image y resumen inserte una división "teaser" que separa resumen de cuerpo
+
+Escriba el cuerpo de la noticia, para facilitar poner estilos a todas las noticias simultaneamente y darle consistencia a su sitio tenga en cuenta:
+
+* El título debe tener Formato Encabezado 1
+* Los subtítulos debe tener Formato Encabezado 2 o subsiguientes según el nivel del subtitulo.
+* Los parráfos deben tener formato Normal.
+* No modifique tipo de letra, tamaño o colores de una manera diferente, para resaltar elementos del texto use solamente negrillas o itálicas.  
+
+El estilo de los formatos descritos, así como la tipografía general de la página se definen desde la página de estilos de la plantilla.
+
+
+
+

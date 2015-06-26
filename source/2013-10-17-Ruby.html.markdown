@@ -1,0 +1,77 @@
+---
+title: Ruby
+date: 2013-10-17
+tags:
+---
+Describimos detalles del lenguaje Ruby 1.9 en su instalación por defecto en adJ 5.3
+
+Nos basamos en http://www.humblelittlerubybook.com/book/html/chapter0.html
+
+#1. Introducción
+
+Diseñado por el japones Yukihiro "Matz" Matsumoto.  Tiene características funcionales, orientado a objetos, imperativo.  Sistema de tipos dinámico, manejo de memoria automático.  Desde el 2012 fue adoptado como estándar ISO (ISO/IEC 30170).  Una versión anterior estandárizada en Japón en 2009 está disponible en http://www.ipa.go.jp/files/000011432.pdf
+
+Desde 1.9 opera sobre la máquina virtual YARV.
+
+!Licencia de Ruby.  
+
+Es BSD de 2 clausulas o la licencia Ruby, ver https://www.ruby-lang.org/en/about/license.txt
+
+!Instalación
+
+Por defecto en adJ queda instalado, si falta ejecutar:
+<pre>
+sudo su 
+ ln -sf /usr/local/bin/ruby19 /usr/local/bin/ruby
+ ln -sf /usr/local/bin/erb19 /usr/local/bin/erb
+ ln -sf /usr/local/bin/irb19 /usr/local/bin/irb
+ ln -sf /usr/local/bin/rdoc19 /usr/local/bin/rdoc
+ ln -sf /usr/local/bin/ri19 /usr/local/bin/ri
+ ln -sf /usr/local/bin/rake19 /usr/local/bin/rake
+ ln -sf /usr/local/bin/gem19 /usr/local/bin/gem
+ ln -sf /usr/local/bin/testrb19 /usr/local/bin/testrb
+</pre>
+
+!Primeros pasos
+
+Desde una terminal ingrese al interprete ```irb``` y ejecute comandos, una sesión de ejemplo:
+
+<pre>
+$ irb
+irb(main):001:0> puts "Hola. ¿Su nombre?"
+Hola. ¿Su nombre?
+=> nil
+irb(main):002:0> n = gets()
+Probando
+=> "Probando\n"
+irb(main):003:0> puts "Hola " + n + "."
+Hola Probando
+.
+=> nil
+irb(main):004:0>
+</pre>
+
+#2. Objetos
+
+Todo en Ruby son objetos, todos los tipos derivan de Object.
+
+!Cadenas
+
+Literales entre apostrofes ('ejemplo') no permiten interpolación y sólo tienen la secuencia de escape \' y \\. Otra forma es %q seguido de un delimitador la cadena y delimitador que cierra: %q{ejemplo} o $q;este;
+
+Literales entre comillas ("ejemplo") permiten más secuencias de escape e interpolación de la forma #{expr}, por ejemplo "3*4 es #{"3+"*3}3 que es #{3*4}" produce "3*4 es 3+3+3+3 que es 12".   Tambie&#324; pueden especificarse con %Q seguido de un delimitador, la cadena y el delimitador que cierra.
+
+También pueden especificarse con "heredoc":
+<pre>
+ s = <<FCADENA
+cadena de varias
+líneas
+FCADENA
+</pre>
+
+Por defecto usa UTF-8.
+
+Los objetos pueden convertirse a cadenas mediante el método .to_s por ejemplo
+4.to_s da "4"
+
+!Números

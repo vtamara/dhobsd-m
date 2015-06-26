@@ -1,0 +1,22 @@
+---
+title: Sympa
+date: 2012-08-28
+tags:
+---
+Sympa es un manejador de listas de correo.
+
+<pre>
+sudo pkg_add p5-DBD-Pg-2.18.0p0.tgz
+sudo pkg_add p5-ldap-0.4001p1.tgz p5-SOAP-Lite-0.713.tgz
+psql sympa -h/var/www/tmp -Usympa -f /usr/local/share/examples/sym 
+sudo apachectl stop
+sudo /usr/local/sbin/mod_perl-enable
+sudo sh /etc/rc.local
+
+
+sudo cpan App::cpanminus
+sudo cpanm FCGI 
+
+sudo /etc/rc.d/sympa start
+sudo /etc/rc.d/wwsympa start
+</pre>

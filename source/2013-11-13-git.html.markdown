@@ -1,0 +1,90 @@
+---
+title: git
+date: 2013-11-13
+tags:
+---
+Una rama es como un repositorio alternativo, una etiqueta es una marca a un punto en el desarrollo de alguna rama.
+
+##1. OPERANDO CON RAMAS (BRANCHES)
+
+Si está trabajando en un proyecto ya existente:
+
+git pull
+traerá información de ramas también
+
+Si el proyecto tiene una rama OBSD_CURRENT puede pasar a la misma con:
+
+<pre>
+git checkout OBSD_CURRENT
+</pre>
+
+(no de ```git branch OBSD_CURRENT``` porque eso crea una rama local con ese nombre).
+
+Puede examinar las ramas existentes y la activa con:
+
+<pre>
+git branch
+</pre>
+
+Si aún no ha clonado el repositorio, y desea trabajar en una rama particular, como se explica en {2} puede hacerlo con:
+
+<pre>
+git clone -b OBSD_CURRENT https://git@github.com/pasosdeJesus/adJ.git
+</pre>
+
+Si desea crear una rama nueva:
+<pre>
+git checkout -b NUEVA_RAMA
+</pre>
+
+Si ha hecho cambios en una rama, por ejemplo OBSD_CURRENT y necesita integrarlos en la rama master:
+
+<pre>
+git fetch origin OBSD_CURRENT
+git merge origin/OBSD_CURRENT
+</pre>
+
+
+## OPERANDO CON ETIQUETAS (TAGS)
+
+Cree una etiqueta local con:
+
+<pre>
+git tag -a v0.9.3 -m "Version 0.9.3"
+</pre>
+
+Envie las etiquetas al repositorio con:
+
+<pre>
+git push origin v0.9.3
+</pre>
+
+
+Puede borrar una etiqueta con:
+<pre>
+git tag -d v1.2b1
+git push origin :refs/tags/v1.2b1
+</pre>
+
+## OPERANDO CON STASH
+
+Si introduce cambios que le impiden jalar fuentes del repositorio (hacer pull):
+<pre>
+git stash
+</pre>
+Esto dejará sus fuentes como en la versión antes sacada del repositorio, sus cambios quedarán en el stash.  A continuación jale las nuevas fuentes  (```git pull```).
+
+Puede revisar los cambios del stash con:
+<pre>
+git stash show -p stash@{0}
+</pre>
+y puede aplicar los cambios del stash en las fuentes jaladas con:
+<pre>
+git stash apply
+</pre>
+
+
+## REFERENCIAS
+
+* {1} http://git-scm.com/book/en/Git-Basics-Tagging
+* {2} http://stackoverflow.com/questions/1911109/git-clone-a-specific-branch

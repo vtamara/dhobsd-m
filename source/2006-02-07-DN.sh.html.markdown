@@ -1,0 +1,39 @@
+---
+title: DN.sh
+date: 2006-02-07
+tags:
+---
+<pre>
+#!/bin/sh
+# Datos de configuración y funciones útiles. 
+# Dominio público. vtamara@pasosdeJesus.org. 2005
+
+
+dn='dc=correo,dc=ean,dc=edu,dc=co';
+
+serv='correo.ean.edu.co';
+
+claveLDAP='Jatbidhub';
+
+buzones='buzon1';
+
+grupos='estudiante profesor apoyo';
+
+
+function die {
+        echo $1;
+        exit 1;
+}
+
+function esta {
+        aguja=$1;
+        pajar="$2";
+        esta=0;
+        for i in $pajar; do
+                if (test "$i" = "$aguja") then {
+                        return 0;
+                } fi;
+        done;
+        die "$grupo no está en '$grupos'";
+}
+</pre>

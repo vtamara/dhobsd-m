@@ -1,0 +1,194 @@
+---
+title: Ganglia
+date: 2013-04-04
+tags:
+---
+Es una aplicación para monitorear servidores.   A continuación presentamos como puede utilizarse Ganglia 3.5.0 con adJ 5.2
+
+
+##Prerequisitos
+
+* Python, apr, pear-XML-parser y pcre (instalados y configurados por defecto en adJ 5.2)
+<pre>
+sudo pkg_add rrdtool
+sudo pkg_add libconfuse
+</pre>
+
+Descargue fuentes de ganglia monitor core de http://sourceforge.net/projects/ganglia/files/ganglia%20monitoring%20core/
+y descomprima.
+
+
+##Compilación
+
+Aplique el siguiente parche
+
+
+<pre>
+--- ganglia-3.5.0/libmetrics/openbsd/metrics.c  Tue Nov 27 10:35:15 2012
++++ ganglia-3.5.0-mod/libmetrics/openbsd/metrics.c      Wed Apr  3 21:11:40 2013
+@@ -437,12 +437,12 @@
+    g_val_t val;
+ 
+    kvm_t *kd;
+-   struct kinfo_proc2 *kp;
++   struct kinfo_proc *kp;
+    int cnt;
+    char err_buf![_POSIX2_LINE_MAX];
+ 
+    kd = kvm_openfiles(NULL, NULL, NULL, !KVM_NO_FILES, err_buf);
+-   kp = kvm_getproc2(kd, !KERN_PROC_ALL, 0, sizeof(struct kinfo_proc2), &cnt);
++   kp = kvm_getprocs(kd, !KERN_PROC_ALL, 0, sizeof(struct kinfo_proc), &cnt);
+ 
+    val.uint32 = cnt;
+    
+@@ -456,13 +456,13 @@
+    g_val_t val;
+ 
+    kvm_t *kd;
+-   struct kinfo_proc2 *kp;
++   struct kinfo_proc *kp;
+    int cnt, i;
+    unsigned int count = 0;
+    char err_buf![_POSIX2_LINE_MAX];
+ 
+    kd = kvm_openfiles(NULL, NULL, NULL, !KVM_NO_FILES, err_buf);
+-   kp = kvm_getproc2(kd, !KERN_PROC_ALL, 0, sizeof(struct kinfo_proc2), &cnt);
++   kp = kvm_getprocs(kd, !KERN_PROC_ALL, 0, sizeof(struct kinfo_proc), &cnt);
+    for (i = 0; i < cnt; i++)
+       if (((kp + i) -> p_stat ``` SRUN) || ((kp + i) -> p_stat ``` SONPROC))
+          count ++;
+@@ -1088,3 +1088,49 @@
+ 
+        return diff;
+ }
++
++
++g_val_t
++cpu_steal_func ( void )
++{
++       
++       static g_val_t val;
++       val.f = 0.0;
++/*
++   char *p;
++   static g_val_t val;
++   static struct timeval stamp={0,0};
++   static double last_steal_jiffies,  steal_jiffies,
++                 last_total_jiffies, total_jiffies, diff;
++
++   p = update_file(&proc_stat);
++   if((proc_stat.last_read.tv_sec != stamp.tv_sec) &&
++      (proc_stat.last_read.tv_usec != stamp.tv_usec)) {
++     stamp = proc_stat.last_read;
++
++     p = skip_token(p);
++     p = skip_token(p);
++     p = skip_token(p);
++     p = skip_token(p);
++     p = skip_token(p);
++     p = skip_token(p);
++     p = skip_token(p);
++     p = skip_token(p);
++     steal_jiffies  = strtod( p , (char **)NULL );
++     total_jiffies = total_jiffies_func();
++
++     diff = steal_jiffies - last_steal_jiffies;
++
++     if ( diff )
++       val.f = (diff/(total_jiffies - last_total_jiffies))*100;
++     else
++       val.f = 0.0;
++
++     last_steal_jiffies  = steal_jiffies;
++     last_total_jiffies = total_jiffies;
++
++   }
++*/
++   return val;
++}
++
+diff -x .lib* -x *~ -x *Po -x *spec -x *xml -x *config* -x *.cache -x *.o -x Makefile -ruN ganglia-3.5.0/gmetad/conf.c ganglia-3.5.0-mod/gmetad/conf.c
+--- ganglia-3.5.0/gmetad/conf.c Tue Nov 27 10:35:15 2012
++++ ganglia-3.5.0-mod/gmetad/conf.c     Wed Apr  3 21:28:25 2013
+@@ -348,7 +348,7 @@
+    config->debug_level = 0;
+    config->should_setuid = 1;
+    config->setuid_username = "nobody";
+-   config->rrd_rootdir = "/var/lib/ganglia/rrds";
++   config->rrd_rootdir = "/var/db/ganglia/rrds";
+    config->write_rrds = 1;
+    config->scalable_mode = 1;
+    config->all_trusted = 0;
+
+</pre>
+
+Configure con:
+<pre>
+./configure --with-libconfuse=/usr/local  --with-gmetad
+</pre>
+
+Compile e instale
+<pre>
+make
+make install
+</pre>
+
+Compile e instale gmetad con
+<pre>
+cd gmetad
+make
+make install
+</pre>
+
+##Configuración
+
+Genere un archivo de configuración para gmond con ```gmond -t``` y almacenelo en /etc/gmond.conf.
+
+Ejecute
+<pre>
+sudo mkdir -p /var/www/var/lib/ganglia/rrds
+sudo chown nobody:nobody /var/www/var/lib/ganglia/rrds
+</pre>
+
+Cambie configuración de gmetad /etc/gmetad.conf, cambiando la linea:
+<pre>
+rrd_rootdir "/var/www/var/lib/ganglia/rrds"
+</pre>
+
+Inicie:
+<pre>
+gmond -c /etc/gmond.conf
+gmetad -c /etc/gmetad.conf
+</pre>
+
+Para asegurar que inician en cada arranque puede agregar lineas como estas en ```/etc/rc.local``` o crear servicios como archivos de comandos en ```/etc/rc.d``` y agregar los servicios en ```/etc/rc.conf.local```.
+
+Debe ver procesos con nombres ```gmond``` y ```gmetad``` si no los ve puede depurar ```gmetad``` con:
+<pre>
+sudo /usr/local/sbin/gmetad  -d 1 -c /etc/gmetad.conf
+</pre>
+
+##ganglia-web
+
+Descargue e instala ganglia-web por ejemplo en ```/var/www/htdocs/ganglia```.
+
+Esta parte supone que podrá localizar la herramienta rrdtool, por lo que debe copiarla junto con las librerías que emplea dentro de la jaula del servidor web ```/var/www```.    Los archivos copiados deben ser: 
+
+<pre>
+/var/www/usr/X11R6/lib/libfreetype.so.18.3
+/var/www/usr/bin/env
+/var/www/usr/lib/libc.so.65.0
+/var/www/usr/lib/libm.so.7.0
+/var/www/usr/lib/libz.so.4.1
+/var/www/usr/libexec/ld.so
+/var/www/local/bin/rrdtool
+/var/www/usr/local/lib/libart_lgpl_2.so.5.20
+/var/www/usr/local/lib/libpng.so.15.0
+/var/www/usr/local/lib/librrd.so.3.0
+/var/www/usr/local/share/rrdtool/fonts/!DejaVuSansMono-Roman.ttf
+</pre>
+
+## Referencias
+* Guia para versiones anteriores de OpenBSD http://www.vicould.net/entries/monitoring-your-openbsd-server-with-ganglia/
+* Guia de instalación http://sourceforge.net/apps/trac/ganglia/wiki/Ganglia%203.1.x%20Installation%20and%20Configuration
+* Cambio de kinfo_proc2 a kinfo_procs. https://mail.gnome.org/archives/commits-list/2012-January/msg09233.html

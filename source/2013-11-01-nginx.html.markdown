@@ -1,0 +1,59 @@
+---
+title: nginx
+date: 2013-11-01
+tags:
+---
+Para usar nginx:
+
+En /etc/rc.conf.local
+
+en pkg_script agregar nginx y php_fpm, retirar httpd
+
+pkg_scripts="cron nginx php_fpm montaencres montaencpos postgresql cupsd"
+
+
+En /etc/nginx/nginx.conf
+
+Pruebe su archivo de configuración con
+
+nginx -t
+
+
+## APLICACIONES MONTADAS EN SUBDIRECTORIOS 
+
+<pre>
+        location ~ ^/nodosureje/(.+\.php)$ {
+            alias       /htdocs/sivel12/$1;
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_index  index.php; 
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            include        fastcgi_params;
+        }
+        location ~ ^/nodosureje/(.*)$
+        {
+                alias /htdocs/sivel12/$1;
+        }
+</pre>
+
+## REESCRITURA PARA ENVIAR DOMINIOS DIFERENTES A SERVIDORES DIFERENTES
+
+Configurar /etc/hosts y copia en /var/www/etc/hosts
+
+En /etc/resolv.conf asegurar
+<pre>
+lookup file bind
+</pre>
+
+<pre>
+    server {
+        listen       443;
+        listen       ![::]:443;
+        server_name  archivoprensa.cinep.org.co www.archivoprensa.cinep.org.co;
+
+        location "/" {
+                proxy_pass https://archivoprensa.cinep.org.co;
+        }
+    }
+</pre>
+
+xx

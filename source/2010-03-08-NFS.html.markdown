@@ -1,0 +1,130 @@
+---
+title: NFS
+date: 2010-03-08
+tags:
+---
+NFS es sigla de Sistema de archivos en Red (Network Filesystem), se trata de un protocolo con servidor y cliente(s) para lograr que parte del sistema de archivos del servidor pueda verse en el computador cliente en un directorio local.
+
+##1. SERVIDOR
+
+!1.1 Configuración
+
+Para compartir un directorio se especifíca en ```/etc/exports``` por ejemplo si el servidor 192.168.2.1 desea compartir en la red 192.168.2/24 el directorio ```/mnt/respaldo/``` el archivo ```/etc/exports``` debe decir:
+<pre>
+/mnt/respaldo -alldirs -network 192.168.2 -mask 255.255.255.0
+</pre>
+El archivo ```/etc/rc.conf.local``` debe incluir:
+<pre>
+portmap=YES
+nfs_server=YES
+</pre>
+
+Para reiniciar ```portmap```
+<pre>
+sudo pkill portmap
+sudo portmap
+</pre>
+
+Para reiniciar servidor nfs:
+
+<pre>
+sudo su -
+pkill nfsd
+rm -f /var/db/mountdtab
+echo -n > /var/db/mountdtab
+mountd
+nfsd -tun 4
+</pre>
+
+Al hacer cambios a ```/etc/exports``` es recomendable enviar señal SIGHUP a ```mountd``` con:
+<pre>
+pkill -SIGHUP mountd
+</pre>
+
+Posibles errores pueden examinarse en ```/var/log/message```
+
+!1.2. Diagnósticos
+
+Para verificar que directorios está exportando:
+
+<pre>
+showmount -e 192.168.2.1
+</pre>
+
+
+Para verificar que está corriendo ```portmap, mountd``` y ```nfsd``` usar:
+<pre>
+# rpcinfo -p
+   program vers proto   port
+    100000    2   tcp    111  portmapper
+    100000    2   udp    111  portmapper
+    100003    2   udp   2049  nfs
+    100003    3   udp   2049  nfs
+    100003    2   tcp   2049  nfs
+    100003    3   tcp   2049  nfs
+    100005    1   udp   1011  mountd
+    100005    3   udp   1011  mountd
+    100005    1   tcp    914  mountd
+    100005    3   tcp    914  mountd
+</pre>
+
+Para verificar que los servicios RPC funcionan:
+
+<pre>
+#rpcinfo -t localhost portmapper
+program 100000 version 2 ready and waiting
+# rpcinfo -t localhost nfs       
+program 100003 version 2 ready and waiting
+program 100003 version 3 ready and waiting
+# rpcinfo -t localhost mountd
+program 100005 version 1 ready and waiting
+rpcinfo: RPC: Program/version mismatch; low version = 1, high version = 3
+program 100005 version 2 is not available
+program 100005 version 3 ready and waiting
+</pre>
+
+Este mismo programa puede usarse desde clientes tipo UNIX donde esté para verificar que pueden verse externamente los servicios RPC.
+
+##2. CLIENTE
+
+!2.1 Cliente OpenBSD
+
+
+Para montar el sistema de archivos exportado en el directorio ```/respaldo```
+
+<pre>
+sudo mkdir -p /respaldo
+sudo mount_nfs 192.168.2.1:/mnt/respaldo/ /respaldo/
+</pre>
+
+Para montarlo de manera permanente, es decir que en cada arranque monte automaticamente (mientras el servidor NFS esté encendido), editar /etc/fstab
+y añadir
+<pre>
+192.168.2.1:/mnt/respaldo /respaldo/ nfs nosuid,rw,nodev 0 0
+</pre>
+
+!2.2 Cliente Ubuntu CE
+
+Puede preparar herramientas y directorio en el cual montar con:
+
+<pre>
+sudo apt-get install portmap nfs-common
+sudo mkdir /respaldo
+</pre>
+Y montar en si con:
+<pre>
+sudo mount.nfs 192.168.2.1:/mnt/respaldo /respaldo
+</pre>
+Para mantener de manera permanente, agregue a ```/etc/fstab```
+
+<pre>
+192.168.2.1:/mnt/respaldo /respaldo/ nfs nosuid,rw,nodev 0 0
+</pre>
+
+
+
+##3. REFERENCIAS
+
+* http://www.openbsd.org/faq/faq6.html
+* http://migranpipablog.wordpress.com/2007/01/28/compartiendo-directorios-mediante-nfs-entre-maquinas-ubuntu-y-openbsd/
+

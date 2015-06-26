@@ -1,0 +1,22 @@
+---
+title: nessus
+date: 2009-09-29
+tags:
+---
+<pre>
+sudo pkg_add nessus-core
+sudo pkg_add nessus-plugins
+sudo nessus-mkcert
+sudo nessusd
+
+sudo nessus-fetch -register 4EE0-64F2-2300-1609-A554
+
+sudo nessus-update-plugins
+
+sudo nessus
+</pre>
+
+
+!REFERENCIAS
+
+* {1} http://lapipaplena.wordpress.com/nessus-tutorial/

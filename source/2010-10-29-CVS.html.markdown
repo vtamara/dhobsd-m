@@ -1,0 +1,27 @@
+---
+title: CVS
+date: 2010-10-29
+tags:
+---
+
+Cada vez que en el repositorio se completa una meta importante, puede ser apropiado dejar una "marca" en el que permita recuperar la versión marcada. Suponiendo que el administrador quisiera marcar la versión que hay en un instante con la marca 'Importante', desde su copia local del repositorio ejecutaría:
+
+<pre>
+cvs rtag 'Importante' mimodulo
+</pre> 
+
+Posterioremente si desea recuperar la versión marcada del módulo puede usar:
+
+<pre>
+cd tmp
+cvs co -r Importante mimodulo
+</pre>	 
+
+Tenga en cuenta que la versión que recupere así quedará con una "marca pegajosa" que hará que CVS la diferencie de la versión más reciente. 
+
+
+
+##REFERENCIAS
+
+{2} http://structio.sourceforge.net/repasa/docusuario/plan-de-estudios-en-un-colegio.html#configuracion-del-servidor-cvs
+

@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge;chrome=1' />
+    <title>DHBOSD <%= ' - ' + current_article.title unless current_article.nil? %></title>
+    <%= feed_tag :atom, "#{blog.options.prefix.to_s}/feed.xml", title: "Atom Feed" %>
+    <link rel="stylesheet" href="/wiki.css" type="text/css">
+
+    <style type="text/css"><!--
+      //--></style>
+    <link rel="stylesheet" href="/example-1.css" type="text/css">
+    <meta name="wiki.base" content="">
+    <meta name="wiki.moniker" content="DHOBSD">
+    <meta name="ROBOTS" content="NOINDEX,NOARCHIVE">
+  </head>
+  <body text="#010203" bgcolor="#FECE8A">
+
+    <h1 class="site-title">DHOBSD</h1>
+
+    <table border="0" cellpadding="0" cellspacing="0" width="85%">
+      <tbody>
+        <tr>
+          <td valign="top" width="200" class="main-menu" style="width:200px;" bgcolor="#FEAA56">
+            <div class="main-menu">
+              <h4>Archivo</h4>
+              <ol>
+                <% blog.articles.group_by {|a| a.date.year }.each do |year, articles| %>
+                  <li><%= link_to "#{year} (#{articles.size})", blog_year_path(year) %></li>
+                <% end %>
+              </ol>
+            </div>
+          </td>
+          <td valign="top" width="100%" bgcolor="#FEAA56">
+            <div id="main" role="main">
+              <%= yield %>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="site-footer" align="center">
+    <small>
+      <a href="http://www.pasosdejesus.org/dominio_publico_colombia.html">Dominio público de acuerdo a legislación colombiana</a> <br>
+    </small>
+    </p>
+  </body>
+</html>

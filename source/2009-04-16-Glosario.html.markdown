@@ -1,0 +1,23 @@
+---
+title: Glosario
+date: 2009-04-16
+tags:
+---
+
+
+
+##COMANDOS/PROGRAMAS
+
+
+
+* cd: Cambiar de directorio. cd servidor
+* john: auditoria de claves sudo john /etc/master.passwd
+* ls: listas archivos
+* man: manual.  man 6 intro
+* nohup: Que continue ejecucion de un comando asi se cierre la terminal sudo nohup john /etc/master.passwd
+* reboot: Reinicia. sudo reboot
+* su: Cambiar a otro usuario. sudo su -
+* sudo: dar un comando con privilegios de administrador
+* uptime: muestra cuanto tiempo lleva encedido
+* vipw: permite editar registro de cuentas del sistema
+* xfe Administrador de archivos

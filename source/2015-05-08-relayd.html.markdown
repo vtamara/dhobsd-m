@@ -1,0 +1,42 @@
+---
+title: relayd
+date: 2015-05-08
+tags:
+---
+
+Como se explica en {1}, ```relayd``` permite reenviar (relay) y redirigir (redirect) dinamicamente conexiones a uno o más servidores. Es útil por ejemplo para: balancear carga, ser puerta de enlace a nivel de aplicación o proxy transparente.  Al operar como balanceador de carga puede monitorear los servidores y hacer solicitudes sólo a los que estén operando. 
+
+Puede operar en la capa 3 modificando dinámicamente las reglas de ```pf``` o
+puede operar en la capa 7.
+
+Su archivo de configuración por defecto es ```relayd.conf```, cuya sintaxis se inspira en la de ```pf```.  Puede constar de macros, configuraciones globales, tablas, redirecciones, reenvios, protocolos y enrutadores.
+
+Las redirecciones operan en la capa 7, y los reenvios operan en la capa 3.
+
+
+! Uso
+
+Puede verificar sintaxis de archivo de configuración con:
+<pre>
+relayd -n
+</pre>
+
+Puede inicar en modo de depuración que operará en primer plano y enviará errores a la salida estándar:
+<pre>
+relayd -n
+</pre>
+
+Cuando opera como servicio, se pueden examinar errores en ```/var/log/servicio```
+
+
+! Casos
+
+! 
+
+
+
+# REFERENCIAS
+
+* {1} Página man de relayd
+* {2} http://www.openbsd.org/papers/relayd-asiabsdcon2013.pdf
+* {3} Página man de relayd.conf

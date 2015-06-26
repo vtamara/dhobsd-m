@@ -1,0 +1,94 @@
+---
+title: UTF-8
+date: 2008-11-08
+tags:
+---
+Unicode es una tabla estándar que asocia números con caracteres, donde están los caracteres de prácticamente todos los lenguajes que la humanidad ha conocido.
+
+Por ejemplo los caractéres típicos del griego antiguo se codifican con números en el rango 880 a 1023 (en hexadecimal 0x0370 a 0x03F) como se describe en http://www.unicode.org/charts/PDF/U0370.pdf
+
+UTF-8 es una codificación para Unicode, cuyos caracteres de 7 bits coinciden con los caracteres ASCII --esos 127 caracteres incluyen signos de puntuación típicos, minúsculas y mayúsculas del alfabeto latino, suficiente para codificar inglés.
+
+En el momento de este escrito, la librería de C de OpenBSD 4.4 no tiene soporte para locales de más de 8 bits (y UTF-8 es de más de 8 bits), por lo que las aplicaciones que recurran al sistema operativo para algunas operaciones relacionadas con caracteres amplios, no tendrán éxito.
+
+Típicamente todas las aplicaciones funcionaran empleando un locale de 8 bits como ISO-8859-1 también llamado LATIN1.  Esta codificación incluye los caracteres especiales del español (tildes, eñes y diéresis), y de otros lenguajes provenientes de Europa occidental. 
+
+Por defecto las aplicaciones compiladas para OpenBSD soportarán LATIN1, aunque algunas aplicaciones si tienen soporte --con librerías propias-- para UTF-8 como se describe en este escrito.
+
+Para visualizar los ejemplos aquí mencionados debe utilizar X-Window.
+
+
+## xterm
+
+Aunque algunas herramientas con interfaz gráfica no requieren ```xterm``` (e.g ```gvim```), otras (como ```vim```) si requieren que la terminal soporte UTF-8.
+ 
+El xterm incluido en OpenBSD, si soporta al iniciar con:
+<pre>
+xterm -en utf-8
+</pre>
+
+Sin embargo no es perfecto, por ejemplo el ```xterm``` incluido en OpenBSD-current (en Nov.2008) no borra bien caracteres de más de 8 bits al presionar Espacio Atras (por ejemplo á seguido de espacio atras).
+
+Para determinar si su terminal está soportando UTF-8 o no:
+<pre>
+echo -n "á" > /tmp/a
+hexdump -b /tmp/a
+</pre>
+el resultado del hexdump debería ser:
+<pre>
+0000000 303 241                                                        
+0000002
+</pre>
+
+Note que la a tildada se codifica con 2 bytes cuyos valores en octal son 303 y 241 (en decimal 195 y 161 que en Latin1 corresponden a los caracteres ? y ¡).
+
+## recode
+
+Es una aplicación incluida en el paquete del mismo nombre. Permite cambiar codificación de un archivo.  Soporta gran variedad de codificaciones que pueden listarse con ```recode -l```
+
+Por ejemplo para cambiar la codificación del archivo del ejemplo anterior de UTF-8 a LATIN1 se usaría:
+<pre>
+recode utf8..latin1 /tmp/a
+</pre>
+
+La ejecución de ```hexdump``` tras esta operación debería producir:
+
+<pre>
+$ hexdump -b /tmp/a
+0000000 341                                                            
+0000001
+</pre>
+
+Note que la á, se codifica en LATIN1 como el número octal 341 (en decimal 225).
+
+Podría volverse a codificar en UTF-8 con:
+<pre>
+recode latin1..utf8 /tmp/a
+</pre>
+
+
+## vim
+
+También soporta UTF-8 con el comando  ```:set encoding=utf-8```, esto cambiará la codificación del archivo que esté editando y la próxima vez que lo guarde quedará guardado en UTF-8.
+
+## PostgreSQL
+
+PostgreSQL almacena cadenas en la codificación que se haya especificado en el momento de inicializar el motor --LATIN1 por defecto en OpenBSD.
+
+La interfaz ```psql``` permite convertir de otras codificaciones a la que tenga el motor por defecto, por ejemplo para establecer ingreso de información codificada en LATIN1:
+
+<pre>
+SET client_encoding = 'LATIN1';
+</pre>
+
+Los scripts para PostgreSQL también soportan ese comando.
+
+La codificación por defecto de las bases de datos se establece al inicializar el motor de bases de datos con el comando:
+initdb
+El motor en si tiene una codificación por defecto que se establece en el 
+
+----
+
+Este escrito se cede al dominio público.  Se dedica al Señor sobre el día Sabático, quien tiene autoridad para perdonar pecados, para sanar, para liberar y que ha dado esa misma autoridad a quienes lo siguen.
+
+vtamara@pasosdeJesus.org. 2008

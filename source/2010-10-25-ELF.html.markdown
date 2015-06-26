@@ -1,0 +1,136 @@
+---
+title: ELF
+date: 2010-10-25
+tags:
+---
+Desde OpenBSD 3.4 se emplea ELF como formato de binarios.
+
+# 1. Formato de ejecutables ELF
+
+Como se describe en {1}, un ejecutable en formato ELF consta de un encabezado que entre otros incluye: identificación ELF, tipo de codificacion (little endian, big endian), procesador en el cual corre, versión ELF, dirección de inicio de la aplicación, ubicación de la tabla de encabezados del programa, ubicación de la tabla de secciones.
+
+Un ejecutable típico puede tener 10 encabezados de programa y 26 encabezados de secciones. Los encabezados de programa son un arreglo de estructuras, cada una de los cuales describe un segmento que el sistema debe preparar para la ejecución y dentro de los cuales típicamente deben organizarse las secciones.  De forma que si un ejecutable tiene 10 encabezados de programa debe localizar 10 segmentos de memoria.  Cada encabezado de programa consta de: tipo, desplazamiento en archivo, dirección virtual en la cual debe ser ubicado, permisos (ejecución, lectura, escritura)
+
+Una sección se refiere a información de un tipo agrupada con un nombre y propiedades.  Algunos ejemplos de secciones comunes son:
+* ```.bss``` Datos no inicializados
+* ```.comment``` control de versiones
+* ```.ctors``` apuntadores a constructores de C++
+* ```.dtors``` apuntadores a destructores de C++
+* ```.dat``` Datos inicializados 
+* ```.debug``` Información de depuraci&#324;o
+* ```.dynamic``` Información para encadenamiento dinámico
+* ```.fini``` Instrucciones para terminación
+* ```.got``` Global Offset Table.
+* ```.init``` Instrucciones para inicialización
+* ```.rodata``` Datos de solo lectura
+* ```.symtab``` Tabla de símbolos
+* ```.text``` Instrucciones ejecutables del programa
+
+Una tabla de símbolos consta de nombres y datos asociados como: valor, tamaño, tipo (objeto, función).
+
+Algunos programas que operan con ejecutables (o librerías) ELF (ver {2}, {3}, {4}) son:
+
+| __Forma de uso__ | __Descripción__ |
+| ```size binario``` | Para ver tamaños de algunos segmentos |
+| ```strings binario``` | extrae cadenas de un archivo |
+| ```strip binario``` | elimina símbolos de un binario |
+| ```objdump -x binario```  | Muestra encabezados |
+| ```objdump -d binario``` | Desensambla |
+| ```readelf -a binario``` | Muestra información del binario: encabezados, tablas de símbolos, asociación secciones-segmentos |
+
+Por ejemplo al revisar el resultado de ```readelf -a /bin/ksh``` se ven 6 segmentos/encabezados de programas y 16 secciones. La organización de las secciones en los segmentos es:
+<pre>
+  Segment Sections...
+   00     .init .text .fini .note.openbsd.ident 
+   01     .rodata 
+   02     .data .eh_frame .jcr 
+   03     .got .ctors .dtors 
+   04     .bss 
+   05     .note.openbsd.ident 
+</pre>
+
+Los permisos de las secciones son:
+<pre>
+0  RX
+1  R
+2  RW
+3  RW
+4  RW
+5  R
+</pre>
+
+Así que el programa puede escribir en las secciones de los segmentos 2, 3 y 4 (```.data```, ```.eh_frame```, ```.jcr```, ```.got```, ```.ctors```, ```.dtors``` y ```.bss```).   Lee datos constantes de las secciones de los segmentos 1 y 5 (```.rodata``` y ```.note.openbsd.ident```). Pueden ejecutarse instrucciones sólo de las secciones del primer segmento (```.init``` ```.text``` ```.fini .note.openbsd.ident```) que incluyen justamente las instrucciones del programa y las de inicialización y terminación.
+
+Note que justamente las secciones ejecutables no pueden escribirse y que 
+las secciones que pueden escribirse no puede ejecutarse.   Esto ayuda a evitar ataques informáticos que ejcutan código que ingresa como datos a la aplicación de alguna manera (e.g. buffer overflow). En OpenBSD esto es una política llamada W^X (secciones escribibles o ejecutables pero no ambas), que se describe junto con otras técnicas para mitigar fallas de seguridad en {5}.   Puede ver un ejemplo que pone a prueba esta teoria en [WxorX]
+
+# 2. Ejecución de un programa ELF
+
+Típicamente un binario es ejecutado desde el interprete de comandos (por defecto ```/bin/ksh```, ver {6}), el cual espera comandos del usuario y si son programas o scripts crea un nuevo proceso con la función ```fork``` y en el nuevo proceso inicia la ejecución del binario con la función ```execve``` (después de preparar detalles como control de tareas) --en las fuentes de ```ksh``` ver función ```execute``` en ```/usr/src/bin/ksh/exec.c```.
+
+## 2.1 Creación de un nuevo proceso
+
+La función ```fork``` (ver {7}) crea un proceso hijo como copia del proceso que la llama excepto por el valor retornado (0 en el proceso hijo y el número del nuevo proceso en el proceso papá) y que se trata de un nuevo proceso con una identificación diferente.
+
+Un proceso tiene (ver struct proc en /usr/include/sys.h):
+* Descriptores de archivo 
+* Estadísticas 
+* Memoria 
+* Acciones en caso de señales
+* Banderas. Que se mezclan y pueden ser: _P_CONTROLT, tiene una terminal que lo controal, P_NOCLDSTOP no ejecutar SIGCHLD cuando termine, P_PPWAIT el proceso papá espera terminación del hijo, P_PROFIL midiendo desempeño (profiling),P_SELECT seleccionando,  P_SINTR sueño puede interrumpirse, P_SUGID puso privilegios de identificaicón en última ejecución, P_SYSTEM  proceso si señales, estadísticas ni uso de memoria de intercambio, P_TIMEOUT   Fin de tiempo tras dormir, P_TRACED  depurado,  P_WAITED el proceso que depura lo ha esperado, P_WEXIT  Terminando,  P_EXEC  llma{o exec.
+P_SUGIDEXEC el último execve fue set[ug]id, P_NOCLDWAIT que el proceso 1 espera hijo, P_NOZOMBIE proceso 1 me espera y no proceso papá, P_INEXEC está haciendo un exec, P_SYSTRACE rastreo de llamados al sistema activo, 
+P_CONTINUED el proceso ha continuado después de estar detenido, P_BIGLOCK   requiere "gran candado" del kernel para correr, P_THREAD sólo es un thread y no un proceso, P_IGNEXITRV para terminar threads,  P_SOFTDEP procesando softdep, P_STOPPED acaba de detenerse,  P_CPUPEG no mover a otra CPU.
+* Estado, que puede ser: SIDL (en proceso de creación), SRUN (ejecutable), SSLEEP (durmiendo), SSTOP (depurado), SZOMB (Esperando recolección del proceso papá), SDEAD (Es casi SZOMB), SONPROC (operando en una CPU).
+* Identificación 
+* Mascara de señales
+* Prioridad
+* Valor nice 
+* Informaciónd de la emulación
+* 
+* usuario real, grupo real
+* usuario efectivo, grupo efectivo
+* usuario salvado, grupo salvado
+
+Ver man 2 intro
+
+
+## 2.2 Carga y ejecución del binario
+
+La función ```execve``` (ver {8}) es de la librería de C (```libc```) y lo que hace es remplazar la memoria del proceso que la llama con la imagen de un binario (o el interprete que requiera si se trata de un script) e iniciar su ejecución.  Cómo función se declara en ```unistd.h``` y se define durante la compilación de las fuentes, al ejecutar ```make``` en las fuentes de la librería, al igual que otras rutinas implementadas en el kernel  como:
+<pre>
+#include "SYS.h"
+RSYSCALL(execve)
+</pre>
+(Ver regla ```${PASM}``` en ```lib/libc/sys/Makefile.inc```)
+
+La macro ```RSYSCALL``` se define en ensamblador en ```SYS.h``` y además de hacer comprobación de errores y preparar para el llamado ejecuta:
+<pre>
+movl $(SYS_execve),%eax; 
+movq %rcx, %r10; 
+syscall
+</pre>
+
+Que corresponde a una llamada a una función del sistema operativo, justamente la función 59 --que es como se define $(SYS_execve) en ```/usr/include/sys/syscall.h```.
+
+La llamada al sistema ```SYS_execve``` se define en ```/usr/src/sys/kern/kern_exec.c``` (en general las llamadas al sistema están en ```/usr/src/sys/kern```).  Como función de C y llamada al sistema recibe proceso, apuntador a los parámetros (estructura ```sys_execve_args```  definida en ```/usr/include/sys/syscallargs.h```), y apuntador a espacio donde se retornará el resultado --aunque la función ```execve``` no retorna a la función llamadora porque remplaza enteramente la imagen del programa anterior por la nueva.  Esta función entre otras realiza las siguientes operaciones:
+* Carga encabezado y verifica tipo de emulación que debe emplearse para ejecutarlo (debe llamar ```check_header``` de ```sys/kern/exec_elf.c```)
+* Copia argumentos y variables de ambiente a la nueva memoria
+* Prepara pila (separando argumentos con una cantidad aleatoria de espacio para evitar ataques, ver !StackGap en {5}).
+* Carga imagen del binario y prepara memoria virtual para organizar las secciones en los segmentos (ver ```ELFNAME2(exec,makecmds)``` en ```sys/kern/exec_elf.c```).
+* Realiza otras configuraciones, por ejemplo si se trata de un binario encadenado dinámicamente prepara para cargar su interprete (típicamente ```/usr/libexec/ld.so```), ver  ```ELFNAME2(exec,fixup)``` en ```sys/kern/exec_elf.c```
+* Llama función para iniciar ejecución acorde con la emulación.
+
+## 2.3 En caso de falla
+
+Si falla la ejecución de un programa ELF, el sistema genera un volcado del estado del sistema (registros, memoria). Este volcado es un binario ELF con su encabezado, encabezados de programas, encabezados de secciones y secciones con los datos tal como están en memoria, también tiene secciones con notas del estado del procesador, registros y otros, que pueden ser posteriormente interpretadas por un depurador.  Ver función ```ELFNAMEEND(coredump)``` en ```sys/kern/exec_elf.c```.
+
+## REFERENCIAS
+
+* {1} man elf
+* {2} info binutils
+* {3} man objdump
+* {4} man readelf
+* {5} Theo de Raat. Exploit Mitigation Techniques. http://www.openbsd.org/papers/ven05-deraadt/index.html
+* {6} man ksh
+* {7} man fork
+* {8} man execve

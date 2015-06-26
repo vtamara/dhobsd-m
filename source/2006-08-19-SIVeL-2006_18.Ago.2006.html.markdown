@@ -1,0 +1,49 @@
+---
+title: SIVeL-2006_18.Ago.2006
+date: 2006-08-19
+tags:
+---
+#Sesión de 18.Ago.2006
+
+##Presentación
+
+* Marly Mier Rinaldy. OFP (Bogota). http://www.ofp.org.co Trabaja con el proyecto de Ciudad Bolivar. Realizan talleres con mujeres de base y tienen comedores populares. Les interesa aprender todo lo relacionado con la instalación, funcionamiento y aplicación del Sistema, para emplearlo aquí en Bogotá y especialmente en Barrancabermeja.  La base instalada en Barranca es manejada por el Area Jurídica y la tarea de Marly es enseñarle a sus compañeras de Jurídica lo que aprende en este taller.  Desean generar reportes mensuales y semestrales, el público son oficinas de abogados (Jose Alvear Restrepo) donde se llevan casos de la OFP, suministrarle información al Banco de Datos del Cinep y tomar los datos estadísticos que genere el sistema para darlos a conocer en sus denuncias a nivel nacional e internacional.  Los casos que llevan son de Violencia intrafamiliar y Violencia socio-política. Procuran fomentar una cultura de denuncia. Algo que le serviría de forma particular para el curso es aumentar el marco teórico para agregar violencia intrafamiliar.
+*Justicia y Vida (Bogotá).  Realiza un trabajo de denuncia, defensa, promocion y protección de los Derechos Humanos de las comunidades de Ciudad Bolivar y Cazuca. Al sur de la ciudad. Deseamos realizar un informe para finales de Noviembre, que incluya casos tipo, y conteos por tipificación y presunto responsable.  Están usando SIVeL para ingresar casos. Desea saber como instalar y como sacar copia de casos de SIVeL y recuperar la copia.
+* Carolina Pinzón. Compromiso (Bucaramanga). http://www.compromisoong.org.  Compromiso trabaja con proyectos de desarrollo para el mejoramiento de las condiciones y calidad de vida, la participación democrática, la paz y la defensa de los Derechos Humanos. Desean retomar la actualización permanente de la base de datos para la publicación del informe semestral del observatorio de DH, pues ya publicaron uno del segundo periodo del 2005 empleando el marco teórico del Banco de Datos y SIVeL.  En el informe que harán desean incluir estadisticas y gráficas.  Esperan que las gráficas pudieran salir directamente de SIVeL sin requerir hoja de cálculo. Les gustaría aprovechar más y mejor su servidor de correo. 
+* Hernan Quishpe. Gimansio Fidel Cano (Bogotá) http://www.gfc.edu.co.  Es profesor de este colegio, ha tenido experiencia en el Banco de Datos. Aunque su enfasís actual es educación desea aprender sobre la instalación del sistema operativo y de SIVeL.  Le interesa saber como operar el servidor de correo.
+* Maria Socorro Abril y Elias Sierra. Asodesamuba (Barancabermeja) asodesamuba@yahoo.es.  Esta asociación atiende directamente población desplazada, velando por el cumplimiento de los derechos humanos, capacitando a las familias desplazadas en derechos humanos e implementando diversos proyectos que ayudan a cambiar la situación económica de los desplazados socios. Desean  sistematizar los casos de desplazamiento que conocen, así como otros casos de violencia socio política.  Aunque SIVeL está instalado, no lo han usado mucho, desean reforzar utilización de SIVeL y posibilidades del sistema operativo. Están considerando instalar Linux en lugar de Windows.  Desean saber como montar una red local y como hacer la conexión a Internet. 
+* Momo Cuama  e Iber Rengifo. Proceso de Comuidades Negras PCN (Buenaventura y Bogotá).  El PCN realiza trabajos a nivel nacional; algunos punto de trabajos son: la lucha, reivindicación, apropiación y cumplimiento de los derechos del pueblo negro en el país, por otra lado trabajan el fortalecimiento de sus organizaciones; el PCN tiene una instancia departamental, llamada Palenque Regional el Congal, y hacen parte de ella organizaciones étnico territoriales y consejos comunitarios del Valle. Iber trabaja con jovenes en la oficina del PCN en Bogotá. Momo trabaja en Buenaventura con sectores desplazado de la zona urbana y el fortalecmiento y la autonomia alimentaria en la zona rural. Desean poder contar y manejar este programa, por el trabajo estadístico, que esperan desarrolar con mayor eficiencia.
+* Alvaro Pinzón. Credhos (Barrancabermeja). http://www.credhos.com/ Recolectan información sobre violencia socio-política, complementan enviado derechos de petición. Desean fortalecer la red del CINEP. Retroalimentando y recibiendo información del Banco de Datos. Desean tener la página web actualizada constantemente. Publican un informe semestral, que incluye algunos casos y un reporte de víctimas con categorias basadas en las del Banco de Datos.
+* Vladimir Támara Patiño. Banco de Datos del CINEP y Pasos de Jesús (Bogotá). http://www.nocheyniebla.org, http://www.pasosdeJesus.org.  Ha sido desarrollador de SIVeL y ha garantizado que su licencia sea de fuentes de abiertas.  
+##Temas
+Tras la presentación y tras revisar temas (http://aprendiendo.pasosdeJesus.org/sivel2006/temas.html) para tratar de satisfacer las expectativas de todos
+los participantes en consenso se decidió que primero revisaramos como
+elaborar un informe con gráficas a partir de la información generable con
+SIVeL y después pasaramos a aprender sobre la instalación.
+
+En las prácticas se trataron de forma transversal:
+* Uso de sistemas de fuentes abiertas.
+* Uso de las herramientas más seguras disponibles, que aunque no dan garantía, junto con capacitación para su buen uso resultan lo mejor que puede hacerse.
+
+Se sugirieron y emplearon: OpenBSD y Linux como remplazos seguros de
+Windows (OpenBSD es más seguro), Mozilla-Firefox como remplazo seguro de IE, !OpenOffice como remplazo de MS-Office.
+
+!Práctica 1: [Operación remota de SIVeL] documentado por Compromiso
+Para trabajar un informe con casos reales y ejemplificar como aprovechar
+infraestructura construible con OpenBSD ingresamos remotamente a Compromiso,
+con el permiso, e hicimos un tunel ssh para tener acceso a
+la base de datos de forma extrasegura (sobre protocolos SSH y SSL).  La
+infraestructura de compromiso incluye:
+* Un cortafuegos con OpenBSD que enruta tráfico de la red local, bloquea puertos (por ejemplo para bloquear messenger) y opera como servidor DNS.
+* Un servidor con OpenBSD que opera como servidor web (http://www.compromisoong.org), como servidor de correo (boletines@compomisoong.org), como servidor de bases de datos y de SIVeL.
+
+Se mencionó como podría establecerse este tipo de conexión por ejemplo para trabajo en regiones, incluso desde un café Internet ---se explicaron los riesgos de seguridad.
+
+!Práctica 2: [Producción de un informe en Linux] documentado por Elias
+En el SIVeL de Compromiso revisamos un reporte tipo revista, estadísticas
+por víctima individual y reporte consolidado.   Guardaron unas estadísticas en CSV, las abrieron en !OpenOffice y las emplaron para hacer una gráfica.
+También en !OpenOffice iniciaron un informe que incluía casos sacados del reporte tipo revista, una tabla con conteos y la gráfica.
+
+
+-----
+Siguiente: [SIVeL-2006 19.Ago.2006]

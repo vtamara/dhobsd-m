@@ -1,0 +1,25 @@
+---
+title: Mofrapaz30Ago2010
+date: 2010-08-30
+tags:
+---
+##Capacitación en correo y servidor de datos
+
+* Han seguido capacitandose para ayudar a soportar el servidor de correo y de datos, quien desee conocer algunos procedimientos puede revisar [SoporteServidorCorreo] 
+
+* [SoporteCorreo]
+* [ComparacionSeguridadPrecio]
+* [ServidorDeDatos]
+
+## Ejercicios
+
+* Para AyC, reiniciar servidor --favor dar clave de encripción para las 3 particiones
+* Para AyC revisar desde el cortafuegos tráfico que pasa por la red por el puerto 80 mientras usuarios se conectan a servidores públicos:
+sudo tcpdump -n -i xl0 -X -s 2048 port 80
+* Para AyC, mostrar como pueden verse correos de una cuenta en el servidor de mofrapaz.
+* Revisar vulnerabilidades en Secunia.  http://dhobsd.pasosdejesus.org/index.php?id=
+* Hacer configuraciones a Thunderbird de Antispam y diccionario. Hacer configuraciones a RoundCubeMail.
+* Publicar en espacio público del web y enviar enlace por correo.
+* Poner un documento a otro usuario y avisarle.
+* Revisar lo que otro usuario le envio.
+* Guardar un documento en parte personal privada y encriptada.  Sacarla desde fuera de la oficina (aunque se puede con Windows usando FileZilla, se recomienda que sea con UbuntuCE).

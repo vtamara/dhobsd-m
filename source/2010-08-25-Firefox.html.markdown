@@ -1,0 +1,14 @@
+---
+title: Firefox
+date: 2010-08-25
+tags:
+---
+Es un buen navegador, que viene por defecto en Ubuntu, para instalarlo en Windows descargarlo de  http://www.mozilla.com 
+
+!Diccionario en Español
+
+Para instalar diccionario en Español:
+# Ubiquese en un área de texto (por ejemplo la que usa para redactar correo) 
+# Presione el botón derecho del ratón y elija diomas
+# Elija Agregar Diccionario y busque el diccionario en Español (sugerimos el de Español de Argentina).
+# Después de reiniciar firefox nuevamente desde el área de texto asegurese  de tener marcado Corrección Ortográfica y de elegir diccionario en Español.

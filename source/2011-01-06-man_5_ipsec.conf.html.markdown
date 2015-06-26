@@ -1,0 +1,530 @@
+---
+title: man_5_ipsec.conf
+date: 2011-01-06
+tags:
+---
+
+##NOMBRE
+     ```ipsec.conf``` - Archivo de configuración de IPsec
+
+##DESCRIPCIÓN
+     The ipsec.conf file specifies rules and definitions for IPsec, which
+     provides security services for IP datagrams.  IPsec itself is a pair of
+     protocols: Encapsulating Security Payload (ESP), which provides integrity
+     and confidentiality; and Authentication Header (AH), which provides
+     integrity.  The IPsec protocol itself is described in ipsec(4).
+
+     In its most basic form, a ____ is established between hosts and/or
+     networks, and then Security Associations (__) are established, which
+     detail how the desired protection will be achieved.  IPsec uses flows to
+     determine whether to apply security services to an IP packet or not.
+
+     Generally speaking an automated keying daemon, such as isakmpd(8), is
+     used to set up flows and establish SAs, by specifying an `ike' line in
+     ipsec.conf (see _________ ______, below).  An authentication method, such
+     as public key authentication, will also have to be set up: see the ___
+     section of isakmpd(8) for information on the types of authentication
+     available, and the procedures for setting them up.
+
+     The keying daemon, isakmpd(8), can be enabled to run at boot time via the
+     _____________ variable in rc.conf.local(8).  Note that it will probably
+     need to be run with at least the -K option, to avoid keynote(4) policy
+     checking.  The ipsec.conf configuration itself is loaded at boot time if
+     the variable _____ is set to YES in rc.conf.local(8).  A utility called
+     ipsecctl(8) is also available to load ipsec.conf configurations, and can
+     additionally be used to view and modify IPsec flows.
+
+     An alternative method of setting up SAs is also possible using manual
+     keying.  Manual keying is not recommended, but can be convenient for
+     quick setups and testing.  Those procedures are documented within this
+     page.
+
+!FORMATO DEL ARCHIVO IPSEC.CONF
+     Lines beginning with `#' and empty lines are regarded as comments, and
+     ignored.  Lines may be split using the `\' character.
+
+     Addresses can be specified in CIDR notation (matching netblocks), as
+     symbolic host names, interface names, or interface group names.
+
+     Certain parameters can be expressed as lists, in which case ipsecctl(8)
+     generates all the necessary combinations.  For example:
+
+           ike esp from {192.168.1.1, 192.168.1.2} to \
+                   {10.0.0.17, 10.0.0.18} peer 192.168.10.1
+
+     Will expand to:
+
+           ike esp from 192.168.1.1 to 10.0.0.17 peer 192.168.10.1
+           ike esp from 192.168.1.1 to 10.0.0.18 peer 192.168.10.1
+           ike esp from 192.168.1.2 to 10.0.0.17 peer 192.168.10.1
+           ike esp from 192.168.1.2 to 10.0.0.18 peer 192.168.10.1
+
+     Macros can be defined that will later be expanded in context.  Macro
+     names must start with a letter, and may contain letters, digits and
+     underscores.  Macro names may not be reserved words (for example flow,
+     from, esp).  Macros are not expanded inside quotes.
+
+     For example:
+
+           remote_gw = "192.168.3.12"
+           flow esp from 192.168.7.0/24 to 192.168.8.0/24 peer $remote_gw
+
+     Additional configuration files can be included with the include keyword,
+     for example:
+
+           include "/etc/macros.conf"
+
+!ADMINISTRACIÓN AUTOMÁTICA DE CLAVES
+     In this scenario, ipsec.conf is used to set up flows and SAs
+     automatically using isakmpd(8) with the ISAKMP/Oakley a.k.a. IKEv1
+     protocol.  To configure automatic keying using the IKEv2 protocol, see
+     iked.conf(5) instead.  Some examples of setting up automatic keying:
+
+        # Set up a VPN:
+        # First between the gateway machines 192.168.3.1 and 192.168.3.2
+        # Second between the networks 10.1.1.0/24 and 10.1.2.0/24
+        ike esp from 192.168.3.1 to 192.168.3.2
+        ike esp from 10.1.1.0/24 to 10.1.2.0/24 peer 192.168.3.2
+
+     The commands are as follows:
+
+     ike [____] [_____] [_____]
+           ____ specifies the IKEv1 mode to use: one of _______, ______, or
+           _______.  When _______ is specified, isakmpd(8) will not
+           immediately start negotiation of this tunnel, but wait for an
+           incoming request from the remote peer.  When ______ or _______ is
+           specified, negotiation will be started at once.  The _______ mode
+           will additionally enable Dead Peer Detection (DPD) and use the
+           local hostname as the identity of the local peer, if not specified
+           by the srcid parameter.  _______ mode should be used for hosts with
+           dynamic IP addresses like road warriors or dialup hosts.  If
+           omitted, ______ mode will be used.
+
+           _____ specifies the encapsulation protocol to be used.  Possible
+           protocols are ___ and __; the default is ___.
+
+           _____ describes the encapsulation mode to be used.  Possible modes
+           are ______ and _________; the default is ______.
+
+     proto ________
+           The optional proto parameter restricts the flow to a specific IP
+           protocol.  Common protocols are icmp(4), tcp(4), and udp(4).  For a
+           list of all the protocol name to number mappings used by
+           ipsecctl(8), see the file ______________.
+
+     from ___ [port _____] [(______)] to ___ [port _____]
+           This rule applies for packets with source address ___ and
+           destination address ___.  The keyword ___ will match any address
+           (i.e. 0.0.0.0/0).  If the ___ argument specifies a fictional source
+           ID, the ______ parameter can be used to specify the actual source
+           address.  This can be used in outgoing NAT/BINAT scenarios as
+           described below.  Host addresses are parsed as type ``IPV4_ADDR'';
+           adding the suffix /32 will change the type to ``IPV4_ADDR_SUBNET'',
+           which can improve interoperability with some IKEv1 implementations.
+
+           The optional port modifiers restrict the flows to the specified
+           ports.  They are only valid in conjunction with the tcp(4) and
+           udp(4) protocols.  Ports can be specified by number or by name.
+           For a list of all port name to number mappings used by ipsecctl(8),
+           see the file _____________.
+
+     local _______ peer ______
+           The local parameter specifies the address or FQDN of the local
+           endpoint.  Unless we are multi-homed or have aliases, this option
+           is generally not needed.
+
+           The peer parameter specifies the address or FQDN of the remote
+           endpoint.  For host-to-host connections where ___ is identical to
+           ______, this option is generally not needed as it will be set to
+           ___ automatically.  If it is not specified or if the keyword ___ is
+           given, the default peer is used.
+
+     ____ auth _________ enc _________ group _____
+           These parameters define the mode and cryptographic transforms to be
+           used for the phase 1 negotiation.  During phase 1 the machines
+           authenticate and set up an encrypted channel.
+
+           The mode can be either ____, which specifies main mode, or
+           __________, which specifies aggressive mode.  Possible values for
+           auth, enc, and group are described below in ______ __________.
+
+           If omitted, ipsecctl(8) will use the default values ____,
+           _________, ___, and ________.
+
+     quick auth _________ enc _________ group _____
+           These parameters define the cryptographic transforms to be used for
+           the phase 2 negotiation.  During phase 2 the actual IPsec
+           negotiations happen.
+
+           Possible values for auth, enc, and group are described below in
+           ______ __________.  If group is specified, Perfect Forward Security
+           (PFS) is used.  If the value ____ is used, PFS is disabled.
+
+           If omitted, ipsecctl(8) will use the default values _____________
+           and ___; PFS will only be used if the remote side requests it.
+
+     srcid ______ dstid ______
+           srcid defines an ID of type ``USER_FQDN'' or ``FQDN'' that will be
+           used by isakmpd(8) as the identity of the local peer.  If the
+           argument is an email address (bob@example.com), ipsecctl(8) will
+           use USER_FQDN as the ID type.  Anything else is considered to be an
+           FQDN.  If srcid is omitted, the default is to use the IP address of
+           the connecting machine.
+
+           dstid is similar to srcid, but instead specifies the ID to be used
+           by the remote peer.
+
+     psk ______
+           Use a pre-shared key ______ for authentication.  If this option is
+           not specified, public key authentication is used (see isakmpd(8)).
+
+     tag ______
+           Add a pf(4) tag to all packets of phase 2 SAs created for this
+           connection.  This will allow matching packets for this connection
+           by defining rules in pf.conf(5) using the tagged keyword.
+
+           The following variables can be used in tags to include information
+           from the remote peer on runtime:
+
+                 ___      The remote phase 1 ID.  It will be expanded to
+                          ________________, e.g. ________________.
+                 _______  Extract the domain from IDs of type FQDN or UFQDN.
+
+           For example, if the ID is ________________ or __________________,
+           ``ipsec-$domain'' expands to ``ipsec-bar.org''.  The variable
+           expansion for the ___ directive occurs only at runtime, not during
+           configuration file parse time.
+
+!FILTRADO DE PAQUETES
+     IPsec traffic appears unencrypted on the enc(4) interface and can be
+     filtered accordingly using the OpenBSD packet filter, pf(4).  The grammar
+     for the packet filter is described in pf.conf(5).
+
+     The following components are relevant to filtering IPsec traffic:
+
+           external interface
+           Interface for ISAKMP traffic and encapsulated IPsec traffic.
+
+           proto udp port 500
+           ISAKMP traffic on the external interface.
+
+           proto udp port 4500
+           ISAKMP NAT-Traversal traffic on the external interface.
+
+           proto ah | esp
+           Encapsulated IPsec traffic on the external interface.
+
+           enc0
+           Interface for outgoing traffic before it's been encapsulated, and
+           incoming traffic after it's been decapsulated.  State on this
+           interface should be interface bound; see enc(4) for further
+           information.
+
+           proto ipencap
+           [tunnel mode only] IP-in-IP traffic flowing between gateways on the
+           enc0 interface.
+
+           tagged ipsec-example.org
+           Match traffic of phase 2 SAs using the tag keyword.
+
+     If the filtering rules specify to block everything by default, the
+     following rule would ensure that IPsec traffic never hits the packet
+     filtering engine, and is therefore passed:
+
+           set skip on enc0
+
+     In the following example, all traffic is blocked by default.  IPsec-
+     related traffic from gateways {192.168.3.1, 192.168.3.2} and networks
+     {10.0.1.0/24, 10.0.2.0/24} is permitted.
+
+           block on sk0
+           block on enc0
+
+           pass  in on sk0 proto udp from 192.168.3.2 to 192.168.3.1 \
+                   port {500, 4500}
+           pass out on sk0 proto udp from 192.168.3.1 to 192.168.3.2 \
+                   port {500, 4500}
+
+           pass  in on sk0 proto esp from 192.168.3.2 to 192.168.3.1
+           pass out on sk0 proto esp from 192.168.3.1 to 192.168.3.2
+
+           pass  in on enc0 proto ipencap from 192.168.3.2 to 192.168.3.1 \
+                   keep state (if-bound)
+           pass out on enc0 proto ipencap from 192.168.3.1 to 192.168.3.2 \
+                   keep state (if-bound)
+           pass  in on enc0 from 10.0.2.0/24 to 10.0.1.0/24 \
+                   keep state (if-bound)
+           pass out on enc0 from 10.0.1.0/24 to 10.0.2.0/24 \
+                   keep state (if-bound)
+
+     pf(4) has the ability to filter IPsec-related packets based on an
+     arbitrary ___ specified within a ruleset.  The tag is used as an internal
+     marker which can be used to identify the packets later on.  This could be
+     helpful, for example, in scenarios where users are connecting in from
+     differing IP addresses, or to support queue-based bandwidth control,
+     since the enc0 interface does not support it.
+
+     The following pf.conf(5) fragment uses queues for all IPsec traffic with
+     special handling for developers and employees:
+
+           altq on sk0 cbq bandwidth 1000Mb \
+                   queue { deflt, developers, employees, ipsec }
+               queue deflt bandwidth 10% priority 0 cbq(default ecn)
+               queue developers bandwidth 75% priority 7 cbq(borrow red)
+               queue employees bandwidth 5% cbq(red)
+               queue ipsec bandwidth 10% cbq(red)
+
+           pass out on sk0 proto esp queue ipsec
+
+           pass out on sk0 tagged ipsec-developers.bar.org queue developers
+           pass out on sk0 tagged ipsec-employees.bar.org queue employees
+
+     The tags will be assigned by the following ipsec.conf example:
+
+           ike esp from 10.1.1.0/24 to 10.1.2.0/24 peer 192.168.3.2 \
+                   tag ipsec-$domain
+
+!TRADUCCIÓN DE DIRECCINES DE RED DE SALIDA
+     In some network topologies it is desirable to perform NAT on traffic
+     leaving through the VPN tunnel.  In order to achieve that, the ___
+     argument is used to negotiate the desired network ID with the peer and
+     the ______ parameter defines the true local subnet, so that a correct SA
+     can be installed on the local side.
+
+     For example, if the local subnet is 192.168.1.0/24 and all the traffic
+     for a specific VPN peer should appear as coming from 10.10.10.1, the
+     following configuration is used:
+
+           ike esp from 10.10.10.1 (192.168.1.0/24) to 192.168.2.0/24 \
+                   peer 10.10.20.1
+
+     Naturally, a relevant NAT rule is required in pf.conf(5).  For the
+     example above, this would be:
+
+           match on enc0 from 192.168.1.0/24 to 192.168.2.0/24 nat-to 10.10.10.1
+
+     From the peer's point of view, the local end of the VPN tunnel is
+     declared to be 10.10.10.1 and all the traffic arrives with that source
+     address.
+
+!TRANSFORMACIONES CRIPTOGRÁFICAS
+     It is very important that keys are not guessable.  One practical way of
+     generating keys is to use openssl(1).  The following generates a 160-bit
+     (20-byte) key:
+
+           $ openssl rand 20 | hexdump -e '20/1 "%02x"'
+
+     The following authentication types are permitted with the auth keyword:
+
+           ______________      Key Length
+           hmac-md5            128 bits
+           hmac-ripemd160      160 bits      [phase 2 only]
+           hmac-sha1           160 bits
+           hmac-sha2-256       256 bits
+           hmac-sha2-384       384 bits
+           hmac-sha2-512       512 bits
+
+     The following cipher types are permitted with the enc keyword:
+
+           ______              Key Length
+           des                 56 bits
+           3des                168 bits
+           aes                 128 bits
+           aes-128             128 bits
+           aes-192             192 bits
+           aes-256             256 bits
+           aesctr              160 bits      [phase 2 only]
+           aes-128-gcm         160 bits      [phase 2 only]
+           aes-192-gcm         224 bits      [phase 2 only]
+           aes-256-gcm         288 bits      [phase 2 only]
+           aes-128-gmac        160 bits      [phase 2 only]
+           aes-192-gmac        224 bits      [phase 2 only]
+           aes-256-gmac        288 bits      [phase 2 only]
+           blowfish            160 bits
+           cast                128 bits
+           null                (none)        [phase 2 only]
+
+     Use of DES as an encryption algorithm is not recommended (except for
+     backwards compatibility) due to its short key length.
+
+     DES requires 8 bytes to form a 56-bit key and 3DES requires 24 bytes to
+     form its 168-bit key.  This is because the most significant bit of each
+     byte is used for parity.
+
+     The keysize of AES-CTR is actually 128-bit.  However as well as the key,
+     a 32-bit nonce has to be supplied.  Thus 160 bits of key material have to
+     be supplied.  The same applies to AES-GCM and AES-GMAC.
+
+     Using AES-GMAC or NULL with ESP will only provide authentication.  This
+     is useful in setups where AH can not be used, e.g. when NAT is involved.
+
+     The following group types are permitted with the group keyword:
+
+           _____               Size
+           modp768             768           [DH group 1]
+           modp1024            1024          [DH group 2]
+           modp1536            1536          [DH group 5]
+           modp2048            2048          [DH group 14]
+           modp3072            3072          [DH group 15]
+           modp4096            4096          [DH group 16]
+           modp6144            6144          [DH group 17]
+           modp8192            8192          [DH group 18]
+           none                0             [phase 2 only]
+
+!FLUJOS MANUALES
+     In this scenario, ipsec.conf is used to set up flows manually.  IPsec
+     uses flows to determine whether to apply security services to an IP
+     packet or not.  Some examples of setting up flows:
+
+        # Set up two flows:
+        # First between the machines 192.168.3.14 and 192.168.3.100
+        # Second between the networks 192.168.7.0/24 and 192.168.8.0/24
+        flow esp from 192.168.3.14 to 192.168.3.100
+        flow esp from 192.168.7.0/24 to 192.168.8.0/24 peer 192.168.3.12
+
+     The following types of flow are available:
+
+     flow esp
+           ESP can provide the following properties: authentication,
+           integrity, replay protection, and confidentiality of the data.  If
+           no flow type is specified, this is the default.
+
+     flow ah
+           AH provides authentication, integrity, and replay protection, but
+           not confidentiality.
+
+     flow ipip
+           IPIP does not provide authentication, integrity, replay protection,
+           or confidentiality.  However, it does allow tunnelling of IP
+           traffic over IP, without setting up gif(4) interfaces.
+
+     The commands are as follows:
+
+     in or out
+           This rule applies to incoming or outgoing packets.  If neither in
+           nor out are specified, ipsecctl(8) will assume the direction out
+           for this rule and will construct a proper in rule.  Thus packets in
+           both directions will be matched.
+
+     proto ________
+           The optional proto parameter restricts the flow to a specific IP
+           protocol.  Common protocols are icmp(4), tcp(4), and udp(4).  For a
+           list of all the protocol name to number mappings used by
+           ipsecctl(8), see the file ______________.
+
+     from ___ [port _____] to ___ [port _____]
+           This rule applies for packets with source address ___ and
+           destination address ___.  The keyword ___ will match any address
+           (i.e. 0.0.0.0/0).  The optional port modifiers restrict the flows
+           to the specified ports.  They are only valid in conjunction with
+           the tcp(4) and udp(4) protocols.  Ports can be specified by number
+           or by name.  For a list of all port name to number mappings used by
+           ipsecctl(8), see the file _____________.
+
+     local _______
+           The local parameter specifies the address or FQDN of the local
+           endpoint of this flow and can be usually left out.
+
+     peer ______
+           The peer parameter specifies the address or FQDN of the remote
+           endpoint of this flow.  For host-to-host connections where ___ is
+           identical to ______, the peer specification can be left out as it
+           will be set to ___ automatically.  Only if the keyword ___ is given
+           is a flow without peer created.
+
+     type ________
+           This optional parameter sets up special flows using modifiers.  By
+           default, ipsecctl(8) will automatically set up normal flows with
+           the corresponding type.  ________ may be one of the following:
+
+                 acquire    Use IPsec and establish SAs dynamically.
+                            Unencrypted traffic is permitted until it is
+                            protected by IPsec.
+                 bypass     Matching packets are not processed by IPsec.
+                 deny       Matching packets are dropped.
+                 dontacq    Use IPsec.  If no SAs are available, does not
+                            trigger isakmpd(8).
+                 require    Use IPsec and establish SAs dynamically.
+                            Unencrypted traffic is not permitted until it is
+                            protected by IPsec.
+                 use        Use IPsec.  Unencrypted traffic is permitted.
+                            Does not trigger isakmpd(8).
+
+!ASOCIACIONES DE SEGURIDAD MANUALES
+     In this scenario, ipsec.conf is used to set up SAs manually.  The
+     security parameters for a flow are stored in the Security Association
+     Database (SADB).  An example of setting up an SA:
+
+        # Set up an IPsec SA for flows between 192.168.3.14 and 192.168.3.12
+        esp from 192.168.3.14 to 192.168.3.12 spi 0xdeadbeef:0xbeefdead \
+                authkey file "auth14:auth12" enckey file "enc14:enc12"
+
+     Parameters specify the peers, Security Parameter Index (SPI),
+     cryptographic transforms, and key material to be used.  The following
+     rules enter SAs in the SADB:
+
+           esp       Enter an ESP SA.
+           ah        Enter an AH SA.
+           ipip      Enter an IPIP pseudo SA.
+           tcpmd5    Enter a TCP MD5 SA.
+
+     The commands are as follows:
+
+     ____  For ESP and AH the encapsulation mode can be specified.  Possible
+           modes are ______ and _________.  When left out, ______ is chosen.
+           For details on modes see ipsec(4).
+
+     from ___ to ___
+           This SA is for a ____ between the peers ___ and ___.
+
+     spi ______
+           The SPI identifies a specific SA.  ______ is a 32-bit value and
+           needs to be unique.
+
+     auth _________
+           For ESP and AH an authentication algorithm can be specified.
+           Possible values are described above in ______ __________.
+
+           If no algorithm is specified, ipsecctl(8) will choose _____________
+           by default.
+
+     enc _________
+           For ESP an encryption algorithm can be specified.  Possible values
+           are described above in ______ __________.
+
+           If no algorithm is specified, ipsecctl(8) will choose ___ by
+           default.
+
+     authkey _______
+           _______ defines the authentication key to be used.  It is either a
+           hexadecimal string or a path to a file containing the key.  The
+           filename may be given as either an absolute path to the file or a
+           relative pathname, and is specified as follows:
+
+                 authkey file "filename"
+
+     enckey _______
+           The encryption key is defined similarly to authkey.
+
+     tcpmd5 from ___ to ___ spi ______ authkey _______
+           TCP MD5 signatures are generally used between BGP daemons, such as
+           bgpd(8).  Since bgpd(8) itself already provides this functionality,
+           this option is generally not needed.  More information on TCP MD5
+           signatures can be found in tcp(4), bgpd.conf(5), and RFC 2385.
+
+           This rule applies for packets with source address ___ and
+           destination address ___.  The parameter spi is a 32-bit value
+           defining the Security Parameter Index (SPI) for this SA.  The
+           encryption key is defined similarly to authkey.
+
+     Since an SA is directional, a second SA is normally configured in the
+     reverse direction.  This is done by adding a second, colon-separated,
+     value to spi, authkey, and enckey.
+
+!VER TAMBIÉN
+     openssl(1), enc(4), ipsec(4), tcp(4), pf.conf(5), ipsecctl(8), isakmpd(8)
+
+!HISTORIA
+     The ipsec.conf file format first appeared in OpenBSD 3.8.
+
+OpenBSD 4.8                     October 6, 2010                    OpenBSD 4.8

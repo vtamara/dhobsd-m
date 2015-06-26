@@ -1,0 +1,66 @@
+---
+title: man_4_crypto
+date: 2011-02-28
+tags:
+---
+##NOMBRE 
+    ```crypto``` - controlador para equipos criptográficos
+
+
+##SINOPSIS 
+<pre>
+     seudo-dispositivo crypto ![cuenta]
+</pre>
+
+##DESCRIPCIÓN 
+    El controlador ```crypto``` provee a las aplicaciones de nivel de usuario acceso a equipos criptográficos con soporte en el kernel. El nodo de dispositivo ```/dev/crypto``` opera principalmente en un modelo basado en ```ioctl(2)```, permitiendo una variedad de aplicaciones para consultar las capacidades del dispositivo, enviar transacciones y recibir resultados.
+   
+     Si al especificarlo se da la ```cuenta``` y esta es mayor que 0, se crea máximo un dispositivo criptográfico.
+
+     Las siguientes llamadas ```ioctl(2)``` aplican sólo para dispositivos ```crypto```:
+
+     CIOCGSESSION  Establece una nueva sesión criptográfica para un nuevo tipo de operación.
+
+     CIOCFSESSION  Libera una sesión previamente establecida.
+
+     CIOCCRYPT     Realiza una operación criptográfica frente a una sesión previamente establecida.
+
+##CARACTERÍSTICAS
+
+     Dependiendo del equipo presente, las siguientes características de criptografía simétrica y asimétrica pueden estar disponibles en ```/dev/crypto```:
+
+<pre>
+  !CRYPTO_DES_CBC
+  !CRYPTO_3DES_CBC
+  !CRYPTO_BLF_CBC
+  !CRYPTO_CAST_CBC
+  !CRYPTO_SKIPJACK_CBC
+  !CRYPTO_MD5_HMAC
+  !CRYPTO_SHA1_HMAC
+  !CRYPTO_RIPEMD160_HMAC
+  !CRYPTO_MD5_KPDK
+  !CRYPTO_SHA1_KPDK
+  !CRYPTO_AES_CBC
+  !CRYPTO_AES_CTR
+  !CRYPTO_AES_XTS
+  CRYPTO_ARC4
+  CRYPTO_MD5
+  CRYPTO_SHA1
+  !CRK_MOD_EXP
+  !CRK_MOD_EXP_CRT
+  !CRK_DSA_SIGN
+  !CRK_DSA_VERIFY
+  !CRK_DH_COMPUTE_KEY
+</pre>
+
+##ARCHIVOS
+
+     ```/dev/crypto```  Dispositivo de acceso criptográfico
+
+##VER TAMBIÉN
+     hifn(4), lofn(4), noct(4), nofn(4), safe(4), ubsec(4), crypto(9)
+
+##HISTORIA
+     El dispositivo criptográfico apareció en OpenBSD 3.0.
+
+OpenBSD 4.8                      Junio 9, 2008                      OpenBSD 4.8

@@ -1,0 +1,204 @@
+---
+title: WxorX
+date: 2010-10-28
+tags:
+---
+Se refiere a una política en los permisos de las secciones de un programa en OpenBSD.  Una sección ejecutable no puede ser escribible, y una sección escribible no puede ser ejecutable.
+
+Esto descarta programas que intentan automodificarse y programas que pretendan ejecutar instrucciones entre los datos. 
+
+A continuación se presentan 2 programas que ponen a prueba esta política.
+
+##Programa que se modifica
+
+<pre>
+.section ".note.openbsd.ident", "a"
+        .p2align 2
+        .long   0x8
+        .long   0x4
+        .long   0x1
+        .ascii "OpenBSD\0"
+        .long   0x
+        .p2align 2
+
+.section .data
+hola:
+   .ascii "Hola Mundo!\n\0"
+.equ tola, . - hola
+
+.section .text
+.globl _start
+_start:
+   # Mostrar cadena haciendo llamada al sistema número 4 al descriptor 1 (stdout)
+   movq $hola, %rsi
+   movq $4, %rax  
+   movq $1, %rdi
+   movq $thola, %rdx
+   syscall
+
+   # Modificamos cadena por imprimir e imprimimos
+   movq $hola, %rsi
+   movb $65, (%rsi)
+   movq $4, %rax
+   movq $1, %rdi
+   movq $thola, %rdx
+   syscall
+
+   # Mostramos 7 primeros bytes del programa
+   movq $_start, %rsi
+   movq $4, %rax
+   movq $1, %rdi
+   movq $7, %rdx
+   syscall
+
+   # Intentamos modificar primer byte del programa y mostrar
+   movq $_start, %rsi
+   movb $65, (%rsi)  # En esta instrucción se produce un SIGSEGV
+   movq $4, %rax
+   movq $1, %rdi
+   movq $7, %rdx
+   syscall
+
+   # Terminar
+   movq $1, %rax #xorq %rax, %rax  # set eax to 0
+   movq $1, %rdi
+   syscall
+
+</pre>
+
+Si llamamos automod.s a este programa, podemos compilarlo con:
+<pre>
+export N=automod; as -gstabs+ $N.s -o $N.o; ld $N.o -o $N; 
+</pre>
+
+y su ejecución detallando llamados al sistema puede verse con:
+<pre>
+ktrace ./$N; kdump
+</pre>
+
+Que generará:
+<pre>
+Hola Mundo!
+Aola Mundo!
+H???`Segmentation fault (core dumped) 
+ 25689 ktrace   RET   ktrace 0
+ 25689 ktrace   CALL  execve(!0x7f7ffffc7167,!0x7f7ffffc7010,!0x7f7ffffc7020)
+ 25689 ktrace   NAMI  "./automod"
+ 25689 automod  EMUL  "native"
+ 25689 automod  RET   execve 0
+ 25689 automod  CALL  write(0x1,!0x6002a8,0xd)
+ 25689 automod  GIO   fd 1 wrote 13 bytes
+       "Hola Mundo!
+        \0"
+ 25689 automod  RET   write 13/0xd
+ 25689 automod  CALL  write(0x1,!0x6002a8,0xd)
+ 25689 automod  GIO   fd 1 wrote 13 bytes
+       "Aola Mundo!
+        \0"
+ 25689 automod  RET   write 13/0xd
+ 25689 automod  CALL  write(0x1,0x400218,0x7)
+ 25689 automod  GIO   fd 1 wrote 7 bytes
+       "H\M-G\M-F\M-(\^B`\0"
+ 25689 automod  RET   write 7
+ 25689 automod  PSIG  SIGSEGV SIG_DFL code 1 addr=0x400218 trapno=6
+ 25689 automod  NAMI  "automod.core"
+</pre>
+
+
+## Programa que pretende ejecutar código entre sus datos
+
+<pre>
+.section ".note.openbsd.ident", "a"
+        .p2align 2
+        .long   0x8
+        .long   0x4
+        .long   0x1
+        .ascii "OpenBSD\0"
+        .long   0x
+        .p2align 2
+
+.section .data
+prop:
+   .ascii "Sobreescribe estos datos con instrucciones e intenta ejecutarlas\n"
+.equ tprop, . - prop
+finl:
+   .ascii "\nhola\n"
+.equ tfinl, . - finl
+
+.section .text
+.globl _start
+_start:
+inicio:
+   # Mensaje con propósito
+   movq $prop, %rsi
+   movq $4, %rax  
+   movq $1, %rdi
+   movq $tprop, %rdx
+llamado:
+   syscall
+
+   # Copiamos código para imprimir hola mundo y terminar en pormod
+   movq $_imprime, %rsi
+   movq $prop, %rdi
+   movq $timprime, %rcx
+   rep
+   movsb
+
+   # Intentamos saltar al código copiado
+   jmp prop
+
+_imprime:
+   # Mostrar cadena haciendo llamada al sistema número 4 al descriptor 1 (stdout)
+   movq $finl, %rsi
+   movq $4, %rax  
+   movq $1, %rdi
+   movq $tfinl, %rdx
+   syscall
+
+   # Terminar
+   movq $1, %rax #xorq %rax, %rax  # set eax to 0
+   movq $1, %rdi
+   syscall
+
+.equ timprime, . - _imprime
+</pre>
+
+Si llamamos ```xdat.s``` a este programa, podemos compilarlo con:
+<pre>
+export N=xdat; as -gstabs+ $N.s -o $N.o; ld $N.o -o $N; 
+</pre>
+y ejecutarlo con ktrace con:
+<pre>
+ktrace ./xdat; kdump
+</pre>
+que produce
+<pre>Sobreescribe estos datos con instrucciones e intenta ejecutarlas
+Segmentation fault (core dumped) 
+  8704 ktrace   RET   ktrace 0
+  8704 ktrace   CALL  execve(!0x7f7ffffc941f,!0x7f7ffffc92c8,!0x7f7ffffc92d8)
+  8704 ktrace   NAMI  "./xdat"
+  8704 xdat     EMUL  "native"
+  8704 xdat     RET   execve 0
+  8704 xdat     CALL  write(0x1,0x600280,0x41)
+  8704 xdat     GIO   fd 1 wrote 65 bytes
+       "Sobreescribe estos datos con instrucciones e intenta ejecutarlas
+       "
+  8704 xdat     RET   write 65/0x41
+  8704 xdat     PSIG  SIGSEGV SIG_DFL code 1 addr=0x600280 trapno=6
+  8704 xdat     NAMI  "xdat.core"
+</pre>
+que muestra como se detuvo la ejecución en la dirección 0x600280, examinando el ejecutable con:
+<pre>
+readelf -all xdat
+</pre>
+Se encuentra en la tabla de símbolos:
+<pre>
+    12: 0000000000600280     0 NOTYPE  LOCAL  DEFAULT    2 prop
+</pre>
+
+Es decir el fallo se produjó justamente al comienzo de los datos que se modificaron y antes de ejecutarlos.
+
+
+## Conclusión
+
+Los binarios ELF producidos en OpenBSD con sus herramientas estándar (experimentado con 4.8 sobre amd64) implementan la política W^X en sus secciones.

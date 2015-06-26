@@ -1,0 +1,161 @@
+---
+title: man_4_ipsec
+date: 2010-12-27
+tags:
+---
+##NOMBRE
+       IPsec - Protocolo de Seguridad de IP
+
+##DESCRIPCIÓN
+
+IPsec es un par de protocolos  ESP (Encapsulating Secutiry Payload) y AH (Authentication Header) que proveen servicios de seguridad a los datagramas IP. 
+
+Ambos protocolos pueden habilitarse/deshabilitarse usando las siguientes variables de ```sysctl(3)``` en ```/etc/sysctl.conf```. Por defecto ambos están habilitados:
+<pre>
+           net.inet.esp.enable    Habilita el protocolo ESP de IPsec
+           net.inet.ah.enable     Habilita el protocolo AH de IPsec
+</pre>
+Hay cuatro propiedades principales de seguridad proveídas por IPsec:
+* Confidencialidad - Asegurar que es difícil para cualquiera excepto el receptor entender los datos comunicados. Por ejemplo asegurar que las claves sean secretas cuando se ingresa a un computador remoto por Internet.
+* Integridad - Garantizar que los datos no son modificados en el transito. Si está en una línea que transporta datos de facturas usted posiblemente quiera saber que las cantidades y números de cuenta son correctos y no han sido modificado por un tercero.
+* Autenticidad - Firmar sus datos de forma que otros puedan ver que realmente fue usted quien los envió. Claramente es bueno saber que los documentos no han sido modificados.
+* Protección de repetición - Requerimos formas de asegurar que un datagrama es procesado sólo una vez, independiente de cuantas veces se reciba. Es decir, no debe ser posible para un atacante almacenar una transacción (como un retiro bancario), y al reproducirlo idéntico lograr que el par piense que se trata de un nuevo mensaje (solicitud de retiro) que se ha recibido. ADVERTENCIA: por especificación del estándar no se realiza protección de repetición cuando se usa IPsec con llaves manuales (i.e cuando se usa ipsecctl).
+
+!Protocolos IPsec
+IPsec provee estos servicios con dos nuevos protocolos: Encabezado de Autenticación (Authentication Header - AH) y Carga de Seguridad Encapsulada (Encapsulating Security Payload - ESP).
+
+ESP puede proveer las propiedades de autenticación, integridad, protección de repetición y confidencialidad de los datos (asegura todo en un paquete después del encabezado IP).  La protección de repetición requiere autenticación e integridad (estas dos siempre van juntas). Confidencialidad (cifrado) puede usarse con o sin autenticación/integridad.  De forma similar, uno podría usar autenticación/integridad con o sin confidencialidad.
+
+AH provee autenticación, integridad y protección de repetición (pero no confidencialidad).  La diferencia principal entre las características de autenticación de AH y de ESP es que AH también autentica parte del encabezado IP del paquete (tales como las direcciones fuente y destino).  ESP autentica solamente la carga del paquete.
+
+!Encabezado de Autenticación (Authentication Header - AH)
+
+AH opera computando un valor que depende de todos los datos de la carga, algunos de los datos del encabezado IP y cierto valor secreto (la llave de autenticación). Este valor es entonces enviado con el resto de cada paquete. El receptor realiza los mismos cómputos, y si el valor coincide, sabe que nadie ha alterado los datos (integridad), la dirección (autenticidad) o el número de secuencia (protección de repetición).  Lo sabe porque la llave de autenticación secreta asegura que ningún atacante activo (hombre en el medio) puede recomputar el valor correcto después de alterar el paquete.  Los algoritmos usados para computar estos valores son llamados de condensados (hash) y son parámetros en la Asociación de Seguridad (SA), tal como la llave de autenticación.
+
+!Carga de seguridad encapsulada (Encapsulating Security Payload - ESP). 
+
+Opcionalmente ESP hace casi todo lo que AH hace excepto que no protege el encabezado IP externo, pero además cifra los datos de la carga con un algoritmo de cifrado que usan una llave de cifrado secreta.  Sólo el que conoce esta llave puede descifra los datos, proveyendo así confidencialidad.   Tanto el algoritmo como la llave de cifrado son parámetros de la asociación de seguridad (SA).
+
+! Asociación de Seguridad (Security Associations - SAs)
+
+Estos protocolos requieren ciertos parámetros para cada conexión que describan exactamente como se logrará la protección deseada.  Estos parámetros se coleccionan en una entidad llamada una asociación de seguridad, o abreviado SA.  Los parámetros típicos de una SA incluye algoritmo de cifrado, algoritmo de condensado, llave de cifrado y llave de autenticación para nombrar unos pocos. Cuando dos pares han establecido SAs coincidentes (uno en cada extremo), los paquetes protegidos con la SA de un extremo pueden ser verificado y/o descifrados usando la información en el otro extremo de la SA. El único aspecto faltante es asegurar que ambos extremos tienen SAs coincidentes.  Esto puede hacerse manualmente o automáticamente usando un servicio de administración de llaves.
+
+!Índices de parámetros de seguridad (Security Parameter Indexes - SPIs)
+
+Para identificar una SA necesitamos un nombre único para esta.  Este nombre es una tripleta que consiste en la dirección de destino, el índice de parámetros de seguridad (conocido como SPI) y el protocolo de seguridad (ESP o AH).  Como la dirección de destino es parte del nombre, una SA es necesariamente una construcción unidireccional.  Para un canal de comunicación bidireccional, se requieren dos SAs, uno de salida y uno de entrada, donde la dirección de destino es nuestra IP local.  El SPI es sólo un número que nos ayuda a hacer el nombre único; puede ser escogido arbitrariamente en el rango 0x100 - 0xffffffff.  El número del protocolo de seguridad debe ser 50 para ESP y 51 para AH, dado que estos números de protocolo son asignados por IANA.
+
+!Modos de Operación
+
+IPsec puede operar en dos modos, bien como túnel o en modo transporte. En modo transporte el encabezado ordinario IP se usa para enviar los paquetes a su destino; en modo túnel el encabezado ordinario IP sólo nos dice la dirección de una compuerta de seguridad que sabe como verificar/descifar la carga y reenviar el paquete al destino dado por otro encabezado IP contenido en la carga protegida.  El modo túnel puede usarse para establecer redes virtuales privadas (VPNs) donde partes de las redes pueden estar esparcidas sobre una red pública insegura, pero las compuertas de seguridad en cada subred son responsables de cifrar y descifrar los datos que pasan por la red pública.  Una SA contendrá información que específica si se trata de un SA en  modo túnel o de transporte, y para túneles contendrá valores para completar el encabezado IP externo.
+
+!Tiempos de vida
+
+Las SA también mantienen un par de parámetros, especialmente útiles para manejo de claves automático, llamados tiempos de vida, los cuales ponen límite a cuanto podemos usar un SA para proteger nuestros datos.  Estos límites pueden ser en tiempo de reloj de pared o en volumen de nuestros datos.
+
+!Ejemplos de IPsec
+
+Para ilustrar mejor como opera IPsec, considere un paquete TCP típico:
+
+<pre>
+   ![Encabezado IP]![Encabezado TCP]![datos...]
+</pre>
+si aplicamos ESP en modo transporte al paquete anterior, tendremos:
+<pre>
+   ![Encabezado IP]![Encabezado ESP]![Encabezado TCP]![datos...]
+</pre>
+Todo lo que siga al encabezado ESP está protegido por los servicios de ESP que usemos (autenticación/integridad, protección de repetición, confidencialidad). Esto significa que el encabezado IP en si mismo no está protegido.
+
+Si aplicamos ESP en modo tunel al paquete original, obtendremos:
+<pre>
+   ![Encabezado IP]![Encabezado ESP]![Encabezado IP]![Encabezado TCP]![datos...]
+</pre>
+Nuevamente todo después del encabezado ESP está protegido criptográficamente. Note que la inserción de un encabezado IP entre los encabezados ESP y TCP.  Este modo de operación nos permite esconder cuales son las verdades fuente y destino de un paquete (pues los encabezados IP protegido y desprotegido no necesariamente son iguales).  Una aplicación típica de esto es una Red Virtual Privada (Virtual Private Network - VPN), donde dos cortafuegos usan IPsec para asegurar el tráfico de todos los computadores tras ellos.  Por ejemplo:
+<pre>
+  Red A <----> Cortafuegos 1 <--- Internet ---> Cortafuegos 2 <---> Red B
+</pre>
+Los cortafuegos 1 y cortafuegos 2 puede proteger toda la comunicación entre la Red A y la Red B usando IPsec en modo tunel, como se ilustró antes.
+
+Esta implementación hace uso de la interfaz virtual, ```enc0```, la cual puede usarse en filtros de paquetes para especificar aquellos paquetes que tienen o que serán procesado por IPsec.
+
+NAT también puede aplicarse a interfaces ```enc#```, pero debe tenerse especial cuidado con la interacción entre NAT y la correspondencia de flujos IPsec, especialmente sobre la ruta de salida de los paquetes.  En la pila TCP/IP los paquetes siguen estas etapas:
+<pre>
+           UL/R -> ![X] -> PF/NAT(enc0) -> IPsec -> PF/NAT(IF) -> IF
+           UL/R <-------- PF/NAT(enc0) <- IPsec <- PF/NAT(IF) <- IF
+</pre>
+Siendo IF la interfaz real y UL/R la Capa Superior (Upper Layer) o código
+de Enrutamiento (Routing code).  La etapa ![X] a la salida representa el punto donde los paquetes son comparados con la base de datos de flujos IPsec (SPD) para determinar si los paquetes deben ser procesador por IPsec y como.  Si, en este punto, se determina que el paquete debe ser procesado por IPsec, es procesado por el código PF/NAT. A menos que PF descarte el paquete, será procesado por IPsec, aún si el paquete ha sido modificado por NAT.
+
+Las asociaciones de seguridad pueden ser establecidas manualmente con ```[ipsecctl(8)|man 8 ipsecctl]``` o automáticamente por los servicios de administración automática de llaves ```[isakmpd(8)|man 8 isakmpd]``` o ```[iked(8)|man 8 iked]```. 
+
+!Variables adicionales
+
+Un número de variables de ```sysctl(8)``` son relevantes para ```ipsec```. Estas son generalmente ```net.inet.ah.*```, ```net.inet.esp.*```, ```net.inet.ip.forwarding```, ```net.inet6.ip6.forwarding```, y ```nt.inet.ip.ipsec-*```.  La explicación complete pueden encontrarse en ```sysctl(3)```, y las variables pueden establecerse usando la interfaz ```sysctl(8)```.
+
+Cierto número de opciones del kernel pueden ser relevantes para ipsec.  Ver ```options(4)``` para más información.
+
+!Detalles del API
+Las sigueintes opciones a nivel de IP de ```setsockopt(2)``` y ```getsockopt(2)``` pueden especificar a ipsec.  Un socket puede especificar niveles de seguridad para tres categorias diferentes:
+
+* ```!IP_AUTH_LEVEL``` : Especifica el uso de autenticación para paquetes que se envian o reciben por el socket.
+* ```!IP_ESP_TRANS_LEVEL``` Especifica el uso de cifrado en modo transporte para paquetes que se envian o reciben por el socket.
+* ```!IP_ESP_NETWORK_LEVEL``` Especifica el uso de cifrado en modo tunel.
+
+Para cadauna de estas categorias hay cinco posibles nivels que especifican la política de seguridad por usar:
+
+* ```!IPSEC_LEVEL_BYPASS``` Sobrepasar la política de seguridad por defecto del sistema.  Esta opción sólo puede ser usada por procesos privilegidaso.  Este nivel es necesario para el servicio de adminsitración de llaves ```isakmpd(8)```.
+* ```!IPSEC_LEVEL_AVAIL``` Si una Asociación de Aeguridad está disponible será usada para enviar los paquetes por el socket.
+* ```!IPSEC_LEVEL_USE``` Usar seguridad IP para enviar paquetes, sin embargo aceptar paquetes que no son seguros.
+* ```!IPSEC_LEVEL_REQUIRE``` Usar seguridad IP para enviar paquetes y también requerir seguridad IP en los datos recibidos.
+* ```!IPSEC_LEVEL_UNIQUE``` La asociación de seguridad de salida sólo será usada por este socket.
+
+Cuano se crea un nuevo socket, se le asigna el nivel de seguridad por defecto del sistema para cada categoria. Estos niveles pueden ser examinados con ```getsockopt(2)```.  Sólo un proceso privilegiado puede bajar el nivel de seguridad con una llamada a ```setsockopt(2)```.
+
+Por ejemplo, un proceso servidor puede querer aceptar sólo conexiones autenticadas para prevenir secuestro de la sesión.  Este enviaría la sigueinte llamada a ```setsockopt(2)```:
+
+<pre>
+        int level = !IPSEC_LEVEL_REQUIRE;
+        error = setsockopt(s, !IPPROTO_IP, !IP_AUTH_LEVEL, &level, sizeof(int));
+</pre>
+
+El sistema garantiza que tendrá éxito al establecer la Asociación de Seguridad requerida.  En cualquier caso un servicio de administración de llaves bien configurado se requere para escuchar los mensajes del kernel.
+
+Una lista de todas las asociaciones de seguridad en las tablas del kernel puede obtenerse con el comando ```ipsecctl(8)```.
+
+
+##DIAGNÓSTICOS
+
+Una operación con sockets puede fallar retornando uno de los siguientes errores:
+
+* ![EACCES] Se hizo un intento por disminuir el nivel de seguridad por debajo del valor por defecto del sistema por parte de un proceso no privilegiado.
+* ![EINVAL] La longitud del campo de opciones no corresponde o se dió un nivel de seguridad desconocido.
+
+```netstat(1)``` puede usarse para obtener algunas estadísticas del uso de AH y ESP, con la bandera ```-p```.  Al usar la bandera ```-r```, ```netstat(1)``` muestra información sobre flujos IPsec.
+
+```vmstat(8)``` presenta información sobre el uso de memoria de IPsec con la bander ```-m``` (busque localizaciones "tdb" y "xform").
+
+##VER TAMBIÉN
+
+    ```enc(4)```, ```options(4)```, ```iked(8)```, ```ipsecctl(8)```, ```isakmpd(8)```, ```systcl(8)```
+
+##HISTORIA
+
+IPsec fue diseñado originalmente para proveer servicios de seguridad al Protocolo de Internet IPv6. Desde entonces se le ha hecho ingeniería para proveer estos servicios al Protocolo de Internet original IPv4.
+
+El proceso de diseño del protocolo IPsec comenzó en 1992 por parte de John Ioannidis, Phil Karn y william Allen Simpson. En 1995, el primero escribió una implementación para BSD/OS. Angelos D. Keromytis la portó a OpenBSD y NetBSD.  Las últimas transformaciones y características nuevas fueron implmentadas por Angelos D. Keromytis y Niels Provos.
+
+##AUTORES
+
+Los autores del código IPsec propiamente son John Ioannidis, Angelos D. Keromytis y Niels Provos.
+
+Niklas Hallqvist y Niels Provos son los autores de ```isakmpd(8)```.
+
+```libdeslite``` de Eric Young se usó en esta implementación por los algoritmos DES.
+
+También se usó el código de SHA-1 de Steve Reid.
+
+La interfaz para setsockopt(2)/getsockopt(2) sigue lejanamente el draft-mcdonald-simple-ipsec-api (ya expirado, pero aún disponible en ftp://ftp.kame.net/pub/internet-drafts/).
+
+##FALLAS
+
+Hay mucho más por decir de este tema. Esto es sólo el comienzo.
+En el momento las opciones de sockets no está completamente implementadas.

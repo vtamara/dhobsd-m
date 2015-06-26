@@ -1,0 +1,235 @@
+---
+title: UbuntuCE
+date: 2009-01-23
+tags:
+---
+## CONFIGURACIÓN DE UBUNTU CHRISTIAN EDITION 10.04
+
+Esta distribución de Ubuntu (ver http://www.ubuntuce.com ) tiene un buen control para niños preconfigurado (parental control), wine preconfigurado, clamav, cortafuegos activado y herramientas de estudio bíblico (xiphos, e-sword, linbread, opensong).  Puede usarse tanto sobre un Ubuntu como sobre XUbuntu.
+
+Aquí describimos detalles de su instalación en una red de área local.
+
+
+## Instalación
+
+Instalar Ubuntu 11.04 o XUbuntu 11.04 y posteriormente ejecutar desde una términal bien:
+
+* Si su sistema es de 64 bits:
+<pre>
+sudo wget http://ubuntuce.com/repos/Ubuntu_CE/apt/sources.list.d/lucid_amd.list -O /etc/apt/sources.list.d/ubuntuce.list; sudo apt-get update && sudo apt-get install ubuntu-ce
+</pre>
+* Si su sistema es de 32 bits:
+<pre>
+sudo wget http://ubuntuce.com/repos/Ubuntu_CE/apt/sources.list.d/lucid_i386.list -O /etc/apt/sources.list.d/ubuntuce.list; sudo apt-get update && sudo apt-get install ubuntu-ce
+</pre>
+
+En el caso de Ubuntu 10.04 para sistemas de 32 bits tras la instalacion puede que no abra la terminal.  En tal caso, como se explica en https://bugs.launchpad.net/ubuntu/+source/gnome-terminal/+bug/436188 , 
+ejecutar desde una consola tipo texto (Ctrl-Alt-F1):
+<screen>
+cd 
+rm .dbus .gconf .gconfd .gnome2 .gnome2_private
+sudo reboot
+</screen>
+
+
+##Actualización de una versión previa
+
+Como se explica en {5}, desde la línea de comandos ejecute:
+<pre>
+ sudo apt-get install update-manager-core
+</pre>
+Editar ```/etc/update-manager/release-upgrades``` para dejar ```Prompt=normal;```
+
+Seguir instrucciones tras ejecutar:
+<pre>
+sudo do-release-upgrade -d
+</pre>
+
+## Fondo de pantalla
+
+Sugerimos la siguiente foto de dominio público cedida por Cesar Moreno:
+
+[http://dhobsd.pasosdejesus.org/sites/DHOBSD.PASOSDEJESUS.ORG/spages/Cristo_petrolero_por_Cesar_Moreno.jpg]
+
+## Cortafuegos 
+
+Por defecto incluye un cortafuegos que se detiene con:
+<pre>
+sudo /etc/init.d/ubuntu_ce_firewall stop
+</pre>
+
+Usa directamente iptables así que no es fácil de configurar.  
+
+Para abrir un puerto, digamos el 631 (TCP y UDP) debe editar el archivo y agregar después de las otras reglas:
+<pre>
+iptables -A INPUT -p tcp --dport 631 -m state --state NEW -j ACCEPT
+iptables -A INPUT -p udp --dport 631 -m state --state NEW -j ACCEPT
+</pre>
+
+## !DansGuardian
+
+Es un control parental incluido por defecto junto con una herramienta gráfica de configuración.  Se configura desde Sistema->Administración-> Configure Parental Control
+
+
+## Paquetes comunes e importantes
+
+Para instalar ssh, el soporte completo para español y algunos programas que no son de fuentes abiertas pero son típicos para usuarios conocedores de Windows (java, flash, fuentes para Windows):
+<pre>
+sudo apt-get install openoffice.org-l10n-es \
+     ssh ubuntu-restricted-extras \
+      language-support-es 
+</pre> 
+
+
+## Cache para la red local con ```apt-cacher-ng```
+
+Para hacer más rápida la descarga de paquetes vale la pena configurar uno de los computadores de la red local para que sea repositorio de paquetes y les sirva a los demás computadores de la red.
+
+En el computador que tendrá el repositorio ejecute (según instrucciones de {1}):
+
+<pre>
+sudo apt-get update
+sudo apt-get install -udV apt-cacher-ng
+sudo apt-get install apt-cacher-ng
+sudo sh /etc/init.d/apt-cacher-ng restart
+</pre>
+
+En el computador donde corre ```apt-cacher``` podrá ver el repositorio local en: ```/var/cache/apt-cacher-ng/```
+
+Después en cada cliente de la red local (incluyendo el mismo donde estará el repositorio) debe configurarse el uso del cache:
+
+* Configuración en Synaptic: ingrese a Synaptic al menu Configuración -> Preferencias, pestaña Red y eliga un proyx, la dirección será la del computador donde corre apt-cacher y el puerto 3142 (sin autenticación).
+
+* Configuración de apt-get: ejecute en una terminal:
+<pre>
+echo 'Acquire::http { Proxy "http://192.168.190.25:3142"; };' | sudo tee /etc/apt/apt.conf.d/01apt-cacher-ng-proxy
+</pre>
+
+remplazando 192.168.190.25 por la IP del computador donde correo el Cache.
+
+
+Para agregar paquetes ya descargados en el servidor de apt-cacher-ng (tomado de {4}):
+
+<pre>
+test -x /var/cache/apt-cacher-ng/_import || sudo mkdir -p -m 2755 /var/cache/apt-cacher-ng/_import
+sudo mv -uf /var/cache/apt/archives/*.deb /var/cache/apt-cacher-ng/_import/
+sudo chown -R apt-cacher-ng.apt-cacher-ng /var/cache/apt-cacher-ng/_import
+</pre>
+
+Antes de importar los paquetes configure algún cliente y actualice índices.  Después abra en el servidor el puerto 4132 con algún navegador. Digamos desde el mismo servidor http://127.0.0.1:3142  y al final de la página presione el botón Import.
+
+Tomará un tiempo mientras identifica cada archivo con la entrada que le corresponde en el índice.
+
+## Correo electrónico con Mozilla Thunderbird
+
+sudo apt-get install thunderbird enigmail lightning-extension lightning-extension-locale-es-es thunderbird-beagle thunderbird-gnome-support
+
+
+##Instalación de Windows Emulado en red
+
+En algunos contextos es necesario contar con Windows además de Ubuntu por ejemplo:
+* Si se reciben documentos para Word o Excel que no pueden ser abiertos con OpenOffice --aunque es recomendable reportar la falla.
+* Si se requieren programas que no tienen equivalentes ni forma de abrirse en Ubuntu como: MS Publisher, Corel Draw, AutoCad.
+
+En tales casos una buena opción es instalar VirtualBox OSE y configurar una máquina virtual con un Windows licenciado.
+
+Puede configurarse en uno solo de los Ubuntu de una red local y ejecutarse desde los otros, de forma que un usuario lo emplee a la vez (por ser una sóla licencia).
+
+<pre>
+sudo aptitude install virtualbox-ose
+</pre>
+
+##Uso de Terminal Server
+
+En el Windows debe establecerse clave para los usuarios que podrían ingresar remotamente, desde Panel de Control->Usuarios
+Para que las mayusculas funcionen:
+http://ubuntuforums.org/showthread.php?p=9483858#post9483858
+
+
+##Recomendaciones para personas que usan por primera vez Unity
+
+* El lanzador del lado izquierdo puede configurarse moviendo iconos a ella.
+* Pueden verse todas las áreas de trabajo con el "Selector de áreas de trabajo" del lanzador
+* Al maximizar una ventana queda escondido el lanzador. Se activa acercan el puntero del ratón.
+* Los menús de diversas aplicaciones quedan en la barra de menus de la parte superior.
+* Las aplicaciones que tienen una ventana activa se ven en esa barra con una pequeña flecha al lado izquierdo 
+* El menu de aplicaciones puede obtenerse con tecla Super y elegir "Más Aplicaciones" en la parte superior derecha "Todas las Aplicaciones".  Más rápido con Super+A y si sabe el nombre Super y escribir el nombre de la aplicación
+* Las teclas rápidas mencionadas en https://dl.dropbox.com/s/rvh1aisarny3qbc/natty-shortcuts-es_ES.svg son:
+** Alt+F2 Ejecutar una orden
+** Super Abre el panel
+** Super+[Número] Abre o activa las aplicaciones correspondientes en el lanzador
+** Super+Shift+[Número] Abre las aplicaciones correspondientes en el lanzador si ya están abiertas
+** Super+T Abre la papelera
+** Alt+F1 Se enfoca el lanzador, utilice las flechas para desplazarse
+**  Ctrl+Alt+T Abre una terminal
+** Super+A Abre el menú Aplicaciones
+** Super+F Abre los archivos y carpetas
+* Administración de ventanas
+** Super+D Minimiza o restaura todas las ventanas
+** Ctrl+Alt+Numpad 7 Coloca la ventana en la esquina superior izquierda
+** Ctrl+Alt+Numpad 8 Coloca la ventana en la mitad superior de la pantalla
+** Ctrl+Alt+Numpad 9 Coloca la ventana en la esquina superior derecha
+** Ctrl+Alt+Numpad 4 Coloca la ventana en la mitad izquierda de la pantalla
+** Ctrl+Alt+Numpad 5 Centra o maximiza la ventana
+** Ctrl+Alt+Numpad 6 Coloca la ventana en la mitad derecha de la pantalla
+** Ctrl+Alt+Numpad 1 Coloca la ventana en la esquina inferior izquierda
+** Ctrl+Alt+Numpad 2 Coloca la ventana en la mitad inferior de la pantalla
+** Ctrl+Alt+Numpad 3 Coloca la ventana en la esquina inferior derecha
+** Ctrl+Alt+Numpad 0 Maximiza la ventana
+** Super+W Modo Expo, muestra todas las ventanas
+** Ctrl+Alt+&#8593; Ir al escritorio que hay encima
+** Ctrl+Alt+&#8594; Ir al escritorio que hay a la derecha
+** Ctrl+Alt+&#8592; Ir al escritorio que hay a la izquierda
+** Ctrl+Alt+&#8595; Ir al escritorio que hay debajo
+** Ctrl+Alt+Shift+&#8594; Mueve la ventana al escritorio que hay a la derecha
+** Ctrl+Alt+Shift+&#8592; Mueve la ventana al escritorio que hay a la izquierda
+** Ctrl+Alt+Shift+&#8593; Mueve la ventana al esciitorio que hay encima
+** Ctrl+Alt+Shift+&#8595; Mueve la ventana al escritorio que hay debajo
+** Gestión de los escritorios
+** F10 Abre el primer menú en el panel
+** Alt+Imprimir Captura de toda la pantalla
+** Captura de la ventana activa
+* Y los atajos del ratón de la misma fuente:
+** Maximizar la ventana: Arrastre la ventana hasta el borde superior de la pantalla
+** Restaurar la ventana:
+** Maximizar la ventana en altura: Clic con el botón central en el botón de maximizar
+**  Maximizar la ventana en ancho: Clic con el botón derecho en el botón de maximizar
+** Colocar la ventana en la mitad izquierda: Arrastre la ventana hasta el borde izquierdo de la pantalla
+** Colocar la ventana en la mitad derecha: Arrastre la ventana hasta el borde derecho de la pantalla
+
+## Instalación desde Windows
+
+Con algunas tarjetas madre y unidades de CD el instalador empieza a reportar errores en sr0 que no le permiten instalar.   Es posible instalar desde un disco duro con Windows y USB ---como se describe en {3}:
+* Crear directorio \ubuntu en USB y dejar imagen ISO allí
+* Crear directorio c:\ubuntu en disco duro y dejar allí los archivos initrd.gz y vmlinuz disponibles en: http://archive.ubuntu.com/ubuntu/dists/intrepid/main/installer-i386/current/images/hd-media/
+* Descargar grub4dos dejar el archivo grldr en c:\ disponibles en http://sourceforge.net/projects/grub4dos/files/
+* Crear el directorio boot en la raiz del disco c: y dentro de este directorio crear el directorio grub c:\boot\grub\
+* Crear un archivo menu.lst con
+<pre>
+title Instalar Ubuntu
+kernel   (hd0,0)/ubuntu/vmlinuz root=/dev/ram0 devfs=mount,dall ramdisk_size=17000
+initrd   (hd0,0)/ubuntu/initrd.gz
+</pre>
+* Guardar el archivo menu.lst dentro del directorio c:\boot\grub\
+</pre>
+* Agregar al directorio boot.ini que se encuentra en la raiz del disco C: 
+<pre>
+c:\grldr="Instalar Ubuntu"
+</pre>
+* Para editar el archivo boot.ini tenemos que ir a Inicio, Pabel de control, Sistema, para editar el archivo de opciones de inicio, alli lo editamos aregando al final la linea 
+<pre>
+c:\grldr="Instalar Ubuntu"
+</pre>
+* Arrancar nuevamente, en el prompt de NTLDR elegir "Instalar Ubuntu" poner la USB pues el instalador empezará a buscar la imagen ISO en los diversos dispositivos montados.
+
+
+## REFERENCIAS
+
+* {1} http://ubuntu-ar.org/node/209
+* {2} http://firehol.sourceforge.net/
+* {3} https://help.ubuntu.com/community/Installation/FromWindows
+* {4} http://ubuntuforums.org/showthread.php?t=981085
+* {5} http://www.unixmen.com/how-to-upgrade-from-ubuntu-1004-1010-1104-to-ubuntu-1110-oneiric-ocelot-desktop-a-server/
+----
+
+Esta información se cede al dominijo público.  Se dedica al más hermoso.  2010. hernan@pasosdeJesus.org vtamara@pasosdeJesus.org

@@ -1,0 +1,95 @@
+---
+title: Enlaces
+date: 2006-01-08
+tags:
+---
+Dignidad Humana:
+* http://www.justapaz.org
+* http://www.palsolidarity.org
+* http://www.nocheyniebla.org
+* http://www.amnesty.org
+
+OpenBSD:
+
+* Sitio Oficial: http://www.openbsd.org
+* Información sobre portes: http://ports.openbsd.nu/
+* Noticias: 
+** http://www.undeadly.org
+* Prueba de servidores con OpenBSD: http://www.armorlogic.com/openbsd_information_server_compatibility_list.html
+* Documentación:
+** http://structio.sf.net/guias/basico_OpenBSD
+** http://structio.sf.net/guias/usuario_OpenBSD
+** http://structio.sf.net/guias/servidor_OpenBSD
+* Sitios de soporte y documentación en español
+** http://www.openbsdcolombia.org/
+** http://www.openbsderos.org
+** http://www.openbsdsupport.com.ar/
+** http://www.openbsdsupport.com.ar/foro
+
+Distribución Aprendiendo de Jesús (adJ)
+* http://aprendiendo.pasosdeJesus.org
+
+BSDs:
+* http://unixbsd.blogspot.com/
+
+Conexión de Internet:
+* Pruebas de velocidad (sin flash): 
+**http://www.speedguide.net/speedtest/
+** http://www.suma-tools.de/dsl-speed-test/initialmeter-en.php
+** http://www.bplspeedtest.com/dsl-speed-test.php
+
+Internet
+* Sitios alojados en una IP http://onsamehost.com/200.118.116.7/
+* Distribución de mercado para servidores web http://news.netcraft.com/
+
+Sistemas Operativos
+* Estadísticas http://www.w3schools.com/browsers/browsers_os.asp
+* Distribución de mercado para Navegadores, sistemas operativos y buscadores http://marketshare.hitslink.com/report.aspx?qprid=9&qpcustom=OpenBSD
+
+Correo y SPAM
+
+* http://whatismyipaddress.com/staticpages/index.php/is-my-ip-address-blacklisted Verifica en varias listas una IP
+* [http://psbl.surriel.com/ | Passive Spam Block List] Registra evidencia de los correos SPAM enviados desde un computador y por los cuales se incluye su IP en la lista
+* http://cbl.abuseat.org
+* http://www.webmaster-toolkit.com/spam-block-list-checker.shtml
+* http://www.barracudacentral.com/
+
+
+
+!JavaScript
+* Cumplimiento de estándares. [ACID1 | http://acid1.acidtests.org/ ], [ACID2 | http://acid2.acidtests.org/], [ACID3 | http://acid3.acidtests.org/]
+* Velocidad http://celtickane.com/webdesign/jsspeedarchive.php promedio de 10 ejecucioens
+| Fecha | Plataforma | ACID1 | ACID2 | ACID3 |
+| 1.Dic.2011 | AMD Athlon 1.8GHz, 1G RAM; OpenBSD-5.0; Chrome 12 | 100 | 100 | 100 |
+| 29.Abr.2011 | AMD Athlon 1.8GHz, 1G RAM; OpenBSD-current; Firefox 4 | 100 | 100 | 97 |
+| 31.Jul.2009 | AMD Athlon 1.8GHz, 1G RAM; OpenBSD-current; Firefox 3.5.1 | 100 | 100 | 93 |
+| 7.Jul.2009 | AMD Athlon 1.8GHz, 1G RAM; OpenBSD-current; Firefox 3.5 |100 | 100 | 93 |
+| 7.Jul.2009 | AMD Athlon 1.8Hz, 1G RAM; OpenBSD-current; Firefox 3.0.10 | 100 | 100 | 77 |
+* Otras comparaciones entre navegadores http://www.mdgx.com/html.htm#BTX
+* !SunSpider 0.9  http://www2.webkit.org/perf/sunspider-0.9/sunspider.html
+
+| Fecha | Plataforma | Resultado |
+| 17.Oct.2014 | AMD FX-8350 Eight-Core 4013.3Mhz; 8G RAM; OpenBSD/adJ-5.6pre; Chromium  36.0.1985.125  | 245.1ms | 7 |
+| 17.May.2013 | AMD FX-6100 6-core 3315Mhz; 8G RAM; OpenBSD-5.2; Chromium  20.0.1132.57 | 404.2 | 6 |
+| 1.Dic.2011 | AMD Athlon 1.8GHz, 1G RAM; OpenBSD-5.0; Chrome 12. Sunspider 0.9.1 | 724 |  |
+| 14.Jun.2011 | AMD Athlon 1.8GHz, 1G RAM; OpenBSD-current; Midori 0.3.6. Sunspider 0.9.1 | 729 |  |
+| 29.Abr.2011 | AMD Athlon 1.8GHz, 1G RAM; OpenBSD-current; Mozilla-Firefox-4.0 | 897.6ms +/- 4.7% | 4 |
+| 27.Feb.2011 | AMD Athlon 1.8GHz, 1G RAM; OpenBSD-4.9-pre; Chromium 9.0.597.94 | 721.2ms +/- 6.3% |  |
+| 21.Sep.2010 | AMD Athlon 1.8GHz, 1G RAM; OpenBSD-4.7; Midori 0.2.2 | 722.2ms +/- 1.8% |  |
+| 21.Sep.2010 | AMD Athlon 1.8GHz, 1G RAM; OpenBSD-4.7; Firefox 3.6.8 | 2655ms +/- 1.1% |  |
+| 14.Oct.2009 | AMD Athlon 1.8GHz, 1G RAM; OpenBSD-current; Midori 0.1.8 | 1035ms  |
+| 14.Oct.2009 | AMD Athlon 1.8GHz, 1G RAM; OpenBSD-current; Epiphany 2.24.3 | 33808.0ms |
+| 31.Jul.2009 | AMD Athlon 1.8GHz, 1G RAM; OpenBSD-current; Firefox 3.5.1 | 6275.4ms +/- 0.5% | 3 |
+| 7.Jul.2009 | AMD Athlon 1.8GHz, 1G RAM; OpenBSD-current; Firefox 3.5 | 6480.2ms +/- 1.8% |
+| 7.Jul.2009 | AMD Athlon 1.8GHz, 1G RAM; OpenBSD-current; Firefox 3.0.10 | 9110.6ms +/- 6.6%  |
+
+[3 | http://www2.webkit.org/perf/sunspider-0.9/sunspider-results.html?%7B%223d-cube%22:%5B301,303,302,305,303%5D,%223d-morph%22:%5B211,213,215,214,213%5D,%223d-raytrace%22:%5B201,202,203,205,202%5D,%22access-binary-trees%22:%5B221,216,217,216,220%5D,%22access-fannkuch%22:%5B397,399,403,399,400%5D,%22access-nbody%22:%5B323,323,321,345,323%5D,%22access-nsieve%22:%5B139,137,142,138,142%5D,%22bitops-3bit-bits-in-byte%22:%5B121,127,123,123,121%5D,%22bitops-bits-in-byte%22:%5B160,163,163,160,161%5D,%22bitops-bitwise-and%22:%5B246,249,246,254,245%5D,%22bitops-nsieve-bits%22:%5B209,210,212,208,209%5D,%22controlflow-recursive%22:%5B75,76,76,75,74%5D,%22crypto-aes%22:%5B140,140,141,141,140%5D,%22crypto-md5%22:%5B89,89,89,89,89%5D,%22crypto-sha1%22:%5B94,90,95,91,91%5D,%22date-format-tofte%22:%5B312,309,309,310,307%5D,%22date-format-xparb%22:%5B338,337,341,343,346%5D,%22math-cordic%22:%5B254,251,254,253,252%5D,%22math-partial-sums%22:%5B238,235,239,269,244%5D,%22math-spectral-norm%22:%5B134,134,134,133,131%5D,%22regexp-dna%22:%5B373,372,377,373,393%5D,%22string-base64%22:%5B204,204,209,205,209%5D,%22string-fasta%22:%5B469,464,463,469,462%5D,%22string-tagcloud%22:%5B291,287,292,291,285%5D,%22string-unpack-code%22:%5B462,463,465,459,460%5D,%22string-validate-input%22:%5B262,249,249,249,252%5D%7D ]
+
+[4 | http://www.webkit.org/perf/sunspider-0.9/sunspider-results.html?%7B%223d-cube%22:%5B46,46,45,46,46%5D,%223d-morph%22:%5B19,19,18,19,20%5D,%223d-raytrace%22:%5B43,41,42,42,41%5D,%22access-binary-trees%22:%5B19,22,22,20,20%5D,%22access-fannkuch%22:%5B39,39,39,39,38%5D,%22access-nbody%22:%5B17,17,17,17,17%5D,%22access-nsieve%22:%5B24,26,25,24,25%5D,%22bitops-3bit-bits-in-byte%22:%5B2,2,2,1,2%5D,%22bitops-bits-in-byte%22:%5B26,22,22,21,21%5D,%22bitops-bitwise-and%22:%5B5,4,4,4,4%5D,%22bitops-nsieve-bits%22:%5B13,10,10,10,10%5D,%22controlflow-recursive%22:%5B22,22,22,22,22%5D,%22crypto-aes%22:%5B26,26,26,26,26%5D,%22crypto-md5%22:%5B20,20,20,20,20%5D,%22crypto-sha1%22:%5B47,13,13,12,13%5D,%22date-format-tofte%22:%5B240,212,212,213,214%5D,%22date-format-xparb%22:%5B35,31,29,30,30%5D,%22math-cordic%22:%5B14,14,14,14,13%5D,%22math-partial-sums%22:%5B18,18,48,18,18%5D,%22math-spectral-norm%22:%5B23,22,22,22,21%5D,%22regexp-dna%22:%5B74,66,64,64,78%5D,%22string-base64%22:%5B12,13,13,13,13%5D,%22string-fasta%22:%5B32,32,32,32,32%5D,%22string-tagcloud%22:%5B55,56,54,55,56%5D,%22string-unpack-code%22:%5B65,68,68,67,67%5D,%22string-validate-input%22:%5B18,18,18,18,18%5D%7D ]
+
+
+[5 | http://www.webkit.org/perf/sunspider-0.9.1/sunspider-0.9.1/results.html?%7B%22v%22:%20%22sunspider-0.9.1%22,%20%223d-cube%22:%5B43,34,34,35,35,36,36,38,34,38%5D,%223d-morph%22:%5B33,29,29,29,33,27,29,30,27,28%5D,%223d-raytrace%22:%5B36,36,37,37,37,35,37,37,35,36%5D,%22access-binary-trees%22:%5B5,6,5,6,5,4,4,5,5,5%5D,%22access-fannkuch%22:%5B40,54,35,38,47,55,51,33,35,38%5D,%22access-nbody%22:%5B30,32,31,31,31,32,31,32,32,34%5D,%22access-nsieve%22:%5B39,18,40,41,19,18,18,16,18,18%5D,%22bitops-3bit-bits-in-byte%22:%5B10,13,11,13,11,20,10,10,10,11%5D,%22bitops-bits-in-byte%22:%5B16,37,17,25,37,20,16,17,18,17%5D,%22bitops-bitwise-and%22:%5B39,39,19,22,20,22,19,21,20,20%5D,%22bitops-nsieve-bits%22:%5B20,18,20,19,33,20,19,21,41,18%5D,%22controlflow-recursive%22:%5B6,7,6,8,6,5,14,6,6,6%5D,%22crypto-aes%22:%5B22,19,20,21,20,19,19,20,21,19%5D,%22crypto-md5%22:%5B11,16,10,11,13,12,11,11,12,11%5D,%22crypto-sha1%22:%5B8,8,11,10,9,16,13,13,11,14%5D,%22date-format-tofte%22:%5B33,38,34,39,35,35,34,37,35,36%5D,%22date-format-xparb%22:%5B52,54,54,53,54,54,52,51,50,50%5D,%22math-cordic%22:%5B32,28,27,27,29,27,26,28,30,29%5D,%22math-partial-sums%22:%5B35,55,33,32,35,34,32,32,32,32%5D,%22math-spectral-norm%22:%5B21,20,20,21,22,19,21,21,19,22%5D,%22regexp-dna%22:%5B25,25,28,38,25,25,25,25,25,28%5D,%22string-base64%22:%5B13,13,13,12,12,12,15,12,17,15%5D,%22string-fasta%22:%5B31,36,33,32,30,31,31,30,33,31%5D,%22string-tagcloud%22:%5B48,49,50,46,47,49,51,48,50,52%5D,%22string-unpack-code%22:%5B65,61,63,59,63,61,63,62,62,64%5D,%22string-validate-input%22:%5B33,32,32,31,33,33,31,32,32,37%5D%7D]
+
+[6 | http://www.webkit.org/perf/sunspider-1.0/sunspider-1.0/results.html?%7B%22v%22:%20%22sunspider-1.0%22,%20%223d-cube%22:%5B23,19,58,22,22,21,26,27,18,24%5D,%223d-morph%22:%5B20,31,15,18,81,32,17,18,26,19%5D,%223d-raytrace%22:%5B19,22,17,24,22,34,16,28,17,19%5D,%22access-binary-trees%22:%5B2,4,2,2,2,5,19,2,2,8%5D,%22access-fannkuch%22:%5B12,14,14,14,15,15,17,16,14,16%5D,%22access-nbody%22:%5B10,41,7,11,6,133,17,12,12,11%5D,%22access-nsieve%22:%5B5,3,4,3,6,4,6,3,3,5%5D,%22bitops-3bit-bits-in-byte%22:%5B1,2,2,2,2,2,2,2,3,2%5D,%22bitops-bits-in-byte%22:%5B6,5,6,6,7,6,6,6,7,6%5D,%22bitops-bitwise-and%22:%5B5,6,5,5,6,6,5,6,6,5%5D,%22bitops-nsieve-bits%22:%5B8,7,7,7,40,7,9,6,6,37%5D,%22controlflow-recursive%22:%5B3,3,2,2,3,3,3,3,2,3%5D,%22crypto-aes%22:%5B13,12,12,12,14,10,15,13,10,18%5D,%22crypto-md5%22:%5B7,6,5,5,5,5,6,5,5,5%5D,%22crypto-sha1%22:%5B7,6,13,6,6,7,7,6,7,6%5D,%22date-format-tofte%22:%5B18,14,14,14,22,20,71,22,14,15%5D,%22date-format-xparb%22:%5B20,17,14,22,15,15,14,22,21,16%5D,%22math-cordic%22:%5B16,5,6,7,5,5,5,12,16,4%5D,%22math-partial-sums%22:%5B24,22,35,30,30,27,23,30,37,27%5D,%22math-spectral-norm%22:%5B5,4,4,5,4,4,5,5,5,4%5D,%22regexp-dna%22:%5B13,10,14,12,10,10,11,12,13,10%5D,%22string-base64%22:%5B42,13,12,11,8,9,7,53,13,7%5D,%22string-fasta%22:%5B12,16,15,15,14,11,12,11,15,17%5D,%22string-tagcloud%22:%5B32,42,50,39,32,32,33,30,35,25%5D,%22string-unpack-code%22:%5B38,58,49,57,39,51,51,37,38,34%5D,%22string-validate-input%22:%5B20,15,53,14,13,13,14,17,14,25%5D%7D ]
+
+[ 7 | http://www.webkit.org/perf/sunspider-1.0.2/sunspider-1.0.2/results.html?%7B%22v%22:%20%22sunspider-1.0.2%22,%20%223d-cube%22:%5B19,19,16,14,19,15,16,19,19,21%5D,%223d-morph%22:%5B11,14,13,11,11,12,11,11,14,12%5D,%223d-raytrace%22:%5B14,12,14,16,15,12,14,13,16,13%5D,%22access-binary-trees%22:%5B2,2,3,1,2,2,2,1,2,3%5D,%22access-fannkuch%22:%5B10,9,9,13,11,13,9,12,10,9%5D,%22access-nbody%22:%5B5,4,4,4,4,4,4,4,4,4%5D,%22access-nsieve%22:%5B5,5,4,5,4,4,4,4,4,4%5D,%22bitops-3bit-bits-in-byte%22:%5B2,1,1,1,1,1,2,1,1,1%5D,%22bitops-bits-in-byte%22:%5B4,4,3,4,3,3,3,3,4,3%5D,%22bitops-bitwise-and%22:%5B4,5,4,4,4,5,5,4,4,4%5D,%22bitops-nsieve-bits%22:%5B5,5,5,5,5,5,5,5,5,5%5D,%22controlflow-recursive%22:%5B2,2,3,2,2,2,2,2,2,3%5D,%22crypto-aes%22:%5B7,6,6,7,6,6,6,8,9,8%5D,%22crypto-md5%22:%5B6,7,6,5,6,6,5,6,6,6%5D,%22crypto-sha1%22:%5B9,6,6,6,6,7,7,8,6,6%5D,%22date-format-tofte%22:%5B12,14,12,14,15,12,12,12,15,13%5D,%22date-format-xparb%22:%5B10,11,14,11,11,11,12,11,11,11%5D,%22math-cordic%22:%5B5,5,5,6,6,5,5,6,6,5%5D,%22math-partial-sums%22:%5B13,17,15,13,14,13,15,13,16,14%5D,%22math-spectral-norm%22:%5B3,3,3,3,3,3,3,3,3,3%5D,%22regexp-dna%22:%5B8,8,8,10,9,8,8,11,8,9%5D,%22string-base64%22:%5B8,9,9,11,11,11,10,9,8,8%5D,%22string-fasta%22:%5B10,11,13,10,10,11,10,10,13,14%5D,%22string-tagcloud%22:%5B36,34,37,38,29,33,39,36,35,34%5D,%22string-unpack-code%22:%5B25,22,21,21,21,21,21,26,21,24%5D,%22string-validate-input%22:%5B10,11,11,12,13,12,13,9,10,11%5D%7D ]

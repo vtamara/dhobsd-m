@@ -1,0 +1,119 @@
+---
+title: Grub2
+date: 2009-12-07
+tags:
+---
+Desde 9.10 Ubuntu y UbuntuCE vienen con Grub 2 que tiene nuevas formas de configuración. A continuación se presenta como configurarlo para iniciar OpenBSD o adJ.
+
+##Identificar partición de OpenBSD/adJ
+
+Desde Ubuntu para ver que partición es la de OpenBSD/adJ:
+<pre>
+sudo fdisk /dev/sda
+</pre>
+(o ```/dev/hda``` si no funciona el anterior) de el comando ```p``` para ver la lista de particiones e identificar la de OpenBSD, puede ser algo como:
+
+<pre>
+/dev/sda3           26001       30401    35351001   a6  OpenBSD
+</pre>
+
+Que indica que es la tercera partición primaria.  
+
+Presione q para salir. 
+
+##Configuración
+
+Edite el archivo ```/etc/grub.d/40_custom``` por ejemplo con
+<pre>
+sudo gedit /etc/grub.d/40_custom
+</pre>
+
+y agregue algunas lineas al final empezando en una nueva línea.
+
+Las lineas por agregar dependen de la arquitectura del procesador y la versión de Grub2. 
+
+!Para Grub2-1.99 incluido en Ubuntu 12.04
+<pre>
+menuentry "adJ" {
+  set root=(hd0,msdos3)
+  kopenbsd /bsd
+} 
+</pre>
+
+El comando ```kopenbsd``` puede tener algunos parametros que pueden verse con ```kopenbsd --help```:
+* ```-a``` Para pedir el nombre del archivo desde el cual reiniciar
+* ```-b``` Para no reiniciar sino apagar
+* ```-c``` Para cambiar dispositivos configurados
+* ```-s``` Para iniciar en modo single
+* ```-d``` Para ingresar a KBD en el arranque
+* ```-r wd```XY Para establecer subpartición root
+* ```-h com![,velocidad]``` para usar consola serial 
+
+!Para Ubuntu 11.04
+<pre>
+menuentry "adJ" {
+  set root=(hd0,msdos3)
+  chainloader +1
+
+  boot
+} 
+</pre>
+!Para Grub2 1.98 incluido en Ubuntu 10.10:
+<pre>
+menuentry "adJ" {
+  set root=(hd0,3)
+  kopenbsd=(hd0,3)/bsd
+  boot
+}
+</pre>
+
+!Grub2 de UbuntuCE 10.04 y 9.10 y arquitectura amd64:
+
+<pre>
+menuentry "adJ" {
+  set root=(hd0,3,a)
+  openbsd /bsd
+}
+</pre>
+
+!Grub2 de UbuntuCE 10.04 y 9.10 y arquitectura i386:
+
+<pre>
+menuentry "adJ" {
+  set root=(hd0,3,a)
+  chainloader +1
+}
+</pre>
+
+
+Salve el archivo con el ícono guardar y salga cerrando la ventana. Para que pueda ver el menú de Grub durante el arranque desde una terminal ejecute:
+
+<pre>
+sudo gedit /etc/default/grub
+</pre>
+
+y cambie las siguientes líneas:
+<pre>
+GRUB_DEFAULT=0
+#!GRUB_HIDDEN_TIMEOUT=0
+!GRUB_HIDDEN_TIMEOUT_QUIET=true
+</pre>
+
+Guarde, cierre y finalmente desde la terminal ejecute:
+
+<pre>
+sudo update-grub2
+</pre>
+
+Tras lo cual puede reiniciar y probar.
+
+
+
+!Referencias
+* Ejemplo de configuración en Ubuntu 9.10 ```/usr/share/doc/grub-pc/examples/grub.cfg```
+* http://www.crice.org/?q=node/364
+* http://ubuntuforums.org/showthread.php?t=1195275
+
+!Agradecimientos
+
+A Dios y a Carlos, Angélica y Antonia.

@@ -1,0 +1,11 @@
+---
+title: Ubuntu-1404
+date: 2014-07-08
+tags:
+---
+Tras actualizar e instalar chrome, para instalar también flash:
+
+<pre>
+sudo apt-get install pepperflashplugin-nonfree
+sudo update-pepperflashplugin-nonfree --install
+</pre>

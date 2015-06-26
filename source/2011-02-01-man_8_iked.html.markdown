@@ -1,0 +1,82 @@
+---
+title: man_8_iked
+date: 2011-02-01
+tags:
+---
+IKED(8)                 OpenBSD System Manager's Manual                IKED(8)
+
+NAME
+     iked - Internet Key Exchange version 2 (IKEv2) daemon
+
+SYNOPSIS
+     iked [-dnSTv] [-D _____=_____] [-f ____]
+
+DESCRIPTION
+     iked is an Internet Key Exchange (IKEv2) daemon which performs mutual
+     authentication and which establishes and maintains IPsec flows and
+     security associations (SAs) between the two peers.
+
+     The IKEv2 protocol is defined in RFC 4306, which combines and updates the
+     previous standards: ISAKMP/Oakley (RFC 2408), IKE (RFC 2409), and the
+     Internet DOI (RFC 2407).  iked only supports the IKEv2 protocol; support
+     for ISAKMP/Oakley and IKEv1 is provided by isakmpd(8).
+
+     iked supports mutual authentication using RSA public keys and X.509
+     certificates.  See the _____ section below and ___ ___ ___________
+     _________ ________ in ikectl(8) for more information about creating and
+     maintaining the public key infrastructure.
+
+     The options are as follows:
+
+     -D _____=_____
+             Define _____ to be set to _____ on the command line.  Overrides
+             the definition of _____ in the configuration file.
+
+     -d      Do not daemonize and log to ______.
+
+     -f ____
+             Use ____ as the configuration file, instead of the default
+             ______________.
+
+     -n      Configtest mode.  Only check the configuration file for validity.
+
+     -S      Start iked in passive mode.  See the set passive option in
+             iked.conf(5) for more information.
+
+     -T      Disable NAT-Traversal and do not propose NAT-Traversal support to
+             the peers.
+
+     -v      Produce more verbose output.
+
+FILES
+     ______________         The default iked configuration file.
+     _____________          The directory where CA certificates are kept.
+     ________________       The directory where IKE certificates are kept,
+                            both the local certificate(s) and those of the
+                            peers, if a choice to have them kept permanently
+                            has been made.
+     _______________        The directory where CRLs are kept.
+     __________________     The directory where local private keys used for
+                            public key authentication are kept.  The file
+                            _________ is used to store the local private key.
+     __________________     The directory in which trusted public keys are
+                            kept.  The keys must be named in the fashion
+                            described above.
+     __________________     The default iked control socket.
+
+SEE ALSO
+     iked.conf(5), ikectl(8), isakmpd(8)
+
+     ________ ___ ________ _______ ________, RFC 4306, December 2005.
+
+HISTORY
+     The iked program first appeared in OpenBSD 4.8.
+
+AUTHORS
+     The iked program was written by Reyk Floeter <reyk@vantronix.net>.
+
+CAVEATS
+     iked is not yet finished and is missing some important security features.
+     It should not yet be used in production networks.
+
+OpenBSD 4.8                   September 30, 2010                   OpenBSD 4.8

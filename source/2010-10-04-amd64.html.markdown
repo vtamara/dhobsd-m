@@ -1,0 +1,272 @@
+---
+title: amd64
+date: 2010-10-04
+tags:
+---
+# Arquitectura del AMD64
+
+## 1. Vista por las aplicaciones
+
+Descripción resumida de {2}
+
+* Registros. 16 de propósito general: ```RAX, RBX, RCX, RDX, RBP, RSI, RDI, RSP, R8-R15```. 16 registros multimedia de 128 bits: ```XMM0-XMM15```.  8 registros multimedia de 64 bits: MMX0-MMX7. 8 registros de punto flotante de 80 bits: ```FPR0-FPR7``` (los registros de multimedia de 64 bits se mapean sobre los de punto flotante). Puntero de instrucción de 64 bits: ```RIP```. Banderas de 64 bits: ```RFLAGS```.  Pueden seguirse usando las partes de estos registros de 32, 16 y 8 bits legados de las arquitecturas i386 y 8086 (e.g por ejemplo los correspondientes a ```RAX``` son ```EAX```, ```AX```, ```AH```, ```AL```). 
+** Banderas: Entre los 16 bits bajos de ```RFLAGS``` están los utilizables por aplicaciones: ```CF``` - Lleva. ```PF``` - Paridad. ```AF``` - Auxiliar. ```ZF``` - Cero. ```SF``` - Signo. ```DF``` - Dirección. ```OF``` - Desbordamiento.  Entre los bits 16 y 32 están banderas reservadas para el sistema operativo. Algunas banderas tiene efecto sobre instrucciones (como ```CMOV```, saltos condicionales, ```Jcc```, ```SETcc```), y algunas instrucciones modifican las banderas (por ejemplo las sumas pueden modificar CF).
+| __Registro__ | __Uso__ | __Detalle__ | __Partes__ |
+| ```RAX``` | Acumulador | Operando en sumas, multiplicaciones, divisiones cadenas, comparaciones e intercambios, traducción en tablas y operaciones de E/S.  Con ```RDX``` mantiene operandos de doble precisión. | ```EAX```, ```AX```, ```AL``` |
+| ```RBX``` | Base | Generación de direcciones en modo 16 bits | ```EBX, BX, BL``` |
+| ```RCX``` | Contador | Indice de bit en operaciones de rotación y cambio. Contador de iteraciones en ciclos. Saltos condicionales si es zero | ```ECX, CX, CL``` |
+| ```RDX``` | Dirección E/S | Operando en multiplicaciones y divisiones | ```EDX, DX, DL``` |
+| ```RSI``` | Índice Fuente | Dirección en memoria fuente en operaciones de  cadena. Indice en direcciones de 16 bits | ```ESI, SI, SIL``` |
+| ```RDI``` | Índice Destino | Dirección en memoria destino en operaciones de cadena. Índice en direcciones de 16 bits | ```EDI, DI, DIL``` |
+| ```RBP``` | Apuntador Base | Dirección en memoria del apuntador base a la pila | ```EBP, BP, BPL``` |
+| ```RSP``` | Apuntador Pila | Dirección en memoria del tope de la pila | ```ESP, SP, SPL``` |
+| ```R8-R10``` | | Sin usos implícitos | ```R8D-R10D, R8W-R10W, R8L-R10L``` |
+| ```R11``` | | Mantiene valor de banderas en ```SYSCALL``` y ```SYSRET``` | ```R11D, R11W, R11L``` |
+| ```R12-R15``` | |Sin usos implícitos. | ```R12D-R15D, R12W-R15W, R12L-R15L``` |
+* Instrucciones. De propósito general. Multimedia de 128bits. multimedia de 64bits. De punto flotante.
+** Movimiento: ```MOV, MOVSX, MOVZX, MOVD, MOVNTI```
+** Movimientos condicionales: ```CMOV```cc dependiendo del valor de las banderas
+** Operaciones de pila: ```POP, POPA, POPAD, PUSH, PUSHA, PUSHAD, ENTER, LEAVE```
+** Conversión de datos: ```CBW, CWDE, CDQE, CWD, CDQ, CQO, MOVMSKPS, MOVMSKPD, XLAT, AAA, AAD, AAM, AAS, DAA, DAS, BSWAP```
+** Cargar registros de segmento: ```LDS, LES, LFS, LGS, LSS, MOV regSeg, POP regSeg```
+** Cargar dirección efectiva: ```LEA```
+** Aritmética: ```ADC, ADD, SUB, SBB, NEG, MUL, IMUL, DIV, IDIV, DEC, INC```
+** Rotación y corrimiento de bits en registros: ```RCL, RCR, ROL, ROR, SAL, SAR, SHL, SHR, SHLD, SRDH``` 
+** Comparacinoes y pruebas: ```CMP, TEST, BSF, BSR, POPCNT, LZCNT, BT, BTC, BTR, BTS, SETcc, BOUND```
+** Lógicas: ```AND, OR, XOR, NOT```
+** Cádenas: ```CMPS,CMPSB, CMPSW, CMPSD, CMPSQ, SCAS, SCASB, SCASW, SCASD, SCASQ, STOS, STOSB, STOSW, STOSD, STOSQ```.   Suelen usarse con el prefijo ```REP``` que repite la instrucción decrementando CX hasta que llegue a 0. ```CMPS``` y ```SCAS``` se usan con  prefijo ```REPE/REPZ``` o ```REPNE/REPNZ``` que además de detener cuando ```CX``` llega a cero se detienen dependiendo de ```ZF```.
+*** ```MOVS, MOVSB, MOVSW, MOVSD, MOVSQ```: Copian un operando desde seg```:![rSI]``` a ```ES:![rDI]```. Tras copiar, tanto ```rSI``` como ```rDI``` son autoincrementados (si la bandera ```DF``` es 0) o autodecrementados (si ```DF``` es 1).  La cantidad de bytes copiados se especifica en ```CX```
+** Transferencia de control: ```JMP```, ```J```cc, ```LOOP```cc, ```CALL, RET, INT, INTO, IRET, IRETD, IRETQ```
+** Banderas: ```POPF, POPFD, POPFQ, PUSHF, PUSHFD, PUSHFQ, CLC, CMC, STC, CLD, STD, CLI, STI, LAHF, SAHF```
+** Entrada/Salida: ```IN, OUT``` y otras que pueden usarse con prefijo ```REP```: ```INS, INSB, INSW, INSD, OUTS, OUTSB, OUTSW, OUTSD```
+** Semáforos: ```CMPXCHG, CMPXCHG8B, CMPXCHG16B, XADD, XCHG```
+** Información del procesador: ```CPUID```
+** Manejo del cache y memoria: ```LFENCE, SFENCE, MFENCE, PREFETCH, PREFETCHW, CLFLUSH```
+** No opera: ```NOP```
+** Llamadas al sistema: ```SYSENTER, SYSEXIT, SYSCALL, SYSRET```
+* Modos de operación.  
+** Modo largo: requiere sistemas operativos de 64 bits. A su vez puede ser modo 64 bits, o modo de compatibilidad
+** Modo legado: compatible con aplicaciones y sistemas operativos de 16 y 32 bits. Puede ser modo protegido, modo virtual 8086, modo real.
+* Memoria virtual:
+** En modo 64 bits, la memoria virtual no es segmentada es un espacio plano numerado de 0 a  2 ^ 64 - 1. Pueden usarse para establecer atributos los registros de segmentos ```CS``` (código) y como bases en direccionamientos ```FS``` y ```GS```.
+** En modo legado y de compatibilidad la memoria es segmentada con los registros de segmento ```DS``` (datos), ```CS``` (código), ```ES``` (extendido), ```FS```, ```GS``` y ```SS``` (pila).
+* Memoria física:
+** Se mapea la virtual a la física mediante segmentación o paginación.  En paginación las direcciones lineales de la memoria virtual se traducen a bloques de tamaño fijo llamados páginas, que el sistema operativo puede mover según necesidad entre memoria y disco. Estos mecanismos son invisibles  para la aplicación.
+* Direccionamiento. Recordando que es una arquitectura little-endian, puede ser:
+** Absoluto: las direcciones son absolutas con respecto a comienzo de memoria virtual o segmento de datos si se usa segmentación.
+** Relativo a instrucción: desplazamiento con respecto al registro de instrucción ```RIP```
+** ModR/M: Base+(Indice*Escala)+Desplazamiento
+** En pila: es especial, se modifica con las instrucciones ```PUSH, POP, CALL, RET, IRET``` e ```INT```.
+** Cadenas: con los registros ```RSI``` y ```RDI```.
+* Privilegios. Actual nivel de privilegio (CPL - Current Privilege Level). 0 para kernel manejo de memoria, localización de archivos, manejo de interrupciones. 1. para controladores y librerías. 3 para aplicaciones.  Al cambiar de nivel se guardan banderas y dirección donde estaba en la pila.
+
+
+## 2. Vista por el sistema operativo
+
+Además de lo visible para las aplicaciones, resumimos de {5}:
+
+* Registros del sistema: Son de 64 bits. Control ```CR0, CR2, CR3, CR4``` y ```CR8```. Banderas ```RFLAGS```. Descriptores de Tablas: ```GDTR, IDTR, LDTR```. Tareas:  ```TR```. Depuración: ```DR0, DR1, DR2, DR3, DR6, DR7```.   También; ```EFER, SYSCFG```, Registros para encadenamiento ```STAR, LSTAR, CSTAR, SFMASK, FS.base, GS.base, !KernelGSbase, SYSENTER_CS, SYSENTER_ESP, SYSENTER_EIP```. Registros para tipado de memoria ```MTRRcap, !MTRRdefType, !MTRRphysBasen,!MTRRphysMaskn, MTRRfixn, PAT, TOP_MEM, TOP_MEM2```. Relacionados con desempeño ```TSC, !PerfEvtSeln, !PerfCtrn```. Chequeo de máquina ```MCG_CAP, MCG_STAT, MCG_CTL, MCi_CTL, MCi_STATUS, MCi_ADDR, MCi_MISC```
+* Un sistema operativo que opere en modo largo debe inicializar modo real mínimo, después inicializar modo protegido, a continuación debe inicializar modo largo y poner EFER.LMA en 1.
+* Modo de Administración del Sistema. System Management Mode. SMM: Modo de operación diseñado para controlar actividades típicas del BIOS como administración de potencia. 
+* Administración de tareas. TSS: útil en modo legado para implementar procesos mapeando memoria independiente para cada proceso y cambios de tareas. No está disponible en modo largo, en el que es el sistema operativo quien debe implementar operación multitarea por completo. Consta de un segmento TSS, descriptor TSS, selector TSS, registros TSS.
+* Depuración y desempeño. Pueden ponerse puntos de ruptura (breakpoints) en los registros de desempeño, para que se produzca la excepción #DB cuando el control llegue a estas. La excepción #BP ocurre ante la interrupción 3.  Los registros de depuración solo pueden ponerse en CPL 0. Los contadores de desempeño se leen con la instrucción RDPMC.
+* Máquina Virtual Segura. Se refiere al soporte de virtualización que da este procesador, es decir para ejecutar un sistema operativo dentro de otro.
+* Controlador de interrupciones programable y avanzado. APIC. Acepta interrupciones del sistema y las envía al manejador de interrupciones de la CPU.
+* Memoria.  en modo largo debe estar activa la traducción de páginas. Cada dirección virtual consta de partes, por ejemplo puede ser: 
+** desplazamiento en tabla 1 (apuntada por dirección base de tabla de páginas), 
+** desplazamiento en tabla 2 (su base es apuntada en el desplazamiento de la tabla 1 anterior).
+** desplazamiento en tabla 3
+** dirección física dentro de la página referenciada por la tercera
+* Máquinas virtuales: 
+** Un monitor de máquina virtual (VMM - Virtual Machine Monitor) es un programa que ejecuta diversos sistemas operativos huesped.  Una VMCB es una estructura en memoria con registros (como ```FS, GS, TR, LDTR, !KernelGsBase, STAR, LSTAR, CSTAR, SFMASK, SYSENTER_CS, SYSENTER_ESP, SYSENTER_EIP```) que permite recuperar el estado de un sistema operativo huesped (o del sistema operativo anfitrion).
+
+! 2.1 Modo largo
+Dado que las estructuras de datos e instrucciones dependen del modo, y que los sistemas operativos de 64 bits deberían operar en modo largo, destacamos algunas características de este modo:
+
+* El puntero de instrucción (```RIP```) es de 64 bits, 
+* Las instrucciones usan el prefijo ```REX``` para especificar operandos de 64 bits.
+* No soporta modos 8086-virtual ni real. No soporta cambio de tarea por hardware. 
+* Se deshabilita segmentación. El espacio de direcciones es un sólo segmento plano para código, datos y pila. Se ignoran segmentos y prefijos ```CS, DS, SS, ES```.  Se ignoran límites de segmentos ```CS, DS, SS, ES, GS``` y ```FS```. Se ignoran atributos de ```DS, ES, FS``` y ```GS```. Los registros ```FS``` y ```GS``` se usan en cálculos de direcciones efectivas. Mapeado a registros específicos de módelo (MSR - Model Specific Registers) sólo pueden cargarse con la instrucción ```WRMSR```
+* Las direcciones virtuales son de 64 bits. Teóricamente las direcciones físicas podrían ser máximo de 52 bits. Los registros de descriptores de tabla que manejan la memoria virtual (```GDTR, IDTR, LDTR``` y ```TR```) pueden cargarse usando las instrucciones ```LGDT, LIDT, LLDT y LTR```.
+* Se habilita la extensión de direcciones físicas (PAE - Physical Address Extension) identificado con el registro ```CR4.PAE``` en ```1```. Con esta extensión, las estructuras de datos de paginación son de 64 bits y permiten referenciar todo el espacio físico de direcciones que es de 52 bits.  Se habilitan 4 niveles de estructuras de paginación, es decir se habilita el nivel de mapeo de páginas 4 (PML4 - Page Map Level 4). El registro ```CR3``` referencia dirección base de la tabla ```PML4```.  El tope de la jerarquía de traducción de páginas y referencia el apuntar a directorio de páginas ```PDP``` que tiene entre 4 y 512 entradas.  Entrada al apuntador a directorio de páginas. ```PDPE```. 
+* Se habilita extensiones para tamaño de página. (PSE - Paging size extension), que permite soportar páginas de tamaños 4K y 2MB.
+* Manejo de excepciones e interrupciones. Todos los apilamientos son de 8 bytes. Entradas ```IDT``` se expanden a 16 bits. ```SS``` no cambia en intercambio de pila. ```SS:RSP``` se apila incondicionalmente.
+* Llamados a compuertas. Todo apilamiento es de 8 bytes. Los llamados a compuertas de 16 bits son ilegales. El tipo de 32 bits para llamadas compuertas es redefinido a 64 bits, expandido a 16 bytes. 
+* ```GDT, IDT, LDT``` y ```TR``` son de 64 bits. ```LGDT, LIDT``` usan seudo-descriptores expandidos de 10 bytes.  ```LLDT``` y ```LTR``` usan entradas de tabla expandidas a 16 bytes. 
+
+
+! 2.2 Instrucciones exclusivas o relacionadas con el sistema operativo: 
+
+
+* Nivel de privilegio: ```ARPL, LAR, LSL, VERR, VERW```.  ```VERR reg/mem``` verifica si un segmente de datos o códigos es leible en el actual nivel de privilegio. ```VERW``` verifica posibilidad de escribir. ```LAR``` carga byte de acceso a registros-
+* Operación con registros privilegiados
+** ```SWAPGS``` usado al ingresar al kernel para obtener un apuntador a las estructuras de datos del kernel y al tiempo salvar la base ```GS```, a la salida se usa para restablecer ```GS```
+** ```SMSW reg/mem``` copia la palabra de estado de la máquina en un registro o en memoria. ```LMSW``` carga palabra de estado de la máquina de un registro o memoria. 
+** ```WRMSR``` Escribe datos en los registros de 64 bits (MSR).  ```RDMSR``` copia MSR especificado por ```ECX``` en ```EDX:EAX```
+** ```MOV CRn``` modifica registros de control.  ```CR0``` mantiene estado de bits de control. ```CR2``` y ```CR3``` se usan para traducción de página. ```CR4``` mantiene bits para habiltiar características. ```CR8``` para priorizar interrupciones externas. ```CR1, CR5, CR6, CR7``` y ```CR9-CR15``` son reservados.
+* Tareas (no usables en modo largo): 
+** ```CLTS``` Limpia bandera de tarea cambiada (```TS``` Task Switch), ```LMSW```, ```MOV Crn```
+** ```STR reg/mem```. Almacena el registro selector de tareas (```TR```) en memoria o registro.  ```LTR``` lo carga de memoria o registro.
+* Interrupciones:
+** ```HLT``` detiene ejecución de instrucciones hasta que ocurra interrupción 
+** ```IRET, IRETD, IRETQ``` Retorno de interrupción restaurando registros
+** ```SIDT mem```, guarda en memoria el registro ```IDTR``` con tabla de descriptores de interrupciones,  ```LIDT mem```, carga el registro ```IDTR``` con una tabla que está en memoria. 
+** ```CLI``` deshabilita interrupciones, ```STI``` las habilita. 
+* Caches de memoria internos. ```INVD``` invalida. ```WBINDVD``` escribe líneas del cache modificadas e invalida. ```CLFLUSH```. ```INVLPG``` Invalida entrada TLB. ```INVLPGA``` invalida entrada TBL en un ASID especificado. ```MOV CR3, MOV CR4```
+* Memoria Virtual
+** ```SGDT mem```, copia el registro ```GDTR``` con la tabla global de descritpores en memoria.  ```LGDT mem```, carga el registro ```GDTR``` con la tabla que está en memoria. 
+** ```SLDT mem```, copia el registro ```LDT``` con tabla local de descriptores a memoria.  ```LLDT mem```, carga el registro ```LDT``` con una tabla en memoria.
+* Modo de Administración del Sistema SMM. ```RSM```: resume al salir de este modo.
+* Operación de varios procesadores:
+** ```MONITOR``` y ```MWAIT``` hacen que un procesador se detenga hasta que se almacene un dato en un rango de direcciones. 
+* Depuración. 
+** ```INT3``` llama manejador de excepción de depuración.
+** ```MOV DRn``` modifica registros de depuración. ```DR0``` a ```DR3``` son direcciones de ruptura. ```DR6``` es registro de estado de depuración. ```DR7``` es registro de control de depuración. ```DR8``` a ```DR15``` son reservados.
+* Desempeño: ```RDTSC``` y ```RDTSCP``` copian contador de tiempo en ```EDX:EAX```, ```RDTSCP``` también copia ```TSC_AUX``` en ```ECX```.  ```RDPMC``` copia el contador monitor de desempeño especificado por ```ECX``` en ```EDX:EAX``` (solo hay 4 contadores !PerfCtr0 a !PerfCtr3)
+* Llamadas al sistema:
+** ```SYSCALL``` y ```SYSEXIT```, para hacer llamadas al sistema y retornos cuando opera en modo largo. Emplean registros MSR para su operación. ```SYSCALL``` guarda ```RIP``` en un registro y carga nuevo ```RIP``` del ```LSTAR``` (registro específico C000_0082). Prepara otros registros dejando ```CPL``` en 0. Su operación depende de los registros MSR: ```STAR, LSTAR, CSTAR``` y ```!SYSCALL_FLAG_MASK```
+** ```SYSENTER``` y ```SYSRET``` solo se usan en modo legado para hacer llamados al sistema empleado registros MSR (```!MSR_SYSENTER_CS, !MS_SYSENTER_ESP, !MS_SYSENTER_EIP```)
+* Máquinas virtuales:  
+** La instrucción ```VMSAVE RAX``` salva el estado del estado del procesador en un área de memoria VMCB apuntada por ```RAX```.  ```VMLOAD RAX``` carga parte del estado del procesador del VMCB especificado en ```RAX```.  Junto con ```VMSAVE``` complementan habilidades de ```VMRUN``` y ```#VMEXIT```.
+** ```VMCALL``` es usada por el sistema huesped para comunicarse con el VMM generando excepción ```#VMEXIT```.
+** ```VMRUN RAX```, inicia ejecución de una secuencia de instrucciones de huesped descrito por el VMCB apuntado por ```RAX```
+** ```SKINIT``` reinicia la máquina de forma segura para iniciar en un VMM
+** ```CLGI``` deshabilita interrupciones globales (GIF). ```STGI``` las habilita
+
+
+## 3. Vista por el sistema operativo OpenBSD
+
+* Soporta arquitectura AMD64 desde 2004, opera en modo largo (long mode).
+* El formato de ejecutables es ```ELF```
+* Los programas pueden hacer llamadas al sistema operativo
+
+! 3.1 Llamadas al sistema
+
+* El sistema está compilado para emplear el ABI de AMD64: Se usan los registros ```RDI```, ```RSI```, ```RDX```, ```RCX```, ```R8``` y ```R9``` como argumentos enteros y de apuntadores, se usan ```XMM0``` a ```XMM7``` para argumentos de punto flotante {3}.  
+* En este ABI las llamadas al sistema se hacen mediante ```SYSCALL```
+
+La sintaxis de los programas en assembler dependen del ensablador que se use para compilarlos, ```nasm``` soporta la sintaxis original del Intel y AMD64.  ```as``` soporta la sintaxis AT&T.  
+
+En el momento de este escrito, en OpenBSD las herramientas de compilación estándar son del proyecto GNU (por el cual oramos):
+* ```cpp```  como preprocesador
+* ```gcc```  para compilar fuentes en C y C++
+* ```as```   para compilar fuentes en assembler
+* ```ld```   para encadenar
+
+Por el licenciamiento de estas herramientas, hay proyectos que buscan remplazarlas. En OpenBSD busca remplazarse ```gcc``` con ```pcc``` (ver {6}), en FreeBSD se ha avanzado en remplazar toda la cadena con herramientas con LLVM: ```cpp``` y ```gcc``` con ```clang```, ```as``` y ```ld``` con ```llvm``` (ver {7})
+
+A continuación presentamos un programa en ensamblador que emplea las herramientas estándar y hace llamadas al sistema operativo para imprimir "Hola Mundo":
+
+<pre>
+# Basado en http://thebrownnotebook.wordpress.com/2009/10/27/native-64-bit-hello-world-with-nasm-on-freebsd/ y http://www.phiral.net/openbsdasm.htm
+
+# Sintaxis para gas que es el ensamblador estándar en OpenBSD, oramos.
+# El enlazador ld convertirá a formato ejecutable ELF
+
+# Tiene una sección con los datos y otra con el código ejecutable
+
+.section .data
+hola:
+   .ascii "Hola, Mundo!\n\0"
+
+
+.section .text
+.globl _start
+
+# La ejecución comienza en símbolo _start
+_start:
+
+# Para hacer llamado al sistema, empleamos la instrucción syscall de AMD64 
+# y empleamos ABI amd64 para para pasar parámetros:
+# enteros o apuntadores en los registros RDI, RSI, RDX, RCX, R8 y R9
+# parámetros de punto flotante en los registros XMM0 a XMM7.
+
+   movq $4, %rax     # en RAX número de llamada al sistema, 4 es write
+   movq $1, %rdi     # En RDI descritpor de salida estándar (stdout)
+   movq $hola, %rsi  # En RSI dirección de cadena por mostrar
+   movq $13, %rdx    # En RDX tamaño de cadena por mostrar
+   syscall
+
+   movq $1, %rax     # Preparamos llamada al sistema, función 1 que es exit
+   movq $0, %rdi     # Retornaremos 0 al SO
+   syscall
+</pre>
+
+Si lo almacenamos en ```ex.s``` puede compilarse con:
+<pre>
+$ as ex.s -o ex.o
+$ ld ex.o -o ex
+</pre>
+
+Puede ejecutarse directamente:
+<pre>
+$ ./ex3
+Hola, Mundo!
+</pre>
+o mejor habilitando rastreo de las llamadas al sistema:
+<pre>
+$ ktrace ./ex3
+Hola, Mundo!
+$ kdump
+  2733 ktrace   RET   ktrace 0
+  2733 ktrace   CALL  execve(!0x7f7ffffcdf4f,!0x7f7ffffcde00,!0x7f7ffffcde10)
+  2733 ktrace   NAMI  "./ex3"
+  2733 ex3      EMUL  "native"
+  2733 ex3      RET   execve 0
+  2733 ex3      CALL  write(0x1,!0x6001f8,0xd)
+  2733 ex3      GIO   fd 1 wrote 13 bytes
+       "Hola, Mundo!
+       "
+  2733 ex3      RET   write 13/0xd
+  2733 ex3      CALL  exit(0)
+</pre>
+
+La sintaxis AT&T busca ser más portable ```inusual prioridad para un ensamblador```, puede consultarse una introducción a las diferencias en {8}.
+
+Es política de OpenBSD que los segmentos de datos (.data) no pueden tener información ejecutable y los segmentos de código (.text) y otros que sean ejecutables no pueden escribirse.  A esta política se le llama  W^X (W xor X) que busca evitar ataques por ejemplo por desbordamiento de colchones (buffer overloading), ver {4} o un experimento en [WxorX]
+
+!3.2 Arranque
+
+Se explica a partir de fuentes de 4.8 y particularmente sys/arch/amd64/stand/biosboot/biosboot.S stand/Makefile.inc stand/biosboot/Makefile include/specialreg.h así como las páginas biosboot, boot boot_amd64
+
+* Desde tiempos del 8086 la CPU arranca en frio empleando el BIOS para realizar un POST (Power On Self Test) y en modo real y pasa el control al BIOS
+* Después carga el Registro Maestro de Arranque (MBR - Master Boot Record) de la pista 0, cabeza 0 y sector 1 del disco a la dirección 0x7C00, verifica que sus dos últimos bytes sean 0xAA55 y pasa el control a este.
+* El MBR de su tabla de particiones embebida, carga también en la dirección 0x7C00 el primer sector de la partición marcada como partición de arranque y pasa el control allí.  En el caso del MBR de OpenBSD presenta el mensaje Using drive X, partition Y. para indicar la partición que carga y a la cual pasa el control.  Puede operar en modo CHS (para discos de máximo 8GB o LBA), el usuario puede forzar modo CHS presionando Shift.
+* En el primer sector de una partición OpenBSD está ```biosboot.S``` que es un programa que cabe en un sector (512 bytes) y emplea registros de 16 bits y los servicios de la BIOS para:
+** Verificar si se está presionando la tecla Shift para cargar en modo CHS (cilindro - cabeza - sector) en lugar de LBA, pero esto requiere que boot esté en los primeros 8GB del disco.  Si carga en modo LBA sale mensaje Loading, si es en modo CHS sale !Loading.  Tras intentar si debe cargar en modo CHS aparece ; tras Loading.
+** Cargar el programa /boot en 0x40000 
+*** Carga nodo-i de /boot
+*** Emplea la información de ese nodo-i para cargar bloques directos y primer bloque indirecto si lo hay.  Muestra un punto . en pantalla por cada bloque leido. Cuando termina la carga envia un fin de linea.   El programa /boot si está sólo en bloques directos puede ser de tamaño 192KB.
+*** Verifica haber cargado un programa ELF 
+La secuencia de arranque desde los 8086 una vez el BIOS tiene el control es cargando el registro maestro de arranque (MBR - Master Boot Record) en un área de memoria (
+** Pasar el control a /boot en dirección 0x40120
+* El programa boot por su parte emplea los registros de 32 bits y:
+** Activa modo protegido
+** Prueba dispositivos para una consola básica y puertos seriales 
+** Detecta memoria 
+** Prueba APM 
+** Reconocer archivo de configuracion ```etc/boot.conf```, excepto si el usuario presiona la tecla Control 
+** Presenta el mensaje ```>> OpenBSD/amd64 BOOT [x.xx]``` y a continuación el indicador ```boot> ``` en el que pueden darse comandos.
+** Intenta cargar el kernel ```/bsd``` que típicamente está comprimido y lo descomprime.  
+
+Esta secuencia de arranque puede "verse" en operación con el emulador ```bochs```, para esto:
+* Instale bochs con soporte para depuración --o configure las fuentes con las opciones --enable-debugger como dice en {9}
+* Descargue un CD de instalación mínimo de OpenBSD para amd64 4.8/amd64/install48.iso de algun espejo de OpenBSD.
+* Configure bochs para que arranque por esa imagen, cuando la emulación comience quedará en el indicador ```bochs:1>``` 
+
+En el indicador de bochs puede detener la ejecución en el MBR con:
+* break 0x7c00  detiene ejecución en MBR la primera vez y la segunda en biosboot.s --en realidad cdboot que es el cargado desde CDs pero que realiza las funciones de biosboot y boot
+* break 0x40140 detiene ejecución cuando comienza boot, bueno en realidad en cdboot que es la versión de este programa que opera desde CD pero hace lo mismo que boot.
+
+ante lo cual puede dar por ejemplo break 0x7000 si desea que la ejecución 
+
+## REFERENCIAS
+
+* {2} AMD Architecture Programmer's Manual. Volume 1: Application Programming. http://support.amd.com/us/Processor_TechDocs/24592.pdf Erratas. Página 82 dice "multiplied by 9" debe ser "multiplide by 8"
+* {3} http://en.wikipedia.org/wiki/X86_calling_conventions
+* {4} http://www.openbsd.org/papers/ven05-deraadt/mgp00016.html
+* {5} AMD64 Architecture Programmer's Manual Volume 2: System Programming. http://support.amd.com/us/Processor_TechDocs/24593.pdf
+* {6} http://pcc.ludd.ltu.se/
+* {7} http://wiki.freebsd.org/BuildingFreeBSDWithClang 
+* {8} http://sig9.com/articles/att-syntax
+* {9} http://bochs.sourceforge.net/cgi-bin/topper.pl?name=New+Bochs+Documentation&url=http://bochs.sourceforge.net/doc/docbook/user/index.html

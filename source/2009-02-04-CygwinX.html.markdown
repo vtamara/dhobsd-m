@@ -1,0 +1,33 @@
+---
+title: CygwinX
+date: 2009-02-04
+tags:
+---
+El sistema de ventanas X-Window permite abrir aplicaciones gráficas en otro computador donde corra un servidor de X-Window.
+
+En este artículo se describe como abrir desde un sistema Windows una aplicación gráfica que corre en un sistema OpenBSD (e.g firefox)
+
+
+! Configuración en Windows
+
+Es necesario instalar un servidor de X-Window, uno de libre redistribución para Windows es Cygwin/X, disponible en http://x.cygwin.com/
+
+Después de instalarlo debe dejarlo corriendo.
+
+
+! Configuración en OpenBSD
+
+Desde una terminal (abriral por ejemplo con putty) ejecutar la aplicación pero antes debe indicarse al sistema que envie la información gráfica al servidor que corre en el sistema Windows (digamos con IP 192.168.0.33) con:
+
+<pre>
+export DISPLAY=192.168.0.33:0.0
+</pre>
+
+En ese momento ya es posible ejecutar la aplicación gráfica, por ejemplo.
+
+<pre>
+sudo firefox
+</pre>
+
+
+
