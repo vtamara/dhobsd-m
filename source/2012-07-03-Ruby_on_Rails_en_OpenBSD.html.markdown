@@ -22,7 +22,7 @@ sudo su
  ln -sf /usr/local/bin/testrb22 /usr/local/bin/testrb
 </pre>
 
-Para facilitar su exploración del lenguaje ruby, puede usar ```irb``` (ver {4}) y tabulador (por ejemplo ingrese y escriba ```4.``` y presione ![Tab] 2 veces para ver los métodos de la clase Integer). Para una mejor experiencia con irb, verifique que su archivo ```~/.irbrc``` tenga las siguientes líneas (añadidas por defecto desde adJ 5.4 en cuenta de administrador):
+Para facilitar su exploración del lenguaje ruby, puede usar ```irb``` (ver {4}) y tabulador (por ejemplo ingrese y escriba ```4.``` y presione la tecla [Tab] 2 veces para ver los métodos de la clase Integer). Para una mejor experiencia con ```irb```, verifique que su archivo ```~/.irbrc``` tenga las siguientes líneas (añadidas por defecto desde adJ 5.4 en cuenta de administrador):
 <pre>
 # Configuración de irb
 # Basado en archivo de comandos disponible en http://girliemangalo.wordpress.com/2009/02/20/using-irbrc-file-to-configure-your-irb/
@@ -51,7 +51,7 @@ sudo make=gmake MAKE=gmake !NOKOGIRI_USE_SYSTEM_LIBRARIES=1 gem install rails
 
 Como interprete de !JavaScript recomendamos ```node.js``` (ver {1}) incluido en DVD de adJ 5.7 y que se configurará automáticamente.
 
-La gran mayoría de gemas instalarán de la misma forma que se explicó (en adJ 5.6 con ruby 2.2 para instalar ```nokogiri``` se requería ```sudo !NOKOGIRI_USE_SYSTEM_LIBRARIES=1 gem install nokogiri``` y para instalar ```capybara-webkit``` requiere ```sudo QMAKE=qmake4 MAKE=gmake gem install capybara-webkit```).
+La gran mayoría de gemas instalarán de la misma forma que se explicó (en adJ 5.7 con ruby 2.2 para instalar ```nokogiri``` se requiere ```sudo gem install nokogiri -- --use-system-libraries ``` y para instalar ```capybara-webkit``` requiere ```sudo QMAKE=qmake4 MAKE=gmake gem install capybara-webkit```).
 
 Para emplear ```vim``` como editor se recomienda asegurarse de haber ejecutado:
 <pre>
