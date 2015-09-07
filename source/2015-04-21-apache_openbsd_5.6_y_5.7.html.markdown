@@ -20,8 +20,9 @@ sudo pkg_add apache-httpd-openbsd
 </pre>
 
 En el archivo ```etc/rc.conf.local```  haga los siguientes cambios (parcialmente explicados en {2}):
-# Renombre ```httpd_flags``` por ```apache_flags```
-# En la variable ```pkg_scripts``` remplace ```httpd``` por ```apache``` (y  de requerirse saque ```nginx```).
+
+1. Renombre ```httpd_flags``` por ```apache_flags```.
+1. En la variable ```pkg_scripts``` remplace ```httpd``` por ```apache``` (y  de requerirse saque ```nginx```).
 
 Modifique el archivo de configuración ```/var/www/conf/httpd.conf```, el cambio evidente es modificar la ruta de los módulos activos para que sean cargados de ```/usr/local/lib/apache/``` en lugar de ```/usr/lib/apache```
 
