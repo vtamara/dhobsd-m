@@ -148,7 +148,9 @@ He notado que algunos servicios ya están habilitados con IPv6, pueden verse en 
 fstat | grep internet6
 ``` 
 
-en algunos servidores con adJ que opero los siguientes servicios ya tienen habilitado IPv6: Xorg, cupsd, nginx, smtpd, sshd, named, ftpd, rsync, dovecot
+en algunos servidores con adJ que opero he constatado que los siguientes 
+servicios ya tienen habilitado IPv6: Xorg, cupsd, nginx, smtpd, sshd, named, 
+ftpd, rsync, dovecot
 
 Así mismo diversas aplicaciones clientes los soportan incluyendo telnet, ssh, chrome.
 
@@ -228,5 +230,60 @@ La navegación con chrome operó bien por ejemplo con una dirección como http:/
 De hecho esa última página me confirmó las buenas posibilidades de la dirección IPv6 proveida por HE, del tunel y de mi servidor DNS para usar IPv6 (un named típico configurado en el mismo servidor adJ).
 
 ![Chrome sobre Tunel IPv6](http://s6.postimg.org/5bram5681/chrome_tunel_ipv6.jpg)
+
+## Ejercicio 7:  Conectar sólo a IPv6 usando un proveedor que ofrezca IPv6 con autoconfiguraación
+
+Basta conectar cable de proveedor que ofrezca IPv6 y dejar en 
+```/etc/hostname.re0``` (cambiando ```re0``` por su interfaz de red):
+<pre>
+rtsol
+</pre>
+
+En el momento de este escrito (Oct.2015) el problema es conseguir proveedores
+que ofrezcan IPv6 en Colombia, el autor ha hecho consulta directa con
+diversos proveedores (como Claro y ETB, UNE ha sido elusivo y presta
+muy mal servicio tras la compra por parte Tigo).  El único que ya
+han desplegado conexiones y tiene planes comerciales es Mercanet, que 
+infortunadamente sólo maneja precios para corporaciones muy grandes.
+
+Se hizo una prueba desde Estados Unidos con el inseguro proveedor Comcast 
+(ver http://aprendiendo.pasosdejesus.org/?id=Ataque+2013 )  donde se pudo
+comprobar la conectividad solo IPv6:
+
+![Prueba de conectividad solo IPv6](https://scontent-mia1-1.xx.fbcdn.net/hphotos-xpt1/v/t1.0-9/12003348_971753412880752_4844462289122407099_n.png?oh=c239c4f9c3e1f32c7e4cac024486eb89&oe=56CBF8B4)
+
+Para poder resolver nombres en este escenario se requiere un servidor DNS 
+que pueda responder a peticiones de dominios IPv6, por ejemplo los 
+servidores públicos de Google con IP 8.8.8.8 pueden hacerlo, así que
+basta configurar en ```/etc/resolv.conf```:
+<pre>
+order file bind
+nameserver 8.8.8.8
+</pre>
+
+Diversos servicios muy conocidos en el momento de este escrito ya operan 
+enteramente sobre IPv6 como Google, Facebook y Linkedin, (sin embargo
+no Twitter). 
+
+El autor no encontró sitios públicos en Colombia que operen con IPv6,
+según se comenta en
+[http://changux.co/ipv6-en-colombia-un-ano-despues-del-worldipv6launchday/]
+la situación ha permanecido así desde 2013 --ese sitio 
+opera sobre IPv6 pero no está ubicado en Colombia según 
+http://www.tcpiputils.com/ipv6-geolocation-database. 
+Según la misma base, paradoijicamente http://www.academiaipv6.org/ tampoco
+está ubicado en Colombia.
+
+## Ejercicio 8:  Conectar con pila doble usando un proveedor que ofrezca IPv6 e IPv4
+
+Suponiendo que el mismo modem del proveedor permite configuración de IPv5 vía DHCP, basta dejar en ```/etc/hostname.re0``` (cambiando ```re0``` por su 
+interfaz de red):
+<pre>
+dhcp
+rtsol
+</pre>
+
+Al examinar con ipv6.test-ipv6.como se verá algo como:
+![Prueba de conectividad con pila doble](https://fbcdn-sphotos-g-a.akamaihd.net/hphotos-ak-xpf1/v/t1.0-9/11951760_971750372881056_6940521321396463334_n.png?oh=10aee4de1223f0db5cfe5c1ec6f2648c&oe=56CD3FFB&__gda__=1452646545_585a924c37a9bca6fa17b0244b09194a)
 
 

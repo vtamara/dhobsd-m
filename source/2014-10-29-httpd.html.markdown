@@ -3,9 +3,20 @@ title: httpd
 date: 2014-10-29
 tags:
 ---
-adJ/OpenBSD 5.6 en el sistema base ya no incluye el tradicional Apache 1.3.29 (quedó en el paquete ```apache-httpd-openbsd```, ver como usarlo en [apache openbsd 5.6 y 5.7]), pero si incluye un nuevo servidor web mínimo OpenBSD ```httpd```.  Aunque OpenBSD 5.6 aún incluye ```nginx``` será eliminado a futuro --por cierto los binarios de OpenBSD 5.6 distribuidos en CD y descargables de Internet desde el 1.Nov.2014 tienen un nginx con una falla de seguridad del 1.Oct.2014 (cerrada en fuentes pero no en binarios --esta falla es cerrada en los binarios de adJ 5.6)
 
-En este artículo se presentan algunos casos de uso del nuevo ```httpd``` que soporta  servir contenido estático, FastCGI sin reescritura y SSL.  Sus fuentes se basan en las de ```relayd```  que fue introducido y madurado en OpenBSD desde la versión 4.1 (inicialmente llamado ```hoststated```).
+Desde adJ/OpenBSD 5.7 el único servidor web incluido en el sistema base
+es OpenBSD httpd.
+El tradicional Apache 1.3.29 fue sacado desde adJ/OpenBSD 5.6 por su 
+obsolecencia (quedó en el paquete de transición ```apache-httpd-openbsd```, 
+ver como usarlo en [http://dhobsd.pasosdejesus.org/apache_openbsd_5.6_y_5.7.html]).
+
+nginx por su parte estuvo un tiempo en el sistema base pero fue retirado
+desde 5.7, quedo sin embargo como paquete.
+
+En este artículo presentamos algunos casos de uso del nuevo ```httpd``` 
+que soporta  servir contenido estático, FastCGI sin reescritura y SSL.  
+Sus fuentes se basan en las de ```relayd```  que fue introducido y madurado en 
+OpenBSD desde la versión 4.1 (inicialmente llamado ```hoststated```).
 
 
 ##1. Configuración mínima
@@ -16,42 +27,62 @@ httpd_flags=""
 </pre>
 y en adJ agregue ```httpd``` a la variable ```pkg_scripts```.
 
-Se configura en el archivo ```/etc/httpd.conf``` cuya sintaxis tiene algunas similitudes con la de ```nginx``` y con la de ```relayd```.  Puede constar de 4 secciones: macros, configuraciones globales, uno o más servidores y tipos.
+Se configura en el archivo ```/etc/httpd.conf``` cuya sintaxis tiene algunas 
+similitudes con la de ```nginx``` y con la de ```relayd```.  Puede constar de 
+4 secciones: macros, configuraciones globales, uno o más servidores y tipos.
 
-La sintaxis de la sección de tipos es idéntica a la de ```nginx``` y como puede usarse ```include``` para incluir otro archivo de configuración, el siguiente es un ejemplo mínimo (incluyendo el macro ```ext_ip```):
+La sintaxis de la sección de tipos es idéntica a la de ```nginx``` y como 
+puede usarse ```include``` para incluir otro archivo de configuración, 
+el siguiente es un ejemplo mínimo (incluyendo el macro ```ext_ip```):
 <pre>
 ext_ip="200.201.202.203"
 server "default" {
 	listen on $ext_ip port 80
 }
-include "/etc/nginx/mime.types"
+#include "/etc/nginx/mime.types"
 </pre>
+
+Si tiene la definición de tipos mime en ```/etc/nginx/mime.types``` quite
+el comentario de la última línea.
 
 Podría probarlo iniciando en modo de depuración con:
 <pre>
-sudo httpd -vn
+  sudo httpd -vn
 </pre>
 
-Y examinando con un navegador la URL ```http://200.201.202.203```, con lo que vería el archivo ```/var/www/htdocs/index.html``` y notaría que:
+Y examinando con un navegador la URL ```http://200.201.202.203```, con lo que 
+vería el archivo ```/var/www/htdocs/index.html``` y notaría que:
 
-# Debido a la opción ```listen on $ext_ip port 80``` serviría por el puerto 80 de 200.201.202.203.  En lugar de $ext_ip puede usar una interfaz o incluso un grupo como ```egress``` para servir en todas las interfaces conectadas a Internet.
-# Por defecto pondría una jaula chroot en ```/var/www```.  Esto podría modificarse en la sección de configuración, antes del primer ```server``` y después del macro con la opción ```chroot __directorio__```
-# Iniciaría 3 procesos para servir páginas.  Esto puede modificarse en la sección de configuración con la opción ```prefork __numero__```
-# Que serviría los archivos de ```/var/www/htdocs```.  Esto puede modificarse  agregando la opción ```root __directorio_relativo_a_jaula__``` dentro de la sección ```server```.
+- Debido a la opción ```listen on $ext_ip port 80``` serviría por el puerto 80 de 
+200.201.202.203.  En lugar de $ext_ip puede usar una interfaz o incluso un 
+grupo como ```egress``` para servir en todas las interfaces conectadas a Internet.
+- Por defecto pondría una jaula chroot en ```/var/www```.  Esto podría 
+modificarse en la sección de configuración, antes del primer ```server``` 
+y después del macro con la opción ```chroot __directorio__```
+- Iniciaría 3 procesos para servir páginas.  Esto puede modificarse en la sección 
+de configuración con la opción ```prefork __numero__```
+- Que serviría los archivos de ```/var/www/htdocs```.  Esto puede modificarse  
+agregando la opción ```root __directorio_relativo_a_jaula__``` dentro de la 
+sección ```server```.
 
 
 ## 2. Servidor con cifrado
 
-Al ejemplo de configuración mínima anterior bastaría agregarle ssl a la opción listen e indicar el puerto 443, que es el asignado por defecto para HTTPS:
+Al ejemplo de configuración mínima anterior bastaría agregarle ```tls``` a 
+la opción listen e indicar el puerto 443, que es el asignado por defecto para 
+HTTPS:
 <pre>
 ext_ip="200.201.202.203"
 server "default" {
-	listen on $ext_ip ssl port 443
+	listen on $ext_ip tls port 443
 }
-include "/etc/nginx/mime.types"
+#include "/etc/nginx/mime.types"
 </pre>
 
-El certificado que emplea por defecto es el par ```/etc/ssl/server.crt``` y ```/etc/ssl/private/server.key```.  Podría especificarse otro par con las opciones ```ssl certificate __archivo__``` y ```ssl key __archivo__``` dentro de la sección server.
+El certificado que emplea por defecto es el par ```/etc/ssl/server.crt``` y 
+```/etc/ssl/private/server.key```.  Podría especificarse otro par con las 
+opciones ```ssl certificate __archivo__``` y ```ssl key __archivo__``` dentro 
+de la sección server.
 
  
 ## 3. Dominios virtuales
@@ -72,7 +103,7 @@ server "www.otrodominio.co" {
         root /htdocs/otrodominio
 }
 
-include "/etc/nginx/mime.types"
+#include "/etc/nginx/mime.types"
 </pre>
 
 ## 4. PHP
@@ -83,13 +114,13 @@ Una configuración mínima para SIVeL 1.2 (ver {4}) que opere en 192.168.1.1, co
 
 <pre>
 server "192.168.1.1" {
-       listen on egress ssl port 443
+       listen on egress tls port 443
 
        location "*.php" {
                fastcgi socket "/run/php-fpm.sock"
        }
       root "/htdocs/sivel/"
-      include "/etc/nginx/mime.types"
+      #include "/etc/nginx/mime.types"
 }
 </pre>
         

@@ -109,14 +109,14 @@ Instale el paquete con:
 # pkg_add openldap-client
 </pre>
 
-! 3.1 SIN CIFRAR EN 127.0.0.1
+### 3.1 SIN CIFRAR EN 127.0.0.1
 
 Verifique localmente que el servidor no cifrado corre con:
 <pre>
 ldapsearch -x -b 'dc=pasosdeJesus,dc=org' '(objectclass=*)'
 </pre>
 
-! 3.2 CIFRANDO
+### 3.2 CIFRANDO
 
 Primero puede analizar y verificar la conexión SSL del puerto 636 con:
 <pre>
@@ -210,7 +210,7 @@ ldapsearch -H !ldaps://www.pasosdeJesus.org -x -b 'dc=pasosdeJesus,dc=org' '(obj
 
 ## 5. USO CON ```phpldapadmin```
 
-!5.1 INSTALACIÓN Y CONFIGURACIÓN DE ```phpldapadmin```
+### 5.1 INSTALACIÓN Y CONFIGURACIÓN DE ```phpldapadmin```
 
 Instale el paquete y siga sus instrucciones (/usr/local/share/doc/pkg-readmes/phpldapadmin-1.2.3):
 
@@ -229,12 +229,12 @@ sudo /dev/MAKEDEV arandom
 
 Para probar dirigase a ```https://midomino.org/phpldapadmin/``` o si lo requiere primero configure un alias en su servidor web.
 
-! 5.2. Preparando cuentas
+### 5.2. Preparando cuentas
 
 Primero cree un grupo posix en grupos.
 A continuación cree cuentas de usuario, tenga en cuenta que en la configuración por defecto debe emplear cifrado crypt para la clave (que no es seguro).
 
-##BIBLIOGRAFÍA
+## BIBLIOGRAFÍA
 
 * {1} [Autenticacion con OpenLDAP]
 * {2} Páginas ```man ldadp```, ```man ldapd.conf```, ```man ldapctl```

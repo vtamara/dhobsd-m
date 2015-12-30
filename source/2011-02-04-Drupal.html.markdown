@@ -3,7 +3,7 @@ title: Drupal7
 date: 2011-02-04
 tags:
 ---
-Drupal 7 es un manejador de contenidos (CMS) muy popular y reciente.  Este artículo describe la instalación multisitio con posibilidad de un administrador general y un administrador por cada sitio suponiendo una instalación estándar de adJ (con Apache corriendo chroot, y PostgreSQL con socket en /var/www/tmp).
+Drupal es un manejador de contenidos (CMS) muy popular.  Este artículo describe la instalación multisitio con posibilidad de un administrador general y un administrador por cada sitio suponiendo una instalación estándar de adJ (con nginx corriendo chroot, y PostgreSQL con socket en /var/www/tmp).
 
 
 Aunque hay diversos manejadores de contenido, preferimos Drupal sobre Joomla porque:
@@ -16,175 +16,206 @@ Aunque hay diversos manejadores de contenido, preferimos Drupal sobre Joomla por
 
 ##1.1 Preparación
 
-Recomendamos descargar la versión más reciente de Drupal 7 de www.drupal.org e instalarla en ```/var/www/htdocs/drupal7```
+Recomendamos descargar la versión más reciente de Drupal 9 de www.drupal.org e instalarla en ```/var/www/htdocs/drupal8```
 
-Para posibilitar URLs limpios y asegurar un poco la instalación se recomienda descargar la versión más reciente del archivo drupal.conf incluido en el paquete oficial de OpenBSD:
-http://www.openbsd.org/cgi-bin/cvsweb/ports/www/drupal6/core/files/drupal.conf
+Para posibilitar URLs limpios su configuración de nginx debe ser algo como:
+```
+server {
+        listen       80;
+        listen       [::]:80;
+        server_name  drupal8.miorganizacion.org;
+        root         /htdocs/drupal8/;
 
-Ubiquela en /var/www/conf/modules.sample/drupal6.conf
-y cree un enlace:
-<pre>
-sudo ln -s /var/www/conf/modules.sample/drupal6.conf \
-       /var/www/conf/modules 
-</pre>
+        access_log  logs/access.log ;
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root  /htdocs;
+        }
+
+        location / {
+                root /htdocs/drupal8/;
+                index  index.php;
+                error_page 404 = @drupal;
+        }
+
+        location @drupal {
+                rewrite ^(.*)$ /index.php?q=$1 last;
+        }
+
+        location ~ \.php$ {
+            root           /htdocs/drupal8/;
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_index  index.php;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            include        fastcgi_params;
+        }
+
+    }
+```
 
 Para posibilitar subir archivos debe existir ```/var/www/tmp``` escribible por el servidor web (usuario ```www```, grupo ```www```).
 
-Además del paquete php-core requerirá ```php-pdo_pgsql```, ```php-gd```, ```php-mbstring```
-
 Reinicie el servidor web con:
-<pre>
-sudo apachectl stop
-sudo sh /etc/rc.local
-</pre>
+```
+sudo sh /etc/rc.d/nginx restart
+```
 
-Es necesario crear un usuario para PostgreSQL, por ejemplo ```drupal7``` con:
-<pre>
+Es necesario crear un usuario para PostgreSQL, por ejemplo ```drupal8``` con:
+```
 sudo su - _postgresql
-createuser -h/var/www/tmp -Upostgres drupal7
-</pre>
+createuser -h/var/www/tmp -Upostgres drupal8
+```
 No se requiere que sea superusuario, ni que pueda crear nuevos roles, aunque si que pueda crear bases de datos nuevas.
 
 A continuación desde la misma cuenta _postgresql, establezca una clave para el usuario recien creado con:
-<pre>
+```
 psql -h/var/www/tmp -Upostgres template1
 ...
-template1=# alter user drupal7 with password  'miclave';
+template1=# alter user drupal8 with password  'miclave';
 ...
+```
 template1=# \q
-</pre>
 Esta clave la debe usar posteriormente en el archivo de configuración de Drupal para su sitio.
 
-Desde la misma cuenta (```_postgresql```) cree la base de datos con codificación UTF8.  Por ejemplo si la base se llama ```drupal7```:
-<pre>
-createdb -h/var/www/tmp -Upostgres -Odrupal7 -E UTF8 drupal7 --template template0
-</pre>
+Desde la misma cuenta (```_postgresql```) cree la base de datos con codificación UTF8.  Por ejemplo si la base se llama ```drupal8```:
+```
+createdb -h/var/www/tmp -Upostgres -Odrupal8 -E UTF8 drupal8 --template template0
+```
 A continuación, puede salir de la cuenta _postgresql (con ```exit```).
 
-Para que tenga la posibilidad de realizar la instalación de nuevos sitios en español descargue la localización en Español de http://localize.drupal.org/translate/downloads ) e instalela en el subdirectorio profiles/standard/translations/
-(cambie la version por la más reciente en el siguiente ejemplo):
-<pre>
-mkdir -p ~/servidor/drupal
-cd ~/servidor/drupal
-ftp http://ftp.drupal.org/files/translations/7.x/drupal/drupal-7.0.es.po
-cp -rf drupal-7.0.es.po /var/www/htdocs/drupal7/profiles/standard/translations/
-</pre>
+Para que tenga la posibilidad de realizar descargas por ejemplo de
+traducciones deb habilitar la extensión php-curl.
 
 Ya podrá instalar su primer sitio que también le permitira comprobar la instalación.
 
 
 ##1.2. Creación de un nuevo sitio 
 
-Supongamos  que su Drupal está en un servidor con IP en la red interna 192.168.1.1 y con IP en Internet 200.200.200.200.
+Su primer sitio recomendamos que lo cree en ```sites/default``` que es donde el 
+proceso de instalación lo espera.
 
-Con la misma instalación de Drupal puede manejar varios sitios, incluso con la misma base de datos.  
+Para eso:
+```
+cd sites/default
+sudo cp default.settings.php settings.php
+sudo mkdir files
+sudo chown www:www settings.php files
+```
 
-A cada uno de sus sitios podrá ingresar con diversos URLs, por ejemplo si a futuro empleará el dominio www.misitiodrupal7.org, pero no lo ha comprado, y planea emplear mientras tanto misitiodrupal7.pasosdeJesus.org, e incluso antes de configurar el dominio pasosdeJesus.org planea hacer pruebas desde el servidor con el URL !http://127.0.0.1/misitiodrupal7/, desde la red interna a su nuevo sitio con el URL !http://192.168.1.1/misitiodrupal7/ y desde Internet con !http://200.200.200.200/misitiodrupal7/:
+Después de que termine el proceso de instalación recuerde quitar 
+permiso de escritura a settings.php por ejemplo con:
+```
+sudo chown root:servicio settings.php
+sudo chmod a+r settings.php
+sudo chmod og-w settings.php
+```
 
-<pre>
-cd /var/www/htdocs/drupal7/sites
-cp -rf default www.misitiodrupal7.org
-mkdir -p www.misitiodrupal7.org/files
-chown -R www:www www.misitiodrupal7.org/files
-</pre>
+A cada uno de sus sitios podrá ingresar con diversos URLs, por ejemplo si a futuro empleará el dominio www.misitiodrupal8.org, pero no lo ha comprado, y planea emplear mientras tanto misitiodrupal8.pasosdeJesus.org, e incluso antes de configurar el dominio pasosdeJesus.org planea hacer pruebas desde el servidor con el URL !http://127.0.0.1/misitiodrupal8/, desde la red interna a su nuevo sitio con el URL !http://192.168.1.1/misitiodrupal8/ y desde Internet con !http://200.200.200.200/misitiodrupal8/:
+
+```
+cd /var/www/htdocs/drupal8/sites
+cp -rf default www.misitiodrupal8.org
+mkdir -p www.misitiodrupal8.org/files
+chown -R www:www www.misitiodrupal8.org/files
+```
 
 Cree tantos enlaces como formas tendrá de acceder al sitio tanto desde red interna como desde internet (cambiando barras de dividido por punto), por ejemplo:
-<pre>
-sudo ln -s www.misitiodrupal7.org 127.0.0.1.misitiodrupal7
-sudo ln -s www.misitiodrupal7.org 192.168.1.1.misitiodrupal7
-sudo ln -s www.misitiodrupal7.org 200.200.200.200.misitiodrupal7
-sudo ln -s www.misitiodrupal7.org misitiodrupal7.pasosdeJesus.org 
-sudo ln -s www.misitiodrupal7.org misitiodrupal7.pasosdejesus.org 
-sudo ln -s www.misitiodrupal7.org www.misitiodrupal7.pasosdeJesus.org
-sudo ln -s www.misitiodrupal7.org www.misitiodrupal7.pasosdejesus.org
-</pre>
+```
+sudo ln -s www.misitiodrupal8.org 127.0.0.1.misitiodrupal8
+sudo ln -s www.misitiodrupal8.org 192.168.1.1.misitiodrupal8
+sudo ln -s www.misitiodrupal8.org 200.200.200.200.misitiodrupal8
+sudo ln -s www.misitiodrupal8.org misitiodrupal8.pasosdeJesus.org 
+sudo ln -s www.misitiodrupal8.org misitiodrupal8.pasosdejesus.org 
+sudo ln -s www.misitiodrupal8.org www.misitiodrupal8.pasosdeJesus.org
+sudo ln -s www.misitiodrupal8.org www.misitiodrupal8.pasosdejesus.org
+```
 
 Con los enlaces anteriores podrá ingresar a su sitio una vez configure
 Apache con Alias empleando IPs.  Una vez configure los dominios y Apache con servidores virtuales (!VirtualHost) también podrá ingresar con los nombres de dominio.
 
-A continuación edite el archivo ```www.misitiodrupal7.org/settings.php``` y después de la línea ```$databases = array();``` agregue:
-<pre>
+A continuación edite el archivo ```www.misitiodrupal8.org/settings.php``` y después de la línea ```$databases = array();``` agregue:
+```
 $databases!['default']!['default'] = array(
         'driver' => 'pgsql',
-        'database' => 'drupal7',
-        'username' => 'drupal7',
+        'database' => 'drupal8',
+        'username' => 'drupal8',
         'password' => 'miclave',
         'host' => '127.0.0.1',
         'prefix' => array(
-                'default'   => 'misitiodrupal7_',
+                'default'   => 'misitiodrupal8_',
                 'users'     => 'shared_',
                 'sessions'  => 'shared_',
                 'role'      => 'shared_',
                 'authmap'   => 'shared_',
         ),
 );
-</pre>
-que indica que usara una base de datos PostgreSQL llamada ```drupal7``` cuyo usuario es ```drupal7``` con clave ```miclave```.
+```
+que indica que usara una base de datos PostgreSQL llamada ```drupal8``` cuyo usuario es ```drupal8``` con clave ```miclave```.
 Con las opciones presentadas será una instalación multisitio con un sólo administrador general de todos los sitios y los mismos usuarios para todos los sitios.
 
 Para que su sitio pueda consultarse con IPs, debe configurar Apache en el archivo ```/var/www/conf/httpd.conf``` creando un Alias en la sección donde estos están:
 
-<pre>
-Alias /misitiodrupal7/ "/var/www/htdocs/drupal7/"
-</pre>
+```
+Alias /misitiodrupal8/ "/var/www/htdocs/drupal8/"
+```
 
-Al reiniciar Apache debe poder comenzar a instalar su sitio desde internet con !http://200.200.200.200/misitiodrupal7/install.php, desde la red local con el URL !http://192.168.1.1/misitiodrupal7/install.php  y desde el mismo servidor con !http://127.0.0.1/misitiodrupal7/install.php
+Al reiniciar Apache debe poder comenzar a instalar su sitio desde internet con !http://200.200.200.200/misitiodrupal8/install.php, desde la red local con el URL !http://192.168.1.1/misitiodrupal8/install.php  y desde el mismo servidor con !http://127.0.0.1/misitiodrupal8/install.php
 
 Para que su sitio pueda accederse con un dominio, debe configurar el dominio agregando registros que apunten a la IP pública (o si configura un DNS interno a la IP privada), por ejemplo en el archivo de zona pasosdeJesus.org (```/var/named/master/pasosdeJesus.org```) se agregaría la línea:
 
-<pre>
-misitiodrupal7 A 200.200.200.200
-</pre>
+```
+misitiodrupal8 A 200.200.200.200
+```
 
-O en el archivo de la zona ```misitiodrupal7.org``` una vez lo adquiera y administre, agregaría:
+O en el archivo de la zona ```misitiodrupal8.org``` una vez lo adquiera y administre, agregaría:
 
-<pre>
+```
 www A 200.200.200.200
-</pre>
+```
 
 Además de configurar sus zonas DNS deberá crear un servidor virtual en el archivo de configuración de Apache, algo como:
 
-<pre>
+```
 <!VirtualHost 200.200.200.200:80 192.168.1.1:80>
-    !ServerAdmin !admin@misitiodrupal7.org
-    !DocumentRoot /var/www/htdocs/drupal7
-    !ServerName www.misitiodrupal7.org
-    !ServerAlias misitiodrupal7.pasosdeJesus.org
+    !ServerAdmin !admin@misitiodrupal8.org
+    !DocumentRoot /var/www/htdocs/drupal8
+    !ServerName www.misitiodrupal8.org
+    !ServerAlias misitiodrupal8.pasosdeJesus.org
 
-    !ErrorLog logs/misitiodrupal7-error_log
-    !CustomLog logs/misitiodrupal7-access_log combined
+    !ErrorLog logs/misitiodrupal8-error_log
+    !CustomLog logs/misitiodrupal8-access_log combined
     Options !ExecCgi Includes !MultiViews Indexes !FollowSymlinks !SymLinksIfOwnerMatch
     !IndexOptions !FancyIndexing
 </!VirtualHost>  
-</pre>
+```
 
 También se recomienda que active SSL en Apache ---si no la hecho--- y que active un dominio virtual con SSL. Así los administradores podrán ingresar usando HTTPS para que sus claves se transmitan encriptadas.
 
-<pre>
+```
 <!VirtualHost 200.200.200.200:443 192.168.1.1:443>
-    !ServerAdmin !admin@misitiodrupal7.org
-    !DocumentRoot /var/www/htdocs/drupal7
-    !ServerName www.misitiodrupal7.org
-    !ServerAlias misitiodrupal7.pasosdeJesus.org
+    !ServerAdmin !admin@misitiodrupal8.org
+    !DocumentRoot /var/www/htdocs/drupal8
+    !ServerName www.misitiodrupal8.org
+    !ServerAlias misitiodrupal8.pasosdeJesus.org
 
     SSLEngine on
     !SSLCertificateFile    /etc/ssl/server.crt
     !SSLCertificateKeyFile /etc/ssl/private/server.key
 
-    !ErrorLog logs/misitiodrupal7-error_log
+    !ErrorLog logs/misitiodrupal8-error_log
     !CustomLog logs/ssl_request_log \
           "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"  
 </!VirtualHost>  
-</pre>
+```
 
 Antes de probar reinicie Apache con:
-<pre>
+```
 apachectl stop
 sudo sh /etc/rc.local
-</pre>
+```
 
 
-Cuando intente acceder a uno de los URLs configurados, debe ver el programa de instalación de Drupal o puede solicitarlo explicitamente agregando ```install.php``` a una URL, por ejemplo ```!http://192.168.1.1/misitiodrupal7/install.php```
+Cuando intente acceder a uno de los URLs configurados, debe ver el programa de instalación de Drupal o puede solicitarlo explicitamente agregando ```install.php``` a una URL, por ejemplo ```!http://192.168.1.1/misitiodrupal8/install.php```
 
 Si instaló el soporte de español como se presentó en la sección anterior debe poder elegir ese idioma incluso para la instalación.
 Al instalar un sitio adicional a otros que tenga emplee el mismo usuario administrador y clave del primero.  
@@ -202,14 +233,14 @@ Una vez instalado y operando es importante realizar diversas tareas comunes (com
 
 ##2.1 Actualizar la version de Drupal
 __Muy importante__ para cerrar fallas de seguridad.  Descargue la más reciente de http://www.drupal.org por ejemplo:
-<pre>
+```
 cd ~/servidor/drupal/
 ftp http://ftp.drupal.org/files/projects/drupal-7.1.tar.gz
 tar xvfz drupal-7.1.tar.gz
-cp -rf drupal-7.1/* /var/www/htdocs/drupal7/
-</pre>
+cp -rf drupal-7.1/* /var/www/htdocs/drupal8/
+```
 
-Tras cada actualización debe ejecutar el script ```update.php``` desde alguno de los URLs que haya configurado por ejemplo !http://192.168.1.1/misitiodrupal7/update.php
+Tras cada actualización debe ejecutar el script ```update.php``` desde alguno de los URLs que haya configurado por ejemplo !http://192.168.1.1/misitiodrupal8/update.php
 
 ##2.2 Administrar usuarios y permisos
 
@@ -217,32 +248,32 @@ Para la configuración multisitio sugerida, habrá un superadministrador que pod
 
 Para esto cree el rol admin y cuando cree un nuevo sitio con su nuevo administrador, ponga el nuevo administrador en el rol admin y en el nuevo sitio modifique los permisos del rol admin para permitirle todo --excepto administrar permisos o administrar usuarios (antes de modificar el rol se sugiera activar todos los módulos que usara en el sitio).
 
-Con respecto al sistema de archivos en el sistema cada administrador debe tener una cuenta de usuario, si por ejemplo el sitio www.misitiodrupal7.org será administrado por el usuario Juan, creele una cuenta con:
-<pre>
+Con respecto al sistema de archivos en el sistema cada administrador debe tener una cuenta de usuario, si por ejemplo el sitio www.misitiodrupal8.org será administrado por el usuario Juan, creele una cuenta con:
+```
 adduser
-</pre> 
+``` 
 Como login emplee por ejemplo juan.
 
 Cree directorios para que ese administrador ubique módulos y temas particulares:
-<pre>
-mkdir /var/www/htdocs/drupal7/sites/www.misitiodrupal7.org/{modules,themes}
-</pre>
+```
+mkdir /var/www/htdocs/drupal8/sites/www.misitiodrupal8.org/{modules,themes}
+```
 Y asegure que los permisos son correctos:
-<pre>
-chown -R juan:juan /var/www/htdocs/drupal7/sites/www.misitiodrupal7.org/{modules,themes}
-chown root /var/www/htdocs/drupal7/sites/www.misitiodrupal7.org
-chown root /var/www/htdocs/drupal7/sites/www.misitiodrupal7.org/settings.php
-chmod go-w /var/www/htdocs/drupal7/sites/www.misitiodrupal7.org/
-chmod go-w /var/www/htdocs/drupal7/sites/www.misitiodrupal7.org/settings.php
-chmod a+rx /var/www/htdocs/drupal7/sites/www.misitiodrupal7.org/
-chmod a+rx /var/www/htdocs/drupal7/sites/www.misitiodrupal7.org/settings.php
-chown www:www -R /var/www/htdocs/drupal7/sites/www.misitiodrupal7.org/files/
-</pre>
+```
+chown -R juan:juan /var/www/htdocs/drupal8/sites/www.misitiodrupal8.org/{modules,themes}
+chown root /var/www/htdocs/drupal8/sites/www.misitiodrupal8.org
+chown root /var/www/htdocs/drupal8/sites/www.misitiodrupal8.org/settings.php
+chmod go-w /var/www/htdocs/drupal8/sites/www.misitiodrupal8.org/
+chmod go-w /var/www/htdocs/drupal8/sites/www.misitiodrupal8.org/settings.php
+chmod a+rx /var/www/htdocs/drupal8/sites/www.misitiodrupal8.org/
+chmod a+rx /var/www/htdocs/drupal8/sites/www.misitiodrupal8.org/settings.php
+chown www:www -R /var/www/htdocs/drupal8/sites/www.misitiodrupal8.org/files/
+```
 
 
 ##2.3 Instalar módulos/temas comunes para todos los módulos
 
-El procedimiento de instalación es el mismo que para administradores y diseñadores de un sitio (ver secciones 3 y 4), sólo que para que sean compartidos debe ubicarse en ```/var/www/htdocs/drupal7/sites/all/modules``` o ```/var/www/htdocs/drupal7/sites/all/themes```
+El procedimiento de instalación es el mismo que para administradores y diseñadores de un sitio (ver secciones 3 y 4), sólo que para que sean compartidos debe ubicarse en ```/var/www/htdocs/drupal8/sites/all/modules``` o ```/var/www/htdocs/drupal8/sites/all/themes```
 
 
 Los módulos que recomendamos instalar/activar en todo sitio son:
@@ -259,30 +290,30 @@ Los módulos que recomendamos instalar/activar en todo sitio son:
 !2.3.1 smtp
 
 Descargar el más reciente de http://drupal.org/project/smtp
-<pre>
+```
 cd ~/servidor/drupal
 ftp http://ftp.drupal.org/files/projects/smtp-7.x-1.x-dev.tar.gz
-cd /var/www/htdocs/drupal7/sites/all/modules/ 
+cd /var/www/htdocs/drupal8/sites/all/modules/ 
 tar xvfz /home/vtamara/servidor/drupal/smtp-7.x-1.x-dev.tar.gz
-</pre>
+```
 
 
 !2.3.2 fckeditor con imce
 
 Instale los módulos y sus requerimientos (consulte los archivos README.txt), a continuación se presenta un ejemplo:
 
-<pre>
+```
 ftp http://ftp.drupal.org/files/projects/fckeditor-6.x-2.1.tar.gz
 tar xvfz fckeditor-6.x-2.1.tar.gz
-sudo cp -rf fckeditor /var/www/htdocs/drupal7/sites/all/modules/
+sudo cp -rf fckeditor /var/www/htdocs/drupal8/sites/all/modules/
 rm fckeditor
 ftp "http://downloads.sourceforge.net/souorceforge/fckeditor/FCKeditor_2.6.6.tar.gz"
 tar xvfz FCKeditor_2.6.6.tar.gz
-sudo cp -rf fckeditor/* /var/www/htdocs/drupal7/sites/all/modules/fckeditor/
+sudo cp -rf fckeditor/* /var/www/htdocs/drupal8/sites/all/modules/fckeditor/
 ftp http://ftp.drupal.org/files/projects/imce-6.x-2.0-rc1.tar.gz
 tar xvfz imce-6.x-2.0-rc1.tar.gz
-sudo cp -rf imce /var/www/htdocs/drupal7/sites/all/modules/
-</pre>
+sudo cp -rf imce /var/www/htdocs/drupal8/sites/all/modules/
+```
 
 
 Después se recomienda:
@@ -297,9 +328,9 @@ Después se recomienda:
 ##2.4 Activar URLs limpios
 
 Para esto debe editar el archivo de configuración de Apache ```/var/www/conf/httpd.conf``` y quitar comentario a la línea que carga el módulo mod_rewrite de forma que quede:
-<pre>
+```
 !LoadModule rewrite_module       /usr/lib/apache/modules/mod_rewrite.so
-</pre>
+```
 
 Después de esto ya estará habilitada la opción de activar URLs limpios desde el ```admin/settings/clean-urls```
 
@@ -307,3 +338,9 @@ Después de esto ya estará habilitada la opción de activar URLs limpios desde 
 
 Para actualizar de Drupal 5 a Drupal 7, ver:
 www.kleinfelter.com/node/273
+
+#3. Uso
+
+Son buenas prácticas para usuarios finales:
+* Emplear URLs con sólo rutas, quitando el protocolo y máquina para permitir operación desde diversos sitios base.
+* Transformar en su equipo imágenes antes de subirlas.
