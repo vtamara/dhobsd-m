@@ -6,7 +6,8 @@ tags:
 OpenBSD 5.7 eliminó BIND (binario ```named```) que puede realizar 
 funciones de servidor de nombres autoritario y servidor de nombres 
 recursivo. Estas funcionalidades las puede realizar con ```nsd``` 
-y ```unbound``` respectivamente.  
+y ```unbound``` respectivamente. 
+ 
 La distribución adJ de OpenBSD  incluye NSD desde 5.4 e incluye 
 unbound desde 5.6 --unbound está como paquete en 5.5.  
 
@@ -17,6 +18,7 @@ servidor BIND con vista autoriaria y vista recursiva.
 
 Un servidor autoritario para un dominio, es la fuente autoritaria sobre un 
 dominio.    
+
 Es requerido para manejar un dominio y típicamente responde consultas que se 
 hagan desde Internet más no desde la red local.   Si ya tiene un ```named``` 
 con vistas operando, con NSD debe configurar la parte que están en la vista 

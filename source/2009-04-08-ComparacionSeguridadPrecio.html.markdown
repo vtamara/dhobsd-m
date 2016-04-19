@@ -25,6 +25,7 @@ de www.secunia.com y precios de www.kamaleon.com.co:
 * En secunia no hay entradas para OpenBSD desde 4.5, los datos para versiones posteriores son de http://openbsd.org/security.html#49
 
 | Fecha | Programa | Desde | Vulnerabilidades | Abiertas | Alt + Ext. Crítica | Precio |
+| 26.Feb.2016 | Windows 7 Proffesional | 2009 | 168 | 6% | 41% | 95000 (26.Feb.2016)|
 | 31.Ago.2011 | Windows 7 Proffesional | 2009 | 168 | 6% | 41% | 405962 (24.Feb.2010)|
 | 31.Ago.2011 | Ubuntu 10.10 |  2010 | 738 | 1% | 21%  | 0 |
 | 31.Ago.2011 | Ubuntu 9.10 |  2009 | 877 | 0% | 16% | 0 |

@@ -3,10 +3,11 @@ title: apt-cacher-ng
 date: 2015-05-08
 tags:
 ---
-# Cache para la red local con ```apt-cacher-ng```
+# Cache de paquetes Ubuntu en una red local con ```apt-cacher-ng```
 
 
-Para hacer más rápida la descarga de paquetes vale la pena configurar uno de los computadores de la red local para que sea repositorio de paquetes y les sirva a los demás computadores de la red.
+Para hacer más rápida la descarga de paquetes de Ubuntu vale la pena configurar uno de los computadores de la red local (que llamaremos sevidor en este escrito)
+para que sea repositorio de paquetes y les sirva a los demás computadores de la red.
 
 ## 1. CONFIGURACIÓN EN SERVIDOR
 En el computador que tendrá el repositorio ejecute (según instrucciones de {1}):

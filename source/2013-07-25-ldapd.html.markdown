@@ -3,21 +3,34 @@ title: ldapd
 date: 2013-07-25
 tags:
 ---
-Describimos como configurar y usar un servidor LDAP en adJ OpenBSD 5.5p1, empleando el servicio ```ldpad``` y los clientes openldap-client y  phpldapadmin.
+Describimos como configurar y usar un servidor LDAP en adJ OpenBSD 5.7p2, 
+empleando el servicio ```ldpad``` y los clientes ```openldap-client```
+y  ```phpldapadmin```.
 
 ##1. INTRODUCCIÓN
 
-LDAP (Lightweight Directory Access Protocol) es un protocolo para mantener e intercambiar información almacenada en directorios (i.e bases de datos especiales).
+LDAP (Lightweight Directory Access Protocol) es un protocolo para mantener 
+e intercambiar información almacenada en directorios (i.e bases de datos 
+especiales).
 
-Un uso típico de LDAP es mantener en un servidor información de los usuarios de una organización para permitir su autenticación en los computadores (e.g nombres, apellidos, dirección, teléfono, login, clave).
+Un uso típico de LDAP es mantener en un servidor información de los usuarios 
+de una organización para permitir su autenticación en los computadores 
+(e.g nombres, apellidos, dirección, teléfono, login, clave).
 
-OpenBSD incluye (desde OpenBSD 4.8) un servidor para LDAP versión 3, ```ldapd```. No incluye cliente para LDAP pero desde la línea de comandos puede emplearse el paquete ```openldap-client``` o como interfaz web ```phpldapadmin``` .
+OpenBSD incluye (desde OpenBSD 4.8) un servidor para LDAP versión 3, 
+```ldapd```. No incluye cliente para LDAP pero desde la línea de comandos 
+puede emplearse el paquete ```openldap-client``` o como interfaz 
+web ```phpldapadmin``` .
 
 ##2. INSTALACIÓN Y CONFIGURACIÓN DE ```ldapd```
 
 No necesita instalar paquetes para la operación como servidor.
 
-La configuración que se presenta emplea LDAPS para conexiones en la red local, empleando un certificados cuyas llaves pública y privada debe copiarse a ```/etc/ldap/certs```, por ejemplo si quiere usar el certificado que usa para el servidor web (```server.crt``` y ```server.key```), debe copiarlo con el nombre que usara para el servicio:
+La configuración que se presenta emplea LDAPS para conexiones en la red 
+local, empleando un certificados cuyas llaves pública y privada deben
+copiarse a ```/etc/ldap/certs```. Por ejemplo si quiere usar el certificado 
+que usa para el servidor web (llaves ```server.crt``` y ```server.key```), debe 
+copiar las llaves con el nombre que usara para el servicio:
 <pre>
 # cp /etc/ssl/private/server.key /etc/ldap/certs/www.pasosdeJesus.org.key
 # cp /etc/ssl/server.crt /etc/ldap/certs/www.pasosdeJesus.org.crt
@@ -31,7 +44,8 @@ chmod 0640 /etc/ldap/certs/*key
 chmod 0644 /etc/ldap/certs/*crt 
 </pre>
 
-Para configurar el servidor, verifique que exista el usuario ```_ldapd``` y el grupo ```_ldapd``` y edite ```/etc/ldapd.conf```:
+Para configurar el servidor, verifique que exista el usuario ```_ldapd``` 
+y el grupo ```_ldapd``` y edite ```/etc/ldapd.conf```:
 
 <pre>
 schema "/etc/ldap/core.schema"                                                  
@@ -57,49 +71,68 @@ namespace "dc=pasosdeJesus,dc=org" {
 }                                                                               
 </pre>
 
-Recuerde que la clave del directorio debe ser mejor que la presentada (i.e remplace ```secret``` por una buena clave). En lugar de poner la clave plana también es posible poner la cadena generada con:
+Recuerde que la clave del directorio debe ser mejor que la presentada 
+(i.e remplace ```secret``` por una buena clave). 
+En lugar de poner la clave plana también es posible poner la cadena generada 
+con:
 <pre>
 # slappasswd -v -u -h {CRYPT} -s secret
 </pre>
 que en el caso de la clave '```secret```' es '```{CRYPT}uPUCy906TIu/k```'
 
-La configuración por defecto emplea ```/var/db/ldap``` como directorio para mantener las bases de datos y mantiene una por cada namespace.  Las conexiones no cifradas por defecto operan en el puerto 389 y deben autenticarse con SASL (a menos que tengan la opción ```secure``` para permitir autenticación plana) y las que empleen certificado iran cifradas en el puerto 636.
+La configuración por defecto emplea ```/var/db/ldap``` como directorio para 
+mantener las bases de datos y mantiene una por cada ```namespace``` del
+archivo de configuración.  
+Las conexiones no cifradas por defecto operan en el puerto 389 y deben 
+autenticarse con SASL (a menos que tengan la opción ```secure``` para 
+permitir autenticación plana) y las que empleen certificado iran 
+cifradas en el puerto 636.
 
-Cada vez que modifique el archivo de configuración del servidor, puede verificarlo con:
+Cada vez que modifique el archivo de configuración del servidor, puede 
+verificarlo con:
 <pre>
 $ sudo ldapd -n
 </pre>
-Para iniciar el servidor LDAP en modo de depuración para ver posibles errores:
+Para iniciar el servidor LDAP en modo de depuración y ver posibles errores:
 <pre>
-$ sudo ldadpd -dv
+$ sudo ldapd -dv
 </pre>
-Tras verificar el funcionamiento, para que en cada arranque se inicie el servidor puede agregar a ```/etc/rc.conf.local```:
+Tras verificar el funcionamiento, para que en cada arranque se inicie el 
+servidor puede agregar a ```/etc/rc.conf.local```:
 <pre>
 ldapd_flags=""
 pkg_scripts="ldapd"
 </pre>
 
-E iniciar el servicio con ```/etc/rc.d/ldapd start``` y detenerlo con ```/etc/rc.d/ldadp stop```
+E iniciar el servicio con ```/etc/rc.d/ldapd start``` 
+y detenerlo con ```/etc/rc.d/ldadp stop```
 
-Si emplea un adJ 5.2 y planea conectarse desde clientes digamos en Ubuntu reciente requerirá el parche descrito en http://openbsd.7691.n7.nabble.com/ldapd-and-quot-The-Diffie-Hellman-prime-sent-by-the-server-is-not-acceptable-quot-td59635.html
+Si emplea un adJ 5.2 y planea conectarse desde clientes digamos en Ubuntu 
+requerirá el parche descrito en 
+http://openbsd.7691.n7.nabble.com/ldapd-and-quot-The-Diffie-Hellman-prime-sent-by-the-server-is-not-acceptable-quot-td59635.html
 
-
-Es muy recomendable que agregue el esquema LDAP de Courier, de esta forma tomada de {3}:
-* Descarguelo y renombrelo:
+Si planea autenticar correo es recomendable que emplee el esquema misc de 
+OpenLDAP como se describe en {7}:
+```
+sudo ftp -o "/etc/ldap/misc.schema" http://www.openldap.org/devel/cvsweb.cgi/~checkout~/servers/slapd/schema/misc.schema
+```
+y que en ```/etc/ldapd.conf``` agregue la línea:
 <pre>
+schema "/etc/ldap/courier.schema"
+</pre>
+
+Si planea autenticar estaciones Ubuntu además del anterior es muy 
+recomendable que agregue el esquema LDAP de Courier, de la siguiente 
+forma descrita en {3}:
+```
 sudo ftp -o /etc/ldap/courier.schema \
 http://courier.cvs.sourceforge.net/viewvc/courier/libs/authlib/authldap.schema
-</pre>
-* Edite /etc/ldap/courier.schema y quite comentario a las líneas:
+```
+Agregue en /etc/ldapd.conf la línea:
 <pre>
-attributetype ( 1.3.6.1.4.1.10018.1.1.14 NAME 'mailhost'                        
-        DESC 'Host to which incoming POP/IMAP connections should be proxied'
-        EQUALITY caseIgnoreIA5Match                                        
-        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} )  
+schema "/etc/ldap/courier.schema"
 </pre>
-* Agregue en /etc/ldapd.conf la línea: ```schema "/etc/ldap/courier.schema"```
-* Reinicie ldapd
-
+Recuerde reinicar  ```ldapd``` al modificar el archivo de configuración.
 
 
 ## 3. PRUEBAS CON OpenLDAP-client
@@ -123,15 +156,20 @@ Primero puede analizar y verificar la conexión SSL del puerto 636 con:
 openssl s_client -connect 192.168.2.1:636
 </pre>
 
-Puede verificar sus certificados contra la entidad que los expide siguiendo instrucciones de {4}.    
+Puede verificar sus certificados contra la entidad que los expide siguiendo 
+instrucciones de {4}.    
 
-```ldapsearch``` por defecto requiere que el certificado de la entidad certificadora esté disponible en el disco y configurado.  Si prefiere evitar chequeo de certificados agregue a ```/etc/openldap/ldap.conf```:
+```ldapsearch``` por defecto requiere que el certificado de la entidad 
+certificadora esté disponible en el disco y configurado.  Si prefiere 
+evitar chequeo de certificados agregue a ```/etc/openldap/ldap.conf```:
 <pre>
 TLS_REQCERT never
 </pre>
 
-Por otra parte si prefiere que ```ldapsearch``` haga verificaciones completas de certificados:
-# Descargar certificado de su entidad certificadora y agreguelo por ejemplo a  ```/etc/ssl/certs/ca-certificates.crt```
+Por otra parte si prefiere que ```ldapsearch``` haga verificaciones 
+completas de certificados:
+# Descargue certificado de su entidad certificadora y agreguelo por ejemplo 
+a  ```/etc/ssl/certs/ca-certificates.crt```
 # Agregue a ```/etc/ldap/ldap.conf``` la línea:
 <pre>
 TLS_CACERT      /etc/ssl/certs/ca-certificates.crt
@@ -139,9 +177,8 @@ TLS_CACERT      /etc/ssl/certs/ca-certificates.crt
 
 Con esto, al ejecutar:
 <pre>
-ldapsearch -H !ldaps://www.pasosdeJesus.org -x -b "dc=pasosdeJesus,dc=org" '(object
+ldapsearch -H !ldaps://www.pasosdeJesus.org -x -b "dc=pasosdeJesus,dc=org" '(objectclass=*)'
 </pre>
-
 debería obtener
 <pre>
 # extended LDIF
@@ -159,12 +196,21 @@ result: 32 No such object
 # numResponses: 1
 </pre>
 
-Para hacer pruebas desde otro computador, tenga en cuenta que en OpenBSD ```ldapsearch``` utiliza openssl mientras que por ejemplo en Ubuntu emplea GNUTls, por lo que con adJ 5.2 requiere el parche mencionado en la sección anterior.
+Para hacer pruebas desde otro computador, tenga en cuenta que en 
+OpenBSD ```ldapsearch``` utiliza openssl mientras que por ejemplo en 
+Ubuntu emplea GNUTls, por lo que con adJ 5.2 requiere el parche mencionado en 
+la sección anterior.
 
 
 ##4. ADICIÓN DE DATOS INICIALES
 
-Una vez tenga éxito sus pruebas con ```ldapsearch``` deberá iniciar un directorio para su organización y los usuarios que se autenticarán. Puede agregar estos datos con el programa ```ldapadd``` que también hace parte del paquete ```openldap-client```. Programa que recibe datos en formato LDIF, por ejemplo leidos de un archivo. Un primer archivo con datos de la organización puede ser ```org.ldif``` y contener:
+Una vez tenga éxito sus pruebas con ```ldapsearch``` deberá iniciar un 
+directorio para su organización y los usuarios que se autenticarán. 
+Puede agregar estos datos con el programa ```ldapadd``` que también hace 
+parte del paquete ```openldap-client```. Programa que recibe datos en formato 
+LDIF, por ejemplo leidos de un archivo. Un primer archivo con datos de la 
+organización puede ser ```org.ldif``` y contener:
+
 <pre>
 dn: dc=pasosdeJesus,dc=org
 dc: pasosdeJesus
@@ -191,7 +237,6 @@ ou: sendmail
 objectClass: top
 objectClass: organizationalUnit
 userPassword: sendmail
-
 </pre>
 
 Nota: Al agregar información verifique no dejar espacios en blanco al final de cada línea.
@@ -202,7 +247,8 @@ ldapadd -x -D "cn=admin,dc=pasosdeJesus,dc=org" -W \
   -H !ldaps://www.pasosdeJesus.org -f org.ldif
 </pre>
 
-Además de poder revisar los mensajes que ```slapd``` genere al ejecutarse en modo de depuración, podrá consultar los datos ingresados al directorio con:
+Además de poder revisar los mensajes que ```slapd``` genere al ejecutarse en 
+modo de depuración, podrá consultar los datos ingresados al directorio con:
 <pre>
 ldapsearch -H !ldaps://www.pasosdeJesus.org -x -b 'dc=pasosdeJesus,dc=org' '(objectclass=*)'
 </pre>
@@ -212,14 +258,26 @@ ldapsearch -H !ldaps://www.pasosdeJesus.org -x -b 'dc=pasosdeJesus,dc=org' '(obj
 
 ### 5.1 INSTALACIÓN Y CONFIGURACIÓN DE ```phpldapadmin```
 
-Instale el paquete y siga sus instrucciones (/usr/local/share/doc/pkg-readmes/phpldapadmin-1.2.3):
+La distribución oficial de phpldapadmin no soporta php-5.5, por lo que se
+recomienda emplear https://github.com/leenooks/phpLDAPadmin
 
-# ```sudo pkg_add phpldapadmin```
-# ```sudo ln -s ../phpldapadmin /var/www/htdocs/phpldapadmin```
-# ``` sudo $EDITOR /var/www/phpldapadmin/config/config.php``` para configurarlo (use su editor preferido en lugar de $EDITOR o defina esa variable).  Es importante que por lo menos quite el comentario a la línea ```$config->custom->jpeg!['tmpdir'] = '/tmp';```
+```
+# mkdir -p ~/servidor/
+# cd ~/servidor/
+# git clone https://github.com/leenooks/phpLDAPadmin.git
+# cp -rf phpLDAPadmin /var/www/phpldapadmin
+# sudo ln -s ../phpldapadmin /var/www/htdocs/phpldapadmin
+# sudo $EDITOR /var/www/phpldapadmin/config/config.php
+```
+para configurarlo (use su editor preferido en lugar de $EDITOR o defina esa 
+variable) es importante que por lo menos quite el comentario a la 
+línea ```$config->custom->jpeg!['tmpdir'] = '/tmp';```
 
-
-También debe asegurar que pueden emplearse los dispositivos de generación de números aleatorios en la jaula chroot de Apache.  Para esto verifique que en ```/etc/fstab``` al montar la partición ```/var``` este permitiendo dispositivos (que no este la opción ```nodev```) y, como se explica en {5}, ejecute:
+También debe asegurar que puede emplearse los dispositivos de generación de 
+números aleatorios en la jaula chroot de Apache.  Para esto verifique 
+que en ```/etc/fstab``` al montar la partición ```/var``` este 
+permitiendo dispositivos (que no este la opción ```nodev```) y como se 
+explica en {5}, ejecute:
 <pre>
 cd /var/www
 sudo mkdir -p dev
@@ -228,6 +286,45 @@ sudo /dev/MAKEDEV arandom
 </pre>
 
 Para probar dirigase a ```https://midomino.org/phpldapadmin/``` o si lo requiere primero configure un alias en su servidor web.
+
+Para evitar las advertencias de algunos tipos de registros removidos por 
+no estar en el esquema nos ha servido incluir:
+
+* mozillaOrgPerson.schema disponible en http://phpldapadmin.sourceforge.net/wiki/index.php/SchemaContributed:MozillaOrgPerson
+* El siguiente cosine.schema extraido de http://www.zytrax.com/books/ldap/ape/cosine.html :
+<pre>
+attributetype ( 0.9.2342.19200300.100.1.26 NAME 'aRecord'
+        EQUALITY caseIgnoreIA5Match
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype ( 0.9.2342.19200300.100.1.27 NAME 'mDRecord'
+        EQUALITY caseIgnoreIA5Match
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype ( 0.9.2342.19200300.100.1.28 NAME 'mXRecord'
+        EQUALITY caseIgnoreIA5Match
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype ( 0.9.2342.19200300.100.1.29 NAME 'nSRecord'
+        EQUALITY caseIgnoreIA5Match
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype ( 0.9.2342.19200300.100.1.30 NAME 'sOARecord'
+        EQUALITY caseIgnoreIA5Match
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype ( 0.9.2342.19200300.100.1.31 NAME 'cNAMERecord'
+        EQUALITY caseIgnoreIA5Match
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+objectclass ( 0.9.2342.19200300.100.4.15 NAME 'dNSDomain'
+        SUP 'domain' STRUCTURAL
+        MAY ( ARecord $ MDRecord $ MXRecord $ NSRecord $ 
+                SOARecord $ CNAMERecord )
+        )
+
+</pre>
+* samba3.schema de http://www.zytrax.com/books/ldap/ape/samba.html
 
 ### 5.2. Preparando cuentas
 
@@ -242,5 +339,6 @@ A continuación cree cuentas de usuario, tenga en cuenta que en la configuració
 * {4} http://www.cyberciti.biz/faq/test-ssl-certificates-diagnosis-ssl-certificate/
 * {5} http://openbsd.7691.n7.nabble.com/dev-random-as-chrooted-named-s-entropy-source-current-td64344.html
 * {6} http://www.openldap.org/faq/index.cgi?_highlightWords=tls&file=185
+* {7} http://www.tumfatig.net/20150718/opensmtpd-dovecot-and-ldapd-on-openbsd-5-7/
 
 Información dedicada al Padre protector y liberada al dominio público. 2013. vtamara@pasosdeJesus.org

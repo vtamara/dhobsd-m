@@ -1,3 +1,9 @@
+---
+title: copiar-servidor
+date: 2016-03-07
+tags:
+---
+
 Para copiar el disco de un servidor en otro
 
 ## Prerrequesitos
