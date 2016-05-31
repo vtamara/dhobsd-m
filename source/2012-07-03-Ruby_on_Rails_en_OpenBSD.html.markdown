@@ -19,10 +19,41 @@ doas sh
  ln -sf /usr/local/bin/ri23 /usr/local/bin/ri
  ln -sf /usr/local/bin/rake23 /usr/local/bin/rake
  ln -sf /usr/local/bin/gem23 /usr/local/bin/gem
- ln -sf /usr/local/bin/testrb23 /usr/local/bin/testrb
 </pre>
 
-Para facilitar su exploración del lenguaje ruby, puede usar ```irb``` (ver {4}) y tabulador (por ejemplo ingrese y escriba ```4.``` y presione la tecla [Tab] 2 veces para ver los métodos de la clase Integer). Para una mejor experiencia con ```irb```, verifique que su archivo ```~/.irbrc``` tenga las siguientes líneas (añadidas por defecto desde adJ 5.4 en cuenta de administrador):
+Asegurarse de tener limites amplios del sistema operativo para abrir
+archivos y manejar memori, por ejemplo superiores a los siguientes 
+en ```/etc/systctl.conf```
+<pre>
+kern.shminfo.shmmni=1024
+kern.seminfo.semmns=2048
+kern.shminfo.shmmax=50331648
+kern.shminfo.shmall=51200
+kern.maxfiles=20000
+</pre>
+
+Y que el usuario desde el cual desarrollará o ejecutará aplicaciones también
+tiene límites amplios, en particular la clase su clase de login (por ejemplo 
+staff).  Debe tener al menos los siguientes en ```/etc/login.conf```
+<pre>
+staff:\
+        :datasize-cur=1536M:\
+        :datasize-max=infinity:\
+        :maxproc-max=4096:\
+        :maxproc-cur=4096:\
+        :openfiles-max=8090:\
+        :openfiles-cur=8090:\
+        :ignorenologin:\
+        :requirehome@:\
+        :tc=default:
+</pre>
+(Si modifica el archivo /etc/login.conf debe reconstruir su versińo binaria 
+con  ```doas cap_mkdb /etc/login.conf```).
+
+
+Para facilitar su exploración del lenguaje ruby, puede usar ```irb``` (ver {4}),
+pero antes verifique que su archivo ```~/.irbrc``` tenga las siguientes 
+líneas (añadidas por defecto desde adJ 5.4 en cuenta de administrador):
 <pre>
 # Configuración de irb
 # Basado en archivo de comandos disponible en http://girliemangalo.wordpress.com/2009/02/20/using-irbrc-file-to-configure-your-irb/
@@ -36,23 +67,55 @@ def clear
 end
 </pre>
 
-El paquete ```ruby``` incluye ```rubygems```. Puede actualizar a la versión más reciente de ```rubygems``` con:
+A continuación ingrese a irb y escriba  por ejemplo ```4.``` y presione la tecla [Tab] 2 veces para ver los métodos de la clase Integer.
+
+El paquete ```ruby``` incluye ```rubygems``` que manejan gemas (es decir
+librerías) con el programa ```gem```. Puede actualizar a la versión 
+más reciente con:
 
 <pre>
 doas gem update --system
-QMAKE=qmake4 make=gmake MAKE=gmake doas gem pristine --all
+QMAKE=qmake-qt5 make=gmake MAKE=gmake doas gem pristine --all
 </pre>
 
-Para instalar a la versión estable más reciente de Rails (4.2.6 en el momento de este escrito), ejecute
+Para facilitar el manejo de varias gemas en un proyecto es típico
+emplear ```bundler``` que instala con:
+<prep>
+doas gem install bundler
+</pre>
 
+y configurarlo para que instale gemas localmente:
 <pre>
-doas gem install nokogiri -- --use-system-libraries --with-xml2-include=/usr/local/include/libxml2/
-make=gmake MAKE=gmake doas gem install rails
+bundler config path ~/.bundler
 </pre>
 
-Como interprete de JavaScript recomendamos ```node.js``` (ver {1}) incluido en DVD de adJ 5.8 y que se configurará automáticamente.
+Los proyectos de ruby que utilizan bundler, tienen un archivo Gemfile, donde
+bundler examina de que librerías depende la aplicación y genera
+un archivo Gemfile.lock con las versiones precisas por instalar de cada gema.  
+Una vez en el directorio del proyecto puede instalarlas con:
+<pre>
+bundle install
+</pre>
 
-La gran mayoría de gemas instalarán de la misma forma que se explicó (en adJ 5.8 con ruby 2.3 para instalar ```nokogiri``` se requiere ```doas gem install nokogiri -- --use-system-libraries --with-xml2-include=${LOCALBASE}/include/libxml2/``` y para instalar ```capybara-webkit``` requiere ```QMAKE=qmake4 MAKE=gmake doas gem install capybara-webkit```).
+Si no logra instalar algunas --por problemas de permisos tipicamnte--
+puede instalar la problemática con doas e indicando usar la ruta de gemas
+locales,  por ejemplo:
+<pre>
+doas gem install --install-dir ~/.bundler/ bcrypt -v '3.1.11'
+</pre>
+instalar 
+Para instalar a la versión estable más reciente de Rails (4.2.6 en el momento 
+de este escrito), ejecute
+<pre>
+MAKE=gmake doas gem install rails
+</pre>
+
+Como interprete de JavaScript recomendamos ```node.js``` (ver {1}) incluido en 
+DVD de adJ 5.8 y que se configurará automáticamente.
+
+La gran mayoría de gemas instalarán de la misma forma que se explicó, algunas
+excepciones son en adJ 5.8 y ruby 2.3 son:
+* para instalar ```nokogiri``` se requiere ```doas gem install nokogiri -- --use-system-libraries --with-xml2-include=${LOCALBASE}/include/libxml2/``` y para instalar ```capybara-webkit``` requiere ```QMAKE=qmake4 MAKE=gmake doas gem install capybara-webkit```).
 
 Para emplear ```vim``` como editor se recomienda asegurarse de haber ejecutado:
 <pre>
