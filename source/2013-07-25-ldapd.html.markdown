@@ -111,7 +111,7 @@ Si emplea un adJ 5.2 y planea conectarse desde clientes digamos en Ubuntu
 requerirá el parche descrito en 
 http://openbsd.7691.n7.nabble.com/ldapd-and-quot-The-Diffie-Hellman-prime-sent-by-the-server-is-not-acceptable-quot-td59635.html
 
-Si planea autenticar correo es recomendable que emplee el esquema misc de 
+Si planea autenticar correo es recomendable que emplee el esquema ```misc``` de 
 OpenLDAP como se describe en {7}:
 ```
 doas ftp -o "/etc/ldap/misc.schema" \
@@ -129,7 +129,7 @@ forma descrita en {3}:
 doas ftp -o /etc/ldap/courier.schema \
   http://courier.cvs.sourceforge.net/viewvc/courier/libs/authlib/authldap.schema
 ```
-Agregue en /etc/ldapd.conf la línea:
+Agregue en ```/etc/ldapd.conf``` la línea:
 <pre>
 schema "/etc/ldap/courier.schema"
 </pre>
@@ -143,7 +143,7 @@ doas ftp -o "/etc/ldap/cosine.schema" \
 doas ftp -o "/etc/ldap/samba3.schema" \
   https://raw.githubusercontent.com/cajus/gosa-gui/master/contrib/openldap/samba3.schema
 ```
-Agregando la respectiva línea con schema en ```/etc/ldapd.conf```.  En el caso de cosine.schema tiene varias definciones repetidas respecto a otros así que deben comentarse, podrá determinar las líneas repetidas ejecutando iterativamente a medida que pone en comentarios:
+Agregando la respectiva línea con schema en ```/etc/ldapd.conf```.  En el caso de ```cosine.schema``` tiene varias definciones repetidas respecto a otros así que deben comentarse con el símbolo # al comienzo de cada línea. Determine las definiciones repetidas con:
 <pre>
 doas ldapd -n
 </pre>
