@@ -72,13 +72,13 @@ namespace "dc=pasosdeJesus,dc=org" {
 </pre>
 
 Recuerde que la clave del directorio debe ser mejor que la presentada 
-(i.e remplace ```secret``` por una buena clave). 
+(i.e remplace ```secreto``` por una buena clave). 
 En lugar de poner la clave plana también es posible poner la cadena generada 
 con:
 <pre>
-# slappasswd -v -u -h {CRYPT} -s secret
+# slappasswd -v -u -h {SHA} -s secreto
 </pre>
-que en el caso de la clave '```secret```' es '```{CRYPT}uPUCy906TIu/k```'
+que en el caso de la clave '```secreto```' es '```{SHA}Ck+Lk/qtUEAH33jJrLb5PqbMjFM=```'
 
 La configuración por defecto emplea ```/var/db/ldap``` como directorio para 
 mantener las bases de datos y mantiene una por cada ```namespace``` del
@@ -88,14 +88,14 @@ autenticarse con SASL (a menos que tengan la opción ```secure``` para
 permitir autenticación plana) y las que empleen certificado iran 
 cifradas en el puerto 636.
 
-Cada vez que modifique el archivo de configuración del servidor, puede 
+Cada vez que modifique el archivo de configuración del servidor puede 
 verificarlo con:
 <pre>
-$ sudo ldapd -n
+$ doas ldapd -n
 </pre>
-Para iniciar el servidor LDAP en modo de depuración y ver posibles errores:
+Para iniciar el servidor LDkAP en modo de depuración y ver posibles errores:
 <pre>
-$ sudo ldapd -dv
+$ doas ldapd -dv
 </pre>
 Tras verificar el funcionamiento, para que en cada arranque se inicie el 
 servidor puede agregar a ```/etc/rc.conf.local```:
@@ -104,8 +104,8 @@ ldapd_flags=""
 pkg_scripts="ldapd"
 </pre>
 
-E iniciar el servicio con ```/etc/rc.d/ldapd start``` 
-y detenerlo con ```/etc/rc.d/ldadp stop```
+E iniciar el servicio con ```doas /etc/rc.d/ldapd start``` 
+y detenerlo con ```doas /etc/rc.d/ldadp stop```
 
 Si emplea un adJ 5.2 y planea conectarse desde clientes digamos en Ubuntu 
 requerirá el parche descrito en 
@@ -114,7 +114,8 @@ http://openbsd.7691.n7.nabble.com/ldapd-and-quot-The-Diffie-Hellman-prime-sent-b
 Si planea autenticar correo es recomendable que emplee el esquema misc de 
 OpenLDAP como se describe en {7}:
 ```
-sudo ftp -o "/etc/ldap/misc.schema" http://www.openldap.org/devel/cvsweb.cgi/~checkout~/servers/slapd/schema/misc.schema
+doas ftp -o "/etc/ldap/misc.schema" \
+  http://www.openldap.org/devel/cvsweb.cgi/~checkout~/servers/slapd/schema/misc.schema
 ```
 y que en ```/etc/ldapd.conf``` agregue la línea:
 <pre>
@@ -125,14 +126,28 @@ Si planea autenticar estaciones Ubuntu además del anterior es muy
 recomendable que agregue el esquema LDAP de Courier, de la siguiente 
 forma descrita en {3}:
 ```
-sudo ftp -o /etc/ldap/courier.schema \
-http://courier.cvs.sourceforge.net/viewvc/courier/libs/authlib/authldap.schema
+doas ftp -o /etc/ldap/courier.schema \
+  http://courier.cvs.sourceforge.net/viewvc/courier/libs/authlib/authldap.schema
 ```
 Agregue en /etc/ldapd.conf la línea:
 <pre>
 schema "/etc/ldap/courier.schema"
 </pre>
-Recuerde reinicar  ```ldapd``` al modificar el archivo de configuración.
+
+También se recomiendan otros esquemas:
+```
+doas ftp -o "/etc/ldap/mozillaOrgPerson.schema" \
+  http://downloads.sourceforge.net/project/jabook/Schemas/mozillaOrgPerson/mozillaOrgPerson.schema
+doas ftp -o "/etc/ldap/cosine.schema" \
+  https://raw.githubusercontent.com/gcp/openldap/master/servers/slapd/schema/cosine.schema
+doas ftp -o "/etc/ldap/samba3.schema" \
+  https://raw.githubusercontent.com/cajus/gosa-gui/master/contrib/openldap/samba3.schema
+```
+Agregando la respectiva línea con schema en ```/etc/ldapd.conf```.  En el caso de cosine.schema tiene varias definciones repetidas respecto a otros así que deben comentarse, podrá determinar las líneas repetidas ejecutando iterativamente a medida que pone en comentarios:
+<pre>
+doas ldapd -n
+</pre>
+Una vez instale todos los esquemas y verifique la sintaxis, rcuerde reinicar  ```ldapd``` (como debe hacer siempre que modifique la configuración).
 
 
 ## 3. PRUEBAS CON OpenLDAP-client
