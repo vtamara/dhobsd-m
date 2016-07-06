@@ -60,7 +60,7 @@ listen on "/var/run/ldapi"
 
 namespace "dc=pasosdeJesus,dc=org" {
         rootdn          "cn=admin,dc=pasosdeJesus,dc=org"
-        rootpw          "secret"
+        rootpw          "secreto"
         index           sn
         index           givenName
         index           cn
