@@ -3,7 +3,7 @@ title: ldapd
 date: 2013-07-25
 tags:
 ---
-Describimos como configurar y usar un servidor LDAP en adJ OpenBSD 5.7p2, 
+Describimos como configurar y usar un servidor LDAP en adJ OpenBSD 5.8p1, 
 empleando el servicio ```ldpad``` y los clientes ```openldap-client```
 y  ```phpldapadmin```.
 
@@ -19,8 +19,8 @@ de una organización para permitir su autenticación en los computadores
 
 OpenBSD incluye (desde OpenBSD 4.8) un servidor para LDAP versión 3, 
 ```ldapd```. No incluye cliente para LDAP pero desde la línea de comandos 
-puede emplearse el paquete ```openldap-client``` o como interfaz 
-web ```phpldapadmin``` .
+pueden emplearse las herraientas del paquete ```openldap-client``` o como interfaz 
+web puede usarse ```phpldapadmin``` .
 
 ##2. INSTALACIÓN Y CONFIGURACIÓN DE ```ldapd```
 
