@@ -157,6 +157,17 @@ Instale el paquete con:
 # pkg_add openldap-client
 </pre>
 
+Puede descargar unos archivos de órdenes que le facilitarán interactuar con openldap-client con:
+<pre>
+mdkir -p ~/servidor
+cd ~/servidor
+git clone https://github.com/vtamara/servidor_ldap.git
+cp servidor_ldap/DN.sh.plantilla servidor_ldap/DN.sh
+</pre>
+
+Y editar y adaptar para su caso ```servidor_ldap/DN.sh```
+
+
 ### 3.1 SIN CIFRAR EN 127.0.0.1
 
 Verifique localmente que el servidor no cifrado corre con:
