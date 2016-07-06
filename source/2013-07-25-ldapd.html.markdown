@@ -276,7 +276,7 @@ ldapadd -x -D "cn=admin,dc=pasosdeJesus,dc=org" -W \
 Además de poder revisar los mensajes que ```slapd``` genere al ejecutarse en 
 modo de depuración, podrá consultar los datos ingresados al directorio con:
 <pre>
-ldapsearch -H !ldaps://www.pasosdeJesus.org -x -b 'dc=pasosdeJesus,dc=org' '(objectclass=*)'
+ldapsearch -H ldaps://www.pasosdeJesus.org -x -b 'dc=pasosdeJesus,dc=org' '(objectclass=*)'
 </pre>
 
 
