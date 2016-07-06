@@ -194,9 +194,9 @@ TLS_REQCERT never
 
 Por otra parte si prefiere que ```ldapsearch``` haga verificaciones 
 completas de certificados:
-# Descargue certificado de su entidad certificadora y agreguelo por ejemplo 
+Descargue certificado de su entidad certificadora y agreguelo por ejemplo 
 a  ```/etc/ssl/certs/ca-certificates.crt```
-# Agregue a ```/etc/ldap/ldap.conf``` la línea:
+y agregue a ```/etc/ldap/ldap.conf``` la línea:
 <pre>
 TLS_CACERT      /etc/ssl/certs/ca-certificates.crt
 </pre>
