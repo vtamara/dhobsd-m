@@ -14,23 +14,33 @@ e intercambiar información almacenada en directorios (i.e bases de datos
 especiales).
 
 Un uso típico de LDAP es mantener en un servidor información de los usuarios 
-de una organización para permitir su autenticación en los computadores 
-(e.g nombres, apellidos, dirección, teléfono, login, clave).
+(e.g nombres, apellidos, dirección, teléfono, login, clave) de una organización
+para permitir su autenticación en los computadores o en aplicaciones.
+
 
 OpenBSD incluye (desde OpenBSD 4.8) un servidor para LDAP versión 3, 
 ```ldapd```. No incluye cliente para LDAP pero desde la línea de comandos 
-pueden emplearse las herraientas del paquete ```openldap-client``` o como interfaz 
+pueden emplearse las herramientas del paquete ```openldap-client``` o como interfaz 
 web puede usarse ```phpldapadmin``` .
 
 ##2. INSTALACIÓN Y CONFIGURACIÓN DE ```ldapd```
 
 No necesita instalar paquetes para la operación como servidor.
 
-La configuración que se presenta emplea LDAPS para conexiones en la red 
-local, empleando un certificados cuyas llaves pública y privada deben
-copiarse a ```/etc/ldap/certs```. Por ejemplo si quiere usar el certificado 
-que usa para el servidor web (llaves ```server.crt``` y ```server.key```), debe 
-copiar las llaves con el nombre que usara para el servicio:
+La configuración que se presenta puede empelar SSL (puerto 636) o TLS para conexiones 
+en la red local y conexiones no cifradas desde el mismo computador tanto
+por puerto TCP estándar (389) como por una conexión socket (```/var/run/ldapi```).
+
+Las conexiones cifradas requieren certificado cuyas llave pública y privada deben
+copiarse a ```/etc/ldap/certs```.  Puede bien generar un certificado
+autofirmado o bien instalar uno firmado por una autoridad certificadora. Según 
+documentación de OpenLDAP para aumentar facilidad de conexión desde más clientes
+es mejor uno firmado por una autoridad (unido a certificado intermedios y de la autoridad)
+y que el FQDN del certificado sea el CN del directorio.
+
+Por ejemplo si quiere usar el certificado que usa para el servidor web 
+(por ejemplo ```/etc/ssl/server.crt``` y ```/etc/ssl/private/server.key```), 
+puede copiar las llaves con el nombre que usará para el servicio:
 <pre>
 # cp /etc/ssl/private/server.key /etc/ldap/certs/www.pasosdeJesus.org.key
 # cp /etc/ssl/server.crt /etc/ldap/certs/www.pasosdeJesus.org.crt
@@ -55,6 +65,7 @@ schema "/etc/ldap/nis.schema"
 lan_if = "re1"
 
 listen on $lan_if ldaps certificate www.pasosdeJesus.org
+listen on $lan_if tls certificate www.pasosdeJesus.org
 listen on lo0 secure
 listen on "/var/run/ldapi"
 
@@ -83,10 +94,14 @@ que en el caso de la clave '```secreto```' es '```{SHA}Ck+Lk/qtUEAH33jJrLb5PqbMj
 La configuración por defecto emplea ```/var/db/ldap``` como directorio para 
 mantener las bases de datos y mantiene una por cada ```namespace``` del
 archivo de configuración.  
-Las conexiones no cifradas por defecto operan en el puerto 389 y deben 
-autenticarse con SASL (a menos que tengan la opción ```secure``` para 
-permitir autenticación plana) y las que empleen certificado iran 
-cifradas en el puerto 636.
+Las conexiones no cifradas por defecto operan en el puerto 389, sólo desde
+el mismo computador.
+Desde la red pueden iniciarse conexiones no cifradas por el puerto 389 pero
+para que ldapd permita autenticar primero deben volverse cifradas con TLS.
+Pueden hacerse conexiones cifradas desde el comienzo con SSL que opera
+en el puerto 636.  
+Se recomienda deshabilitar SSL y dejar sólo TLS.  No se recomienda agregar
+```secure``` a conexión alguna excepto a las del mismo servidor.
 
 Cada vez que modifique el archivo de configuración del servidor puede 
 verificarlo con:
@@ -134,7 +149,7 @@ Agregue en ```/etc/ldapd.conf``` la línea:
 schema "/etc/ldap/courier.schema"
 </pre>
 
-También se recomiendan otros esquemas:
+Para que PHPldapadmin no reporte errores en esquemas, también se recomiendan:
 ```
 doas ftp -o "/etc/ldap/mozillaOrgPerson.schema" \
   http://downloads.sourceforge.net/project/jabook/Schemas/mozillaOrgPerson/mozillaOrgPerson.schema
@@ -234,7 +249,7 @@ Una vez tenga éxito sus pruebas con ```ldapsearch``` deberá iniciar un
 directorio para su organización y los usuarios que se autenticarán. 
 Puede agregar estos datos con el programa ```ldapadd``` que también hace 
 parte del paquete ```openldap-client```. Programa que recibe datos en formato 
-LDIF, por ejemplo leidos de un archivo. Un primer archivo con datos de la 
+LDIF, por ejemplo leídos de un archivo. Un primer archivo con datos de la 
 organización puede ser ```org.ldif``` y contener:
 
 <pre>
@@ -273,7 +288,7 @@ ldapadd -x -D "cn=admin,dc=pasosdeJesus,dc=org" -W \
   -H !ldaps://www.pasosdeJesus.org -f org.ldif
 </pre>
 
-Además de poder revisar los mensajes que ```slapd``` genere al ejecutarse en 
+Además de poder revisar los mensajes que ```ldapd``` genere al ejecutarse en 
 modo de depuración, podrá consultar los datos ingresados al directorio con:
 <pre>
 ldapsearch -H ldaps://www.pasosdeJesus.org -x -b 'dc=pasosdeJesus,dc=org' '(objectclass=*)'
@@ -284,7 +299,7 @@ ldapsearch -H ldaps://www.pasosdeJesus.org -x -b 'dc=pasosdeJesus,dc=org' '(obje
 
 ### 5.1 INSTALACIÓN Y CONFIGURACIÓN DE ```phpldapadmin```
 
-La distribución oficial de phpldapadmin no soporta php-5.5, por lo que se
+La distribución oficial de phpldapadmin no soporta php-5.5 ni TLS, por lo que se
 recomienda emplear https://github.com/leenooks/phpLDAPadmin
 
 ```
@@ -313,49 +328,11 @@ sudo /dev/MAKEDEV arandom
 
 Para probar dirigase a ```https://midomino.org/phpldapadmin/``` o si lo requiere primero configure un alias en su servidor web.
 
-Para evitar las advertencias de algunos tipos de registros removidos por 
-no estar en el esquema nos ha servido incluir:
-
-* mozillaOrgPerson.schema disponible en http://phpldapadmin.sourceforge.net/wiki/index.php/SchemaContributed:MozillaOrgPerson
-* El siguiente cosine.schema extraido de http://www.zytrax.com/books/ldap/ape/cosine.html :
-<pre>
-attributetype ( 0.9.2342.19200300.100.1.26 NAME 'aRecord'
-        EQUALITY caseIgnoreIA5Match
-        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-
-attributetype ( 0.9.2342.19200300.100.1.27 NAME 'mDRecord'
-        EQUALITY caseIgnoreIA5Match
-        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-
-attributetype ( 0.9.2342.19200300.100.1.28 NAME 'mXRecord'
-        EQUALITY caseIgnoreIA5Match
-        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-
-attributetype ( 0.9.2342.19200300.100.1.29 NAME 'nSRecord'
-        EQUALITY caseIgnoreIA5Match
-        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-
-attributetype ( 0.9.2342.19200300.100.1.30 NAME 'sOARecord'
-        EQUALITY caseIgnoreIA5Match
-        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-
-attributetype ( 0.9.2342.19200300.100.1.31 NAME 'cNAMERecord'
-        EQUALITY caseIgnoreIA5Match
-        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-
-objectclass ( 0.9.2342.19200300.100.4.15 NAME 'dNSDomain'
-        SUP 'domain' STRUCTURAL
-        MAY ( ARecord $ MDRecord $ MXRecord $ NSRecord $ 
-                SOARecord $ CNAMERecord )
-        )
-
-</pre>
-* samba3.schema de http://www.zytrax.com/books/ldap/ape/samba.html
 
 ### 5.2. Preparando cuentas
 
 Primero cree un grupo posix en grupos.
-A continuación cree cuentas de usuario, tenga en cuenta que en la configuración por defecto debe emplear cifrado crypt para la clave (que no es seguro).
+A continuación cree cuentas de usuario, tenga en cuenta que en la configuración por defecto debe emplear cifrado SHA para la clave (que no es seguro pero es soportada por ```phpLdapAdmin``` y ```ldadpd```).
 
 ## BIBLIOGRAFÍA
 
