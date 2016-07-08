@@ -307,8 +307,8 @@ recomienda emplear https://github.com/leenooks/phpLDAPadmin
 # cd ~/servidor/
 # git clone https://github.com/leenooks/phpLDAPadmin.git
 # cp -rf phpLDAPadmin /var/www/phpldapadmin
-# sudo ln -s ../phpldapadmin /var/www/htdocs/phpldapadmin
-# sudo $EDITOR /var/www/phpldapadmin/config/config.php
+# doas ln -s ../phpldapadmin /var/www/htdocs/phpldapadmin
+# doas $EDITOR /var/www/phpldapadmin/config/config.php
 ```
 para configurarlo (use su editor preferido en lugar de $EDITOR o defina esa 
 variable) es importante que por lo menos quite el comentario a la 
@@ -321,9 +321,9 @@ permitiendo dispositivos (que no este la opción ```nodev```) y como se
 explica en {5}, ejecute:
 <pre>
 cd /var/www
-sudo mkdir -p dev
+doas mkdir -p dev
 cd dev
-sudo /dev/MAKEDEV arandom
+doas /dev/MAKEDEV arandom
 </pre>
 
 Para probar dirigase a ```https://midomino.org/phpldapadmin/``` o si lo requiere primero configure un alias en su servidor web.
