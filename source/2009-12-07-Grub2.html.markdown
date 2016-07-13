@@ -41,13 +41,14 @@ menuentry "adJ" {
 </pre>
 
 El comando ```kopenbsd``` puede tener algunos parametros que pueden verse con ```kopenbsd --help```:
-* ```-a``` Para pedir el nombre del archivo desde el cual reiniciar
-* ```-b``` Para no reiniciar sino apagar
-* ```-c``` Para cambiar dispositivos configurados
-* ```-s``` Para iniciar en modo single
-* ```-d``` Para ingresar a KBD en el arranque
-* ```-r wd```XY Para establecer subpartición root
-* ```-h com![,velocidad]``` para usar consola serial 
+
+- ```-a``` Para pedir el nombre del archivo desde el cual reiniciar
+- ```-b``` Para no reiniciar sino apagar
+- ```-c``` Para cambiar dispositivos configurados
+- ```-s``` Para iniciar en modo single
+- ```-d``` Para ingresar a KBD en el arranque
+- ```-r wd0a``` o por ejemplo  ```-r sd0a``` Para establecer subpartición root
+- ```-h com![,velocidad]``` para usar consola serial 
 
 !Para Ubuntu 11.04
 <pre>
