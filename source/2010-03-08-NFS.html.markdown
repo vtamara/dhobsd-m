@@ -21,14 +21,14 @@ nfs_server=YES
 
 Para reiniciar ```portmap```
 <pre>
-sudo pkill portmap
-sudo portmap
+doas pkill portmap
+doas portmap
 </pre>
 
 Para reiniciar servidor nfs:
 
 <pre>
-sudo su -
+doas su -
 pkill nfsd
 rm -f /var/db/mountdtab
 echo -n > /var/db/mountdtab
@@ -93,8 +93,8 @@ Este mismo programa puede usarse desde clientes tipo UNIX donde esté para verif
 Para montar el sistema de archivos exportado en el directorio ```/respaldo```
 
 <pre>
-sudo mkdir -p /respaldo
-sudo mount_nfs 192.168.2.1:/mnt/respaldo/ /respaldo/
+doas mkdir -p /respaldo
+doas mount_nfs 192.168.2.1:/mnt/respaldo/ /respaldo/
 </pre>
 
 Para montarlo de manera permanente, es decir que en cada arranque monte automaticamente (mientras el servidor NFS esté encendido), editar /etc/fstab
