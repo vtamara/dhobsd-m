@@ -56,7 +56,7 @@ pero antes verifique que su archivo ```~/.irbrc``` tenga las siguientes
 líneas (añadidas por defecto desde adJ 5.4 en cuenta de administrador):
 <pre>
 # Configuración de irb
-# Basado en archivo de comandos disponible en http://girliemangalo.wordpress.com/2009/02/20/using-irbrc-file-to-configure-your-irb/
+# Basado en archivo de comandos disponible en <http://girliemangalo.wordpress.com/2009/02/20/using-irbrc-file-to-configure-your-irb/>
 require 'irb/completion'
 require 'pp'
 IRB.conf[:AUTO_INDENT] = true
@@ -80,7 +80,7 @@ QMAKE=qmake-qt5 make=gmake MAKE=gmake doas gem pristine --all
 
 Para facilitar el manejo de varias gemas en un proyecto es típico
 emplear ```bundler``` que instala con:
-<prep>
+<pre>
 doas gem install bundler
 </pre>
 
@@ -89,33 +89,33 @@ y configurarlo para que instale gemas localmente:
 bundler config path ~/.bundler
 </pre>
 
-Los proyectos de ruby que utilizan bundler, tienen un archivo Gemfile, donde
+Los proyectos de ruby que utilizan bundler, tienen un archivo ```Gemfile```, donde
 bundler examina de que librerías depende la aplicación y genera
-un archivo Gemfile.lock con las versiones precisas por instalar de cada gema.  
-Una vez en el directorio del proyecto puede instalarlas con:
-<pre>
-bundle install
-</pre>
+un archivo ```Gemfile.lock``` con las versiones precisas por instalar de cada gema.  
+Una vez en el directorio del proyecto puede instalarlas con ```bundle install```
 
-Si no logra instalar algunas --por problemas de permisos tipicamnte--
-puede instalar la problemática con doas e indicando usar la ruta de gemas
+Si no logra instalar algunas --por problemas de permisos tipicamente--
+puede instalar con doas e indicando usar la ruta de gemas
 locales,  por ejemplo:
 <pre>
 doas gem install --install-dir ~/.bundler/ bcrypt -v '3.1.11'
 </pre>
-instalar 
+
+
 Para instalar a la versión estable más reciente de Rails (4.2.6 en el momento 
 de este escrito), ejecute
 <pre>
-MAKE=gmake doas gem install rails
+doas gem install rails
 </pre>
 
 Como interprete de JavaScript recomendamos ```node.js``` (ver {1}) incluido en 
 DVD de adJ 5.8 y que se configurará automáticamente.
 
-La gran mayoría de gemas instalarán de la misma forma que se explicó, algunas
-excepciones son en adJ 5.8 y ruby 2.3 son:
-* para instalar ```nokogiri``` se requiere ```doas gem install nokogiri -- --use-system-libraries --with-xml2-include=${LOCALBASE}/include/libxml2/``` y para instalar ```capybara-webkit``` requiere ```QMAKE=qmake4 MAKE=gmake doas gem install capybara-webkit```).
+La gran mayoría de gemas instalarán de la misma forma que se explicó. Algunos
+casos especiales son:
+
+- ```nokogiri``` que requiere ```doas gem install --install-dir ~/.bundler/ nokogiri -- --use-system-libraries --with-xml2-config=/usr/local/bin/xml2-config``` 
+- ```capybara-webkit``` que requería ```QMAKE=qmake-qt5 MAKE=gmake doas gem install capybara-webkit```).
 
 Para emplear ```vim``` como editor se recomienda asegurarse de haber ejecutado:
 <pre>
@@ -138,13 +138,13 @@ set expandtab
 #2. Documentación
 
 Puede aprender por ejemplo con los tutoriales interactivos de
-https://rubymonk.com
+<https://rubymonk.com>
 
 En Internet puede ver la referencia oficial de las clases en:
-http://ruby-doc.org/core-2.1.5/Integer.html
+<http://ruby-doc.org/core-2.1.5/Integer.html>
 
 Y es buena referencia para Ruby, Rails y Rspec (incluidos cambios entre una versión y otra y comentarios) es:
-http://apidock.com/
+<http://apidock.com/>
 
 Podrá consultar documentación del núcleo, librería estándar y gemas instalando el paquete ```ruby-ri_docs``` y ejecutando ```ri``` seguido de la clase (por ejemplo ```ri Float```) o sin parámetro ingresa a una consola que da la posibilidad de autocompletar presionando Tab (por ejemplo pruebe tecleando ```Float``` y después Tab dos veces).
 
@@ -152,7 +152,7 @@ También podrá ver la documentación de las gemas en formato Rdoc ejecutando:
 <pre>
 gem server
 </pre>
-y con un navegador consultando ```http://localhost:8808```
+y con un navegador consultando <http://localhost:8808>
 
 #3. Uso
 
@@ -160,14 +160,24 @@ y con un navegador consultando ```http://localhost:8808```
 
 Genere una nueva aplicación asegurando que las gemas requeridas se instalan globalmente, pero después ajuste permisos:
 <pre>
-doas rails new aplicacion
-doas chown -R $USER:$USER aplicacion
+rails new -B aplicacion
 cd aplicacion
+bundle install
+</pre>
+
+Esto creará una nueva aplicación de ejemplo e instalará todas sus dependencias.   
+Las gemas que no logre instalar por falta de permisos, como se explicó anteriormente
+instalelas con ```doas gem install``` y la opción ```--install-dir ~/.bundler/```
+Si no logra instalar algunas --por problemas de permisos tipicamente--
+
+Una vez haya logrado que ```bundle install``` se ejecute completo puede ejecutar:
+
+<pre>
 rails server
 </pre>
 
 Tras esto puede ver con un navegador la aplicación en el puerto 3000 del computador donde instaló:
-http://127.0.0.1:3000/
+<http://127.0.0.1:3000/>
 
 Notará que se genera:
 
@@ -186,8 +196,8 @@ Notará que se genera:
 | app/assets/images/ | Gráficos de la aplicación (tipicamente que no se sirven estáticos) |
 | app/mailers/ | Controlador para enviar correos |
 | app/models/ | Modelos |
-| app/controllers/concerns/ | Código que se repiten en controladores |
-| app/models/concerns/| Código que se repiten en modelos |
+| app/controllers/concerns/ | Código que se repite en controladores |
+| app/models/concerns/| Código que se repite en modelos |
 | bin/bundle| Maneja dependencias con el ambiente de la aplicación |
 | bin/rails| Maneja posibilidades de generación y controles Rails|
 | bin/rake| Maneja tareas definidas en ```Rakefile``` y ```lib/tasks```|
@@ -241,7 +251,7 @@ rails g scaffold Departamento nombre:string{500} latitud:float longitud:float fe
 rake db:migrate
 </pre>
 
-Tras esto y volver a iniciar el servidor (más breve con ```rails s```) podrá realizar las operaciones básicas sobre departamentos desde: ```http://127.0.0.1:3000/departamentos/```
+Tras esto y volver a iniciar el servidor (más breve con ```rails s```) podrá realizar las operaciones básicas sobre departamentos desde: <http://127.0.0.1:3000/departamentos/>
 
 El scaffold genera tablas (con una migración), modelo, controlador, vistas y rutas iniciales que con una interfaz muy simple le permitirán listar departamentos, ver detalles de cada uno, crear nuevos, editar existentes y eliminar.  
 
@@ -268,11 +278,12 @@ Los archivos generados son:
 |app/assets/stylesheets/scaffolds.scss| Para poner CSS de las vistas |
 
 Por convención de Ruby on Rails:
-* Las fuentes del módelo quedan en ```app/models/departamento.rb```
-* El nombre de la tabla será la forma plural del nombre del módelo (e.g ```departamentos```)
-* La tabla incluirá automáticamente un campo id de tipo entero que se autoincrementa
-* La tabla incluirá automáticamente los campos ```created_at``` y ```updated_at``` de tipo ```datetime```.  
-* La tabla será creada con una migración (cuya fuente quedará en ```db/migrate/```) y el registro de las migraciones ya aplicadas se lleva en una tabla ```schema_migrations``` creada automáticamente en la base de datos.
+
+- Las fuentes del módelo quedan en ```app/models/departamento.rb```
+- El nombre de la tabla será la forma plural del nombre del módelo (e.g ```departamentos```)
+- La tabla incluirá automáticamente un campo id de tipo entero que se autoincrementa
+- La tabla incluirá automáticamente los campos ```created_at``` y ```updated_at``` de tipo ```datetime```.  
+- La tabla será creada con una migración (cuya fuente quedará en ```db/migrate/```) y el registro de las migraciones ya aplicadas se lleva en una tabla ```schema_migrations``` creada automáticamente en la base de datos.
 
 ### 3.1.2 Página de inicio
 
@@ -302,10 +313,10 @@ end
 
 Cree la vista ```app/views/hogar/index.html.erb```:
 <pre>
-<article>
-<h1>Mi aplicación</h1>
-<p> Manejar <a href="/departamentos">Departamentos</a></p>
-</article>
+    &lt;article>
+    &lt;h1>Mi aplicación&lt;/h1>
+    &lt;p> Manejar &lt;a href="/departamentos">Departamentos&lt;/a>&lt;/p>
+    &lt;/article>
 </pre>
 
 Y en el archivo de configuración de rutas ```config/routes.rb``` añada:
@@ -316,7 +327,7 @@ root "hogar#index"
 
 Al modificar fuentes en general no necesita volver a lanzar el servidor de rails, pero si modifica ```config/routes.rb``` o cualquier archivo fuera del directorio ```app``` debe reiniciar el servicio.
 
-Examine desde un navegador ```http://127.0.0.1:3000/```.   Verá lo que escribió en ```app/views/hogar/index.html.erb``` en el ambiente HTML que tenga diseñado en ```app/views/layouts/application.html.erb```.
+Examine desde un navegador <http://127.0.0.1:3000/>.   Verá lo que escribió en ```app/views/hogar/index.html.erb``` en el ambiente HTML que tenga diseñado en ```app/views/layouts/application.html.erb```.
 
 ### 3.1.3 Interacción con la base de datos
 
@@ -453,13 +464,12 @@ Ruby también ofrece facilidades para medir tiempos como se resume en {4}.
 
 #5. Referencias
 
-* {1} http://guides.rubyonrails.org/getting_started.html
-* {2} http://stackoverflow.com/questions/7092107/rails-3-1-error-could-not-find-a-javascript-runtime
-* {3} http://stackoverflow.com/questions/5285048/rails-3-routing-singular-option
-* {4} http://www.caliban.org/ruby/rubyguide.shtml
-* {5} http://guides.rubyonrails.org/debugging_rails_applications.html
-* {6} http://stackoverflow.com/questions/1200568/using-rails-how-can-i-set-my-primary-key-to-not-be-an-integer-typed-column
-* {7} http://stackoverflow.com/questions/6223803/execute-sql-script-inside-seed-rb-in-rails3
-* {8} http://stackoverflow.co
-m/questions/7542976/add-timestamps-to-an-existing-table
-* {9} http://stackoverflow.com/questions/4613574/how-do-i-explicitly-specify-a-models-table-name-mapping-in-rails
+* {1} <http://guides.rubyonrails.org/getting_started.html>
+* {2} <http://stackoverflow.com/questions/7092107/rails-3-1-error-could-not-find-a-javascript-runtime>
+* {3} <http://stackoverflow.com/questions/5285048/rails-3-routing-singular-option>
+* {4} <http://www.caliban.org/ruby/rubyguide.shtml>
+* {5} <http://guides.rubyonrails.org/debugging_rails_applications.html>
+* {6} <http://stackoverflow.com/questions/1200568/using-rails-how-can-i-set-my-primary-key-to-not-be-an-integer-typed-column>
+* {7} <http://stackoverflow.com/questions/6223803/execute-sql-script-inside-seed-rb-in-rails3>
+* {8} <http://stackoverflow.com/questions/7542976/add-timestamps-to-an-existing-table>
+* {9} <http://stackoverflow.com/questions/4613574/how-do-i-explicitly-specify-a-models-table-name-mapping-in-rails>
