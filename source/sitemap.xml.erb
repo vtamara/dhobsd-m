@@ -1,0 +1,11 @@
+<% fuente = 'https://gist.github.com/ls-lukebowerman/3287848' %>
+<% pages = sitemap.resources.find_all{|p| p.source_file.match(/\.html/) } %>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <% pages.each do |p| %>
+    <url>
+      <loc>http://dhobsd.pasosdeJesus.org/<%=p.destination_path.gsub('/index.html','')%></loc>
+      <priority>0.7</priority>
+    </url>
+  <% end %>
+</urlset>

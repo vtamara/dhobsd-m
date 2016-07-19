@@ -73,9 +73,11 @@ cada comptuador cliente en ```~/.postgresql/{usuario.crt, usuario.key}```
 donde usuario debe correponder al usuario en la base de datos y 
 al CN del certificado.
 
-Desde el servidor puede generar y firmar certificado para cliente (cambie 
-```usuario``` por el usuario PostgreSQL dueño de la bae de datos y 
-que usara desde los clientes para conectarse):
+Desde el servidor puede generar y firmar certificado para cliente por
+10 años (cambie ```usuario``` por el usuario PostgreSQL dueño de la 
+bae de datos y que usara desde los clientes para conectarse, si
+prefiere un lapsode tiemo diferente especifiquelo en días después
+de la opción ```-days```):
 
 <pre>
 doas su - 
@@ -83,7 +85,7 @@ cd /var/postgresql/data
 openssl genrsa -des3 -out usuario.key 1024
 openssl rsa -in usuario.key -out usuario.key
 openssl req -new -key usuario.key -out usuario.csr -subj '/C=CO/ST=Cundinamarca/L=Bogota/O=Pasos de Jesús/CN=usuario'
-openssl x509 -req -in usuario.csr -CA root.crt -CAkey server.key -out usuario.crt -CAcreateserial
+openssl x509 -req -days 3650 -in usuario.csr -CA root.crt -CAkey server.key -out usuario.crt -CAcreateserial
 </pre>
 
 A continuación copie el certificado generado (```usuario.crt```) y la 
@@ -154,7 +156,7 @@ rails dbconsole
 
 ## 4. Referencias
 
-* https://www.howtoforge.com/postgresql-ssl-certificates
+* <https://www.howtoforge.com/postgresql-ssl-certificates>
 
 ### 5. Agradecimientos
 
