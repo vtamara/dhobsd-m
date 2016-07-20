@@ -117,15 +117,16 @@ reciente de Rails (5.0.0 en el momento de este escrito), ejecute
 doas gem install rails
 </pre>
 
-Como interprete de JavaScript recomendamos ```node.js``` (ver {1}) incluido en 
-DVD de adJ 5.8 y que se configurará automáticamente.
+Rails requiere en el servidor un interprete de JavaScript, recomendamos ```node.js``` (ver {1}) incluido en 
+el DVD de adJ 5.9 y que se configurará automáticamente.
 
-La gran mayoría de gemas instalarán de la misma forma que se explicó. Algunos
-casos especiales son:
+La gran mayoría de gemas usadas por rails instalarán de la misma forma que se explicó. Algunos casos especiales son:
 
-- ```nokogiri``` que requiere ```doas gem install --install-dir ~/.bundler/ nokogiri -- --use-system-libraries --with-xml2-config=/usr/local/bin/xml2-config``` 
-- ```capybara-webkit``` que requería ```QMAKE=qmake-qt5 MAKE=gmake doas gem install capybara-webkit```).
+- ```nokogiri``` que puede requerir ```doas gem install --install-dir ~/.bundler/ nokogiri -- --use-system-libraries --with-xml2-config=/usr/local/bin/xml2-config``` 
 
+- ```capybara-webkit``` que podría requerir ```QMAKE=qmake-qt5 MAKE=gmake doas gem install capybara-webkit```).
+
+## 1.6. Editor ```vim```
 Para emplear ```vim``` como editor se recomienda asegurarse de haber ejecutado:
 <pre>
 cd ~
@@ -167,9 +168,9 @@ y con un navegador consultando <http://localhost:8808>
 
 ##3.1 Nueva aplicación usando SQLite
 
-Genere una nueva aplicación asegurando que las gemas requeridas se instalan globalmente, pero después ajuste permisos:
+Genere una nueva aplicación:
 <pre>
-rails new -B aplicacion
+rails new aplicacion
 cd aplicacion
 bundle install
 </pre>
@@ -177,7 +178,6 @@ bundle install
 Esto creará una nueva aplicación de ejemplo e instalará todas sus dependencias.   
 Las gemas que no logre instalar por falta de permisos, como se explicó anteriormente
 instalelas con ```doas gem install``` y la opción ```--install-dir ~/.bundler/```
-Si no logra instalar algunas --por problemas de permisos tipicamente--
 
 Una vez haya logrado que ```bundle install``` se ejecute completo puede ejecutar:
 
@@ -205,6 +205,9 @@ Notará que se genera:
 | app/assets/images/ | Gráficos de la aplicación (tipicamente que no se sirven estáticos) |
 | app/mailers/ | Controlador para enviar correos |
 | app/models/ | Modelos |
+| app/channel/ | Controlador de websockets |
+| app/jobs/ | Maneja cola de tareas programadas | 
+| app/mailer/ | Facilita envío y recepción de correos |
 | app/controllers/concerns/ | Código que se repite en controladores |
 | app/models/concerns/| Código que se repite en modelos |
 | bin/bundle| Maneja dependencias con el ambiente de la aplicación |
@@ -229,13 +232,14 @@ Notará que se genera:
 | config/locales/en.yml| Localización en inglés |
 | config/boot.rb| Prepara rutas para encontrar gemas |
 | config/database.yml| Configuración de base de datos |
+| config/puma.rb| Configuración de servidor web puma |
 | db/seeds.rb | Datos iniciales para base de datos |
 | lib/tasks/ | Tareas para ```rake``` |
 | lib/assets/ | "Activos" comunes para librerías |
 | log/| Bitácoras |
 | public | Archivos estáticos |
 | public/404.html| Mensaje por defecto para páginas no encontradas |
-| public/422.html| Mensjae por defecto para rechazar cambios |
+| public/422.html| Mensaje por defecto para rechazar cambios |
 | public/500.html| Mensaje por defecto cuando ocurren errores en servidor |
 | public/favicon.ico| Icono |
 | public/robots.txt| Puede evitar indexación por parte de motores de búsqueda |
