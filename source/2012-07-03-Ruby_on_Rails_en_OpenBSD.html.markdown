@@ -3,11 +3,11 @@ title: Ruby_on_Rails_en_OpenBSD
 date: 2012-07-03
 tags:
 ---
-En adJ 5.8 es sencillo usar ruby 2.3 con Ruby on Rails 4.2.  Lo básico se instala de paquetes de OpenBSD y lo más reciente en Ruby directamente como gemas.
+En adJ 5.9 es sencillo usar ruby 2.3 con Ruby on Rails 5.  Lo básico se instala de paquetes de OpenBSD y lo más reciente en Ruby directamente como gemas.
 
 #1. Instalación y configuración
 
-Asegúrese de tener instalados los paquetes  ruby 2.3.0, libv8 y node, incluidos en el DVD de adJ 5.8
+Asegúrese de tener instalados los paquetes  ruby 2.3.1, libv8 y node, incluidos en el DVD de adJ 5.9
 
 Asegúrese de tener enlaces al interprete de ruby y herramientas (como describe el paquete ruby):
 <pre>
@@ -21,8 +21,10 @@ doas sh
  ln -sf /usr/local/bin/gem23 /usr/local/bin/gem
 </pre>
 
+## 1.1. Límites amplios 
+
 Asegurarse de tener limites amplios del sistema operativo para abrir
-archivos y manejar memori, por ejemplo superiores a los siguientes 
+archivos y manejar memoria, por ejemplo superiores a los siguientes 
 en ```/etc/systctl.conf```
 <pre>
 kern.shminfo.shmmni=1024
@@ -32,9 +34,9 @@ kern.shminfo.shmall=51200
 kern.maxfiles=20000
 </pre>
 
-Y que el usuario desde el cual desarrollará o ejecutará aplicaciones también
-tiene límites amplios, en particular la clase su clase de login (por ejemplo 
-staff).  Debe tener al menos los siguientes en ```/etc/login.conf```
+El usuario desde el cual desarrollará o ejecutará aplicaciones también
+debe tener límites amplios, en particular su clase de login (por ejemplo 
+```staff```).  Debe tener al menos los siguientes en ```/etc/login.conf```
 <pre>
 staff:\
         :datasize-cur=1536M:\
@@ -47,13 +49,14 @@ staff:\
         :requirehome@:\
         :tc=default:
 </pre>
-(Si modifica el archivo /etc/login.conf debe reconstruir su versińo binaria 
+(Si modifica el archivo ```/etc/login.conf``` debe reconstruir su versińo binaria 
 con  ```doas cap_mkdb /etc/login.conf```).
 
+## 1.2. irb
 
 Para facilitar su exploración del lenguaje ruby, puede usar ```irb``` (ver {4}),
 pero antes verifique que su archivo ```~/.irbrc``` tenga las siguientes 
-líneas (añadidas por defecto desde adJ 5.4 en cuenta de administrador):
+líneas (añadidas por defecto en adJ a la cuenta de administrador):
 <pre>
 # Configuración de irb
 # Basado en archivo de comandos disponible en <http://girliemangalo.wordpress.com/2009/02/20/using-irbrc-file-to-configure-your-irb/>
@@ -69,6 +72,8 @@ end
 
 A continuación ingrese a irb y escriba  por ejemplo ```4.``` y presione la tecla [Tab] 2 veces para ver los métodos de la clase Integer.
 
+##1.3. Gemas
+
 El paquete ```ruby``` incluye ```rubygems``` que manejan gemas (es decir
 librerías) con el programa ```gem```. Puede actualizar a la versión 
 más reciente con:
@@ -78,32 +83,36 @@ doas gem update --system
 QMAKE=qmake-qt5 make=gmake MAKE=gmake doas gem pristine --all
 </pre>
 
+##1.4. Bundler
 Para facilitar el manejo de varias gemas en un proyecto es típico
 emplear ```bundler``` que instala con:
 <pre>
 doas gem install bundler
 </pre>
 
-y configurarlo para que instale gemas localmente:
+Configurelo para que instale gemas localmente (así evitará problemas de permisos y la dificultad de bundler para usar ```doas``` en lugar de ```sudo```):
 <pre>
 bundler config path ~/.bundler
 </pre>
 
-Los proyectos de ruby que utilizan bundler, tienen un archivo ```Gemfile```, donde
-bundler examina de que librerías depende la aplicación y genera
+Puede experimentar descargando un proyecto para ruby ya hecho, seguramente verá
+un archivo ```Gemfile```, donde bundler examina de que librerías depende la aplicación y genera
 un archivo ```Gemfile.lock``` con las versiones precisas por instalar de cada gema.  
-Una vez en el directorio del proyecto puede instalarlas con ```bundle install```
+Una vez tenga un proyecto puede instalar las gemas de las que depende con ```bundle install```
 
-Si no logra instalar algunas --por problemas de permisos tipicamente--
-puede instalar con doas e indicando usar la ruta de gemas
+Si eventualmente no logra instalar algunas --por problemas de permisos tipicamente--
+puede instalar con ```doas``` e indicar la ruta de las gemas
 locales,  por ejemplo:
 <pre>
 doas gem install --install-dir ~/.bundler/ bcrypt -v '3.1.11'
 </pre>
 
+##1.5. Rails
 
-Para instalar a la versión estable más reciente de Rails (4.2.6 en el momento 
-de este escrito), ejecute
+Se trata de una popular gema que facilita mucho crear sitios web dinámicos. 
+
+Para instalar globalmente (en ```/usr/local/bin``` y ```/usr/local/lib/ruby/gems/```) la versión estable más 
+reciente de Rails (5.0.0 en el momento de este escrito), ejecute
 <pre>
 doas gem install rails
 </pre>
