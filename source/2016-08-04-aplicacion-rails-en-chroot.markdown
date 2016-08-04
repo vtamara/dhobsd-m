@@ -43,4 +43,19 @@ $ tree -L 3 -d /var/www/bundler/
 10 directories
 </pre>
 
+Es recomendable hacer esto para aplicaciones en desarrollo y en producción del mismo servidor, así todas compartirán las gemas.
 
+Las gemas que bundle install no logre instalar por problemas de permisos instalelas de manera individual con gem install pero añadiendo después de install la opción ```--install-dir /var/www/bundler/ruby/2.3/``` por ejemplo:
+<pre>
+doas gem install --install-dir /var/www/bundler/ruby/2.3/ raindrops -v '0.17.0' 
+</pre>
+
+En el caso de ```nokogiri``` se requieren más opciones en adJ:
+<pre>
+doas gem install --install-dir /var/www/bundler/ruby/2.3/ nokogiri -v '1.6.8' -- --use-system-libraries
+</pre>
+
+Y asegurese de preceder todo ejecutable (e.g rails, unicorn) con ```bundle exec```, por ejemplo para lanzar servidor de desarrollo:
+<pre>
+bundle exec rails s
+</pre>
