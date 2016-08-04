@@ -4,9 +4,15 @@ date: 2016-08-04
 tags:
 ---
 
+# APLICACIÓN RAIL EN CHROOT
+
+En adJ y OpenBSD es típico que las aplicaciones web corran en jaula chroot en ```/var/www```. Por ejemplo esa es la configuración por omisión de PHP y todos los servidores web disponibles.
+
+En el caso de Ruby on Rails no hay opciones para facilitar esto.  
+
 Se puede hacer gradual.
 
-1. Gemas compartidas en /var/www/bundler
+##1. Gemas compartidas en /var/www/bundler
 
 <pre>
 mkdir /var/www/bundler
