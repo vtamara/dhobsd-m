@@ -4,7 +4,7 @@ date: 2016-08-04
 tags:
 ---
 
-# APLICACIÓN RAIL EN CHROOT
+# APLICACIÓN RAILS EN CHROOT
 
 En adJ y OpenBSD es típico que las aplicaciones web corran en jaula chroot en ```/var/www``` con el usuario `www` y `www`. Por ejemplo esa es la configuración por omisión de PHP y todos los servidores web disponibles.
 
