@@ -3,11 +3,11 @@ title: Ruby_on_Rails_en_OpenBSD
 date: 2012-07-03
 tags:
 ---
-En adJ 5.8 es sencillo usar ruby 2.3 con Ruby on Rails 4.2.  Lo básico se instala de paquetes de OpenBSD y lo más reciente en Ruby directamente como gemas.
+En adJ 5.9 es sencillo usar ruby 2.3 con Ruby on Rails 5.  Lo básico se instala de paquetes de OpenBSD y lo más reciente en Ruby directamente como gemas.
 
 #1. Instalación y configuración
 
-Asegúrese de tener instalados los paquetes  ruby 2.3.0, libv8 y node, incluidos en el DVD de adJ 5.8
+Asegúrese de tener instalados los paquetes  ruby 2.3.1, libv8 y node, incluidos en el DVD de adJ 5.9
 
 Asegúrese de tener enlaces al interprete de ruby y herramientas (como describe el paquete ruby):
 <pre>
@@ -21,8 +21,10 @@ doas sh
  ln -sf /usr/local/bin/gem23 /usr/local/bin/gem
 </pre>
 
+## 1.1. Límites amplios 
+
 Asegurarse de tener limites amplios del sistema operativo para abrir
-archivos y manejar memori, por ejemplo superiores a los siguientes 
+archivos y manejar memoria, por ejemplo superiores a los siguientes 
 en ```/etc/systctl.conf```
 <pre>
 kern.shminfo.shmmni=1024
@@ -32,9 +34,9 @@ kern.shminfo.shmall=51200
 kern.maxfiles=20000
 </pre>
 
-Y que el usuario desde el cual desarrollará o ejecutará aplicaciones también
-tiene límites amplios, en particular la clase su clase de login (por ejemplo 
-staff).  Debe tener al menos los siguientes en ```/etc/login.conf```
+El usuario desde el cual desarrollará o ejecutará aplicaciones también
+debe tener límites amplios, en particular su clase de login (por ejemplo 
+```staff```).  Debe tener al menos los siguientes en ```/etc/login.conf```
 <pre>
 staff:\
         :datasize-cur=1536M:\
@@ -47,13 +49,14 @@ staff:\
         :requirehome@:\
         :tc=default:
 </pre>
-(Si modifica el archivo /etc/login.conf debe reconstruir su versińo binaria 
+(Si modifica el archivo ```/etc/login.conf``` debe reconstruir su versińo binaria 
 con  ```doas cap_mkdb /etc/login.conf```).
 
+## 1.2. irb
 
 Para facilitar su exploración del lenguaje ruby, puede usar ```irb``` (ver {4}),
 pero antes verifique que su archivo ```~/.irbrc``` tenga las siguientes 
-líneas (añadidas por defecto desde adJ 5.4 en cuenta de administrador):
+líneas (añadidas por defecto en adJ a la cuenta de administrador):
 <pre>
 # Configuración de irb
 # Basado en archivo de comandos disponible en <http://girliemangalo.wordpress.com/2009/02/20/using-irbrc-file-to-configure-your-irb/>
@@ -69,6 +72,8 @@ end
 
 A continuación ingrese a irb y escriba  por ejemplo ```4.``` y presione la tecla [Tab] 2 veces para ver los métodos de la clase Integer.
 
+##1.3. Gemas
+
 El paquete ```ruby``` incluye ```rubygems``` que manejan gemas (es decir
 librerías) con el programa ```gem```. Puede actualizar a la versión 
 más reciente con:
@@ -78,45 +83,50 @@ doas gem update --system
 QMAKE=qmake-qt5 make=gmake MAKE=gmake doas gem pristine --all
 </pre>
 
+##1.4. Bundler
 Para facilitar el manejo de varias gemas en un proyecto es típico
 emplear ```bundler``` que instala con:
 <pre>
 doas gem install bundler
 </pre>
 
-y configurarlo para que instale gemas localmente:
+Configurelo para que instale gemas localmente (así evitará problemas de permisos y la dificultad de bundler para usar ```doas``` en lugar de ```sudo```):
 <pre>
 bundler config path ~/.bundler
 </pre>
 
-Los proyectos de ruby que utilizan bundler, tienen un archivo ```Gemfile```, donde
-bundler examina de que librerías depende la aplicación y genera
+Puede experimentar descargando un proyecto para ruby ya hecho, seguramente verá
+un archivo ```Gemfile```, donde bundler examina de que librerías depende la aplicación y genera
 un archivo ```Gemfile.lock``` con las versiones precisas por instalar de cada gema.  
-Una vez en el directorio del proyecto puede instalarlas con ```bundle install```
+Una vez tenga un proyecto puede instalar las gemas de las que depende con ```bundle install```
 
-Si no logra instalar algunas --por problemas de permisos tipicamente--
-puede instalar con doas e indicando usar la ruta de gemas
+Si eventualmente no logra instalar algunas --por problemas de permisos tipicamente--
+puede instalar con ```doas``` e indicar la ruta de las gemas
 locales,  por ejemplo:
 <pre>
 doas gem install --install-dir ~/.bundler/ bcrypt -v '3.1.11'
 </pre>
 
+##1.5. Rails
 
-Para instalar a la versión estable más reciente de Rails (4.2.6 en el momento 
-de este escrito), ejecute
+Se trata de una popular gema que facilita mucho crear sitios web dinámicos. 
+
+Para instalar globalmente (en ```/usr/local/bin``` y ```/usr/local/lib/ruby/gems/```) la versión estable más 
+reciente de Rails (5.0.0 en el momento de este escrito), ejecute
 <pre>
 doas gem install rails
 </pre>
 
-Como interprete de JavaScript recomendamos ```node.js``` (ver {1}) incluido en 
-DVD de adJ 5.8 y que se configurará automáticamente.
+Rails requiere en el servidor un interprete de JavaScript, recomendamos ```node.js``` (ver {1}) incluido en 
+el DVD de adJ 5.9 y que se configurará automáticamente.
 
-La gran mayoría de gemas instalarán de la misma forma que se explicó. Algunos
-casos especiales son:
+La gran mayoría de gemas usadas por rails instalarán de la misma forma que se explicó. Algunos casos especiales son:
 
-- ```nokogiri``` que requiere ```doas gem install --install-dir ~/.bundler/ nokogiri -- --use-system-libraries --with-xml2-config=/usr/local/bin/xml2-config``` 
-- ```capybara-webkit``` que requería ```QMAKE=qmake-qt5 MAKE=gmake doas gem install capybara-webkit```).
+- ```nokogiri``` que puede requerir ```doas gem install --install-dir ~/.bundler/ nokogiri -- --use-system-libraries --with-xml2-config=/usr/local/bin/xml2-config``` 
 
+- ```capybara-webkit``` que podría requerir ```QMAKE=qmake-qt5 MAKE=gmake doas gem install capybara-webkit```).
+
+## 1.6. Editor ```vim```
 Para emplear ```vim``` como editor se recomienda asegurarse de haber ejecutado:
 <pre>
 cd ~
@@ -158,9 +168,9 @@ y con un navegador consultando <http://localhost:8808>
 
 ##3.1 Nueva aplicación usando SQLite
 
-Genere una nueva aplicación asegurando que las gemas requeridas se instalan globalmente, pero después ajuste permisos:
+Genere una nueva aplicación:
 <pre>
-rails new -B aplicacion
+rails new aplicacion
 cd aplicacion
 bundle install
 </pre>
@@ -168,7 +178,6 @@ bundle install
 Esto creará una nueva aplicación de ejemplo e instalará todas sus dependencias.   
 Las gemas que no logre instalar por falta de permisos, como se explicó anteriormente
 instalelas con ```doas gem install``` y la opción ```--install-dir ~/.bundler/```
-Si no logra instalar algunas --por problemas de permisos tipicamente--
 
 Una vez haya logrado que ```bundle install``` se ejecute completo puede ejecutar:
 
@@ -196,6 +205,9 @@ Notará que se genera:
 | app/assets/images/ | Gráficos de la aplicación (tipicamente que no se sirven estáticos) |
 | app/mailers/ | Controlador para enviar correos |
 | app/models/ | Modelos |
+| app/channel/ | Controlador de websockets |
+| app/jobs/ | Maneja cola de tareas programadas | 
+| app/mailer/ | Facilita envío y recepción de correos |
 | app/controllers/concerns/ | Código que se repite en controladores |
 | app/models/concerns/| Código que se repite en modelos |
 | bin/bundle| Maneja dependencias con el ambiente de la aplicación |
@@ -220,13 +232,14 @@ Notará que se genera:
 | config/locales/en.yml| Localización en inglés |
 | config/boot.rb| Prepara rutas para encontrar gemas |
 | config/database.yml| Configuración de base de datos |
+| config/puma.rb| Configuración de servidor web puma |
 | db/seeds.rb | Datos iniciales para base de datos |
 | lib/tasks/ | Tareas para ```rake``` |
 | lib/assets/ | "Activos" comunes para librerías |
 | log/| Bitácoras |
 | public | Archivos estáticos |
 | public/404.html| Mensaje por defecto para páginas no encontradas |
-| public/422.html| Mensjae por defecto para rechazar cambios |
+| public/422.html| Mensaje por defecto para rechazar cambios |
 | public/500.html| Mensaje por defecto cuando ocurren errores en servidor |
 | public/favicon.ico| Icono |
 | public/robots.txt| Puede evitar indexación por parte de motores de búsqueda |

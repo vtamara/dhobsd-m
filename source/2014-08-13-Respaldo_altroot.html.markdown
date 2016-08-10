@@ -29,16 +29,16 @@ Los sistemas de archivos de ```/var``` y ```/home``` también se copian diariame
 </pre>
 Aseguramos el montaje durante el arranque con lo siguiente en ```/etc/rc.local``` (cambiar sd1 por wd1 de acuerdo al hardware):
 <pre>
-mount | grep "\/sd1d" > /dev/null 2>&1
+/sbin/mount | /usr/bin/grep "\/sd1e" > /dev/null 2>&1
 if (test "$?" != "0") then {
-    fsck -y /dev/sd1d
-    mount /altroot/home
+    /sbin/fsck -y /dev/sd1e
+    /sbin/mount /dev/sd1e /altroot/var/
 } fi;
 
-mount | grep "\/sd1e" > /dev/null 2>&1
+/sbin/mount | /usr/bin/grep "\/sd1d" > /dev/null 2>&1
 if (test "$?" != "0") then {
-    fsck -y /dev/sd1e
-    mount /altroot/var/
+    /sbin/fsck -y /dev/sd1d
+    /sbin/mount /dev/sd1d /altroot/home
 } fi;
 </pre>
 
