@@ -44,8 +44,7 @@ se configura y usa consistentemente como autoridad certificadora.
 
 ## 2. Configuración de servidor
 
-En el servidor deben quedar certificados del servidor en 
- ```/var/postgresql/data```:
+En el servidor deben quedar certificados del servidor en ```/var/postgresql/data```:
 
 * root.crt Autoridad certificadora (igual a server.crt)
 * root.crl Lista de revocación
