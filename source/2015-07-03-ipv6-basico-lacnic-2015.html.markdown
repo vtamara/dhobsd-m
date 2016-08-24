@@ -182,7 +182,7 @@ y desde Chromium puede verse en la dirección http://[fd4d:da20:9e55::1]:4000/
 
 
 
-![IPv6](http://s6.postimg.org/awuvnuwg1/chromeipv6.jpg)
+![Rails con IPv6](https://raw.githubusercontent.com/vtamara/dhobsd-m/master/source/img/chrome-cor1440.jpg)
 
 ## Ejercicio 6:  Conectar a Internet IPv6 usando un tunnel broker con HE
 
@@ -229,7 +229,7 @@ La navegación con chrome operó bien por ejemplo con una dirección como http:/
 
 De hecho esa última página me confirmó las buenas posibilidades de la dirección IPv6 proveida por HE, del tunel y de mi servidor DNS para usar IPv6 (un named típico configurado en el mismo servidor adJ).
 
-![Chrome sobre Tunel IPv6](http://s6.postimg.org/5bram5681/chrome_tunel_ipv6.jpg)
+![Chromium sobre Tunel IPv6](https://raw.githubusercontent.com/vtamara/dhobsd-m/master/source/img/tunel-1.jpg)
 
 ## Ejercicio 7:  Conectar sólo a IPv6 usando un proveedor que ofrezca IPv6 con autoconfiguraación
 
@@ -250,7 +250,7 @@ Se hizo una prueba desde Estados Unidos con el inseguro proveedor Comcast
 (ver http://aprendiendo.pasosdejesus.org/?id=Ataque+2013 )  donde se pudo
 comprobar la conectividad solo IPv6:
 
-![Prueba de conectividad solo IPv6](https://scontent-mia1-1.xx.fbcdn.net/hphotos-xpt1/v/t1.0-9/12003348_971753412880752_4844462289122407099_n.png?oh=c239c4f9c3e1f32c7e4cac024486eb89&oe=56CBF8B4)
+![Prueba de conectividad solo IPv6](https://raw.githubusercontent.com/vtamara/dhobsd-m/master/source/img/ipv6-nativo-2.png)
 
 Para poder resolver nombres en este escenario se requiere un servidor DNS 
 que pueda responder a peticiones de dominios IPv6, por ejemplo los 
@@ -276,7 +276,7 @@ está ubicado en Colombia.
 
 ## Ejercicio 8:  Conectar con pila doble usando un proveedor que ofrezca IPv6 e IPv4
 
-Suponiendo que el mismo modem del proveedor permite configuración de IPv5 vía DHCP, basta dejar en ```/etc/hostname.re0``` (cambiando ```re0``` por su 
+Suponiendo que el mismo modem del proveedor permite configuración de IPv6 vía DHCP, basta dejar en ```/etc/hostname.re0``` (cambiando ```re0``` por su 
 interfaz de red):
 <pre>
 dhcp
@@ -284,6 +284,6 @@ rtsol
 </pre>
 
 Al examinar con ipv6.test-ipv6.como se verá algo como:
-![Prueba de conectividad con pila doble](https://fbcdn-sphotos-g-a.akamaihd.net/hphotos-ak-xpf1/v/t1.0-9/11951760_971750372881056_6940521321396463334_n.png?oh=10aee4de1223f0db5cfe5c1ec6f2648c&oe=56CD3FFB&__gda__=1452646545_585a924c37a9bca6fa17b0244b09194a)
+![Prueba de conectividad con pila doble](https://raw.githubusercontent.com/vtamara/dhobsd-m/master/source/img/ipv6-doblepila.png)
 
 
