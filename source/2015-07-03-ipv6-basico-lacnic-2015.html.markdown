@@ -287,3 +287,7 @@ Al examinar con ipv6.test-ipv6.como se verá algo como:
 ![Prueba de conectividad con pila doble](https://raw.githubusercontent.com/vtamara/dhobsd-m/master/source/img/ipv6-doblepila.png)
 
 
+# Recursos para migración
+
+* En Colombia: http://www.mintic.gov.co/gestionti/615/articles-5482_Guia23_Transicion_IPV4_IPV6.pdf
+* 
