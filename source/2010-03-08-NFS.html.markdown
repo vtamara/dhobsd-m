@@ -3,7 +3,7 @@ title: NFS
 date: 2010-03-08
 tags:
 ---
-NFS es sigla de Sistema de archivos en Red (Network Filesystem), se trata de un protocolo con servidor y cliente(s) para lograr que parte del sistema de archivos del servidor pueda verse en el computador cliente en un directorio local.
+NFS es sigla de Sistema de archivos en Red (Network Filesystem), se trata de un protocolo con servidor y cliente(s) para lograr que parte del sistema de archivos del servidor pueda verse en el computador cliente en un directorio local. A continuación presentamos su uso como servidor y cliente en adJ 5.9.
 
 ##1. SERVIDOR
 
