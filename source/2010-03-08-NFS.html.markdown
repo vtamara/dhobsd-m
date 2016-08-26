@@ -15,18 +15,21 @@ Para compartir un directorio se especifíca en ```/etc/exports``` por ejemplo si
 </pre>
 El archivo ```/etc/rc.conf.local``` debe incluir:
 <pre>
-portmap=YES
-nfs_server=YES
+portmap_flags=
+nfsd_flagsr=
 </pre>
 
 Para reiniciar ```portmap```
 <pre>
-doas pkill portmap
-doas portmap
+doas sh /etc/rc.d/portmap -d restart
 </pre>
 
 Para reiniciar servidor nfs:
 
+<pre>
+doas sh /etc/rc.d/nfsd -d restart
+</pre>
+o
 <pre>
 doas su -
 pkill nfsd
@@ -50,7 +53,11 @@ Para verificar que directorios está exportando:
 <pre>
 showmount -e 192.168.2.1
 </pre>
-
+que debe mostrar algo como
+<pre>
+Exports list on 192.168.2.1:
+/mnt/respaldo                        192.168.2.0
+</pre>
 
 Para verificar que está corriendo ```portmap, mountd``` y ```nfsd``` usar:
 <pre>
