@@ -4,11 +4,11 @@ date: 2016-03-18
 tags:
 ---
 
-Para usar freecodecamp sobre adJ 5.8
+Para usar freecodecamp sobre adJ 5.9
 
-## Prerrequesitos
+## Prerrequisitos
 
-* gcc-4.9 y  g++-4.9 que se instalan por omisión en adJ 5.8
+* gcc-4.9.3p3 y  g++-4.9.3p3 que se instalan por omisión en adJ 5.9
 
 ## Procedimiento
 
@@ -18,7 +18,7 @@ Actualizar npm
 doas npm install npm -g
 </pre>
 
-Asegurar que npm usa paquetes un poco más recientes de los compiladores gcc y g++:
+Asegurar que ```npm``` usa paquetes un poco más recientes de los compiladores gcc y g++:
 
 <pre>
 env CC=/usr/local/bin/egcc CXX=/usr/local/bin/eg++ npm install
@@ -31,7 +31,7 @@ doas npm install -g bower
 Esta aplicación requiere abrir más de 6000 descriptores de archivos, por lo 
 que se recomienda:
 
-* Aumentar límites del kernel. En sysctl.conf:
+* Aumentar límites del kernel. En ```sysctl.conf```:
 <pre>
 kern.shminfo.shmmni=1024 
 kern.seminfo.semmns=2048 
@@ -41,7 +41,7 @@ kern.maxfiles=20000
 </pre>
 
 * Aumentar límite de la clase del usuario que lance aplicación. 
-  Por ejemplo si es de la clase ```staff```:
+  Por ejemplo si es de la clase ```staff``` en ```/etc/login.conf```:
 <pre>
 staff:\
         :datasize-cur=1536M:\
