@@ -18,7 +18,7 @@ Actualizar npm
 doas npm install npm -g
 </pre>
 
-Asegurar que npm usan esos compiladores un poco más recientes de gcc y g++:
+Asegurar que npm usa paquetes un poco más recientes de los compiladores gcc y g++:
 
 <pre>
 env CC=/usr/local/bin/egcc CXX=/usr/local/bin/eg++ npm install
