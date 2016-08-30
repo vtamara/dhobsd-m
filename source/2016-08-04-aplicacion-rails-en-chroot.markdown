@@ -23,7 +23,7 @@ En la aplicación en el archivo .bundle/config asegurese de tener:
 <pre>
 ---
 BUNDLE_PATH: "/var/www/bundler"
-BUNDLE_DISABLE_SHARED_GEMS: 'true'  
+BUNDLE_DISABLE_SHARED_GEMS: true
 </pre>
 
 Para evitar conflictos con su archivo personal de configuración de bundle puede ejecutar:
