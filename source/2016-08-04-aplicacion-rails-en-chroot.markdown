@@ -93,3 +93,15 @@ Las que no puedan actualizarse por permisos, reinstalarlas con install, por ejem
 <pre>
 doas gem install --install-dir /var/www/bundler/ruby/2.3/ nokogiri -- --use-system-libraries
 </pre>
+
+También podrá encontrar los que generar librerías y requieren reinstalación con:
+<pre>
+find /var/www/bundler -name "*.so"
+</pre>
+y algo como
+<pre>
+doas gem install --install-dir /var/www/bundler/ruby/2.3/  nio4r bcrypt debug_inspector kgio raindrops unicorn websocket-driver json byebug ffi io-console pg
+</pre>
+
+
+</pre>
