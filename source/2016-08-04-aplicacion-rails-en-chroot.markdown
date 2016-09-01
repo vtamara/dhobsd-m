@@ -83,7 +83,6 @@ Las librerías compartidas es posible que dejen de operar cuando actualice versi
 <pre>
 doas gem update --system
 QMAKE=qmake-qt5 make=gmake MAKE=gmake doas gem pristine --all
-doas gem update --system
 </pre>
 
 2. Actualizar gemas instaladas en ```/var/www/bundler```
