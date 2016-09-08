@@ -104,7 +104,7 @@ doas gem install --install-dir /var/www/bundler/ruby/2.3/  nio4r bcrypt debug_in
 </pre>
 
 
-## 2. Aplicación rais en jaula en /var/www
+## 2. Aplicación rails en jaula en /var/www
 
 En análogía a aplicaciones php, pueden correr con el usuario www, pero dado que se requieren límites más amplios para algunas aplicaciones, es mejor dejar este usuario en la clae de login servicio (o su versión obsoleta daemon) con vipw:
 <pre>
