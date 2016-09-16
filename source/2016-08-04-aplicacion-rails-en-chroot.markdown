@@ -12,15 +12,28 @@ En el caso de Ruby on Rails no hay opciones para facilitar esto.
 
 ## 1. Aplicación rails en producción en jaula en /var/www
 
-En análogía a aplicaciones php, pueden correr con el usuario www, pero dado que se requieren límites más amplios para algunas aplicaciones, es mejor dejar este usuario en la clae de login servicio (o su versión obsoleta daemon) con vipw:
+En análogía a aplicaciones php, pueden correr con el usuario www, pero dado que se requieren límites más amplios para algunas aplicaciones, es mejor dejar este usuario en la clase de login servicio (o su versión obsoleta daemon) con vipw:
 <pre>
 www:*:67:67:servicio:0:0:HTTP Server:/var/www:/sbin/nologin 
 </pre>
 y que esa clase tenga límites suficientemente amplios como se explica en {3}
 
+Se ubica la aplicación en /var/www y se instalan las gemas que requiere con:
+<pre>
+bundle install --deployment
+</pre>
 
 
-Se puede hacer gradual.
+Se prepara un entorno ruby para correr chroot:
+https://github.com/pasosdeJesus/adJ/blob/ADJ_5_9/arboldd/usr/local/adJ/ruby-chroot-www.sh
+
+Los grandes pasos de este script son:
+
+1. Tener actualizado ruby fuera de chroo
+2. Instala paquetes ruby y node completos y entorno de ruby en jaula chroot $dchroot
+3. Agrega librerías compartidas que pueda requerir la aplicación
+4. Ejecuta ldconfig
+
 
 ##2. Aplicación rails en desarrollo en jaula /var/www
 
