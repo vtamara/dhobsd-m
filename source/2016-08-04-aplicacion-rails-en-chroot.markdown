@@ -10,11 +10,21 @@ En adJ y OpenBSD es típico que las aplicaciones web corran en jaula chroot en `
 
 En el caso de Ruby on Rails no hay opciones para facilitar esto.  
 
+## 1. Aplicación rails en producción en jaula en /var/www
+
+En análogía a aplicaciones php, pueden correr con el usuario www, pero dado que se requieren límites más amplios para algunas aplicaciones, es mejor dejar este usuario en la clae de login servicio (o su versión obsoleta daemon) con vipw:
+<pre>
+www:*:67:67:servicio:0:0:HTTP Server:/var/www:/sbin/nologin 
+</pre>
+y que esa clase tenga límites suficientemente amplios como se explica en {3}
+
+
+
 Se puede hacer gradual.
 
-##1. Gemas compartidas en /var/www/bundler
+##2. Aplicación rails en desarrollo en jaula /var/www
 
-###1.1 Configuración general
+###2.1 Configuración general
 
 <pre>
 doas mkdir /var/www/bundler
@@ -26,7 +36,7 @@ Para evitar conflictos con su archivo personal de configuración de bundle ejecu
 mv ~/.bundle/config ~/.bundle/config-antes
 </pre>
 
-###1.2 Configuración de cada aplicación 
+###2.2 Configuración de cada aplicación 
 
 En la aplicación en el archivo .bundle/config asegurese de tener:
 <pre>
@@ -75,7 +85,7 @@ En cada aplicación cuando vaya a relizar alguna acción, asegurese de preceder 
 bundle exec rails s
 </pre>
 
-###1.3 Actualización de gemas tras actualizar sistema operativo y/o ruby
+###2.3 Actualización de gemas tras actualizar sistema operativo y/o ruby
 
 Las librerías compartidas es posible que dejen de operar cuando actualice versión de librerías de las que dependen o del sistema operativo o de ruby.   Tipicamente se reconstruyen con ```gem pristine``` pero hemos notado que este opera sólo sobre las gemas instaladas en ```/usr/local/lib/ruby/gems``` así que recomendamos:
 
@@ -102,15 +112,6 @@ y algo como
 <pre>
 doas gem install --install-dir /var/www/bundler/ruby/2.3/  nio4r bcrypt debug_inspector kgio raindrops unicorn websocket-driver json byebug ffi io-console pg
 </pre>
-
-
-## 2. Aplicación rails en jaula en /var/www
-
-En análogía a aplicaciones php, pueden correr con el usuario www, pero dado que se requieren límites más amplios para algunas aplicaciones, es mejor dejar este usuario en la clae de login servicio (o su versión obsoleta daemon) con vipw:
-<pre>
-www:*:67:67:servicio:0:0:HTTP Server:/var/www:/sbin/nologin 
-</pre>
-y que esa clase tenga límites suficientemente amplios como se explica en {3}
 
 
 
