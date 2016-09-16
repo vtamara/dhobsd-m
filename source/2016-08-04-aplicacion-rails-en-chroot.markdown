@@ -34,6 +34,11 @@ Los grandes pasos de este script son:
 3. Agrega librerías compartidas que pueda requerir la aplicación
 4. Ejecuta ldconfig
 
+Lo que sigue es ejecutar la aplicación en modo producción, hemos empleado unicorn con exito para esto, lo que requiere es:
+* Ajusta permisos (por ejemplo tmp, log y public/assets deben ser escribibles po www).
+* 
+
+Ejecutar la aplicación, OJO no como root sino como www:ww pues está documentado como root puede salirse de la jaula.
 
 ##2. Aplicación rails en desarrollo en jaula /var/www
 
