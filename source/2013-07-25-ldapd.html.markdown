@@ -334,7 +334,12 @@ Para probar dirigase a ```https://midomino.org/phpldapadmin/``` o si lo requiere
 Primero cree un grupo posix en grupos.
 A continuación cree cuentas de usuario, tenga en cuenta que en la configuración por defecto debe emplear cifrado SHA para la clave (que no es seguro pero es soportada por ```phpLdapAdmin``` y ```ldadpd```).
 
-## BIBLIOGRAFÍA
+## 6. DIFERENCIAS CON OPENLDAP
+
+* El renombramiento de objetos opera con OpenLDAP pero no con ldapd.
+
+
+## 7. BIBLIOGRAFÍA
 
 * {1} [Autenticacion con OpenLDAP]
 * {2} Páginas ```man ldadp```, ```man ldapd.conf```, ```man ldapctl```
