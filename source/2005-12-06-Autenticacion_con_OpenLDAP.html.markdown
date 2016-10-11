@@ -5,7 +5,7 @@ tags:
 ---
 En este artículo describimos como autenticar usuarios en OpenBSD 3.8 empleando ```login_ldap``` y un directorio manejado por OpenLDAP.
 
-##INTRODUCCIÓN
+## INTRODUCCIÓN
 
 LDAP (Lightweight Directory Access Protocol) es un protocolo para mantener e intercambiar información almacenada en directorios (i.e bases de datos especiales).
  Un uso típico de LDAP es mantener en un servidor información de los usuarios de una organización para permitir su autenticación en los computadores (e.g nombres, apellidos, dirección, teléfono, login, clave).
@@ -14,7 +14,7 @@ OpenLDAP es una implementación de LDAPv3 de fuentes abiertas que cuenta con paq
 
 El paquete ```login_ldap``` agrega a los esquemas de autenticación de OpenBSD uno que consulta en un servidor LDAP. En particular puede consultar un servidor LDAP que corre en el mismo computador donde se hace la autenticación, lo cual facilita los pasos requeridos para mantener seguridad y por esto será el esquema aquí descrito.
 
-##INSTALACIÓN Y CONFIGURACIÓN
+## INSTALACIÓN Y CONFIGURACIÓN
 
 La instalación de todos los paquetes es directa:
 <pre>
@@ -26,7 +26,7 @@ La instalación de todos los paquetes es directa:
 También se requiere el esquema ```authldap.schema``` que puede descargar de Internet (http://cvs.sourceforge.net/viewcvs.py/*checkout*/courier/libs/authlib/authldap.schema) o que está incluido en el paquete ```courier-authlib-ldap``` (disponible desde
 OpenBSD 4.1).
 
-!OpenLDAP
+### OpenLDAP
 
 Para configurar el servidor, si no existen comience por crear un usuario (```_openldap```) y un grupo (```_openldap```):
 <pre>
@@ -106,7 +106,7 @@ Puede verificar que el servidor está corriendo con:
 ldapsearch -x -b 'dc=correo,dc=pasosdeJesus,dc=org' '(objectclass=*)'
 </pre>
 
-! login_ldap
+### login_ldap
 
 La configuración de este paquete es sencilla pues sólo debe ejecutar 
 ```enable-login-ldap``` y agregar algunas líneas a ```/etc/login.conf``` pero sin agregar espacios en blanco al final de cada una (por este motivo es mejor no emplear copiar & pegar sino incluir en ```/etc/login.conf``` el contenido de ```/usr/local/share/login_ldap/login_ldap.conf``` y modificarlo
@@ -239,7 +239,7 @@ login: pablo
 ...
 </pre>
 
-##ELIMINACIÓN DE INFORMACIÓN
+## ELIMINACIÓN DE INFORMACIÓN
 
 Para eliminar un usuario puede emplear
 <pre>
@@ -254,7 +254,7 @@ Si necesita borrar el directorio completo utilice:
 # rm /var/openldap-data/*
 </pre>
 
-##EFICIENCIA
+## EFICIENCIA
 
 Para lograr búsquedas veloces deben crearse indices sobre los campos que
 se realizan las búsquedas y configurarse caches.   Cada índice se configura en el archivo ```/etc/openldap/slapd.conf``` por ejemplo las líneas:
@@ -279,7 +279,7 @@ Después de hacer esta configuración deben regenerarse índices con:
 
 y después reiniciar ```slapd```
 
-##SEGURIDAD
+## SEGURIDAD
 
 Es recomendable emplear SSL para encriptar las conexiones que consultan a ```slapd```.  Para esto es indispensable tener un certificado para el servidor firmado por una autoridad certificadora (CA), así que tiene tres opciones para obtener tal certificado:
 * Usar una autoridad certificadora oficial/comercial
@@ -334,7 +334,7 @@ Note que es indispensable la llave pública de la autoridad certificadora para l
 
 Es recomndable que emplee ```pf``` para bloquear los puertos en los que no ofrezca servicios y eventualmente para abrir el puerto 636.
 
-##AUTOMATIZACIÓN
+## AUTOMATIZACIÓN
 
 * Configuración general: [ http://dhobsd.pasosdeJesus.org/index.php?binary=internal%3A%2F%2Fd06c5dae76d1241a1893128185c33ddf.bin | DN.sh]
 * Agrega datos LDIF  (requiere DN.sh): [http://dhobsd.pasosdeJesus.org/index.php?binary=internal%3A%2F%2F6b69fdd2fbd7610e8b449ec1f30a992b.bin | agldif.sh]
@@ -344,7 +344,7 @@ Es recomndable que emplee ```pf``` para bloquear los puertos en los que no ofrez
 * Cambia clave de un usuario (requiere DN.sh): [http://dhobsd.pasosdeJesus.org/index.php?binary=internal%3A%2F%2Feb75a2d65e15b4620c4c7bcb963be2e1.bin | camclave.sh]
 
 
-##CONCLUSIONES
+## CONCLUSIONES
 
 Aunque el esquema de autenticación de OpenBSD requiera crear una cuenta del sistema por cada usuario LDAP a autenticar, esta configuración resulta apropiada para:
 
@@ -353,7 +353,7 @@ Aunque el esquema de autenticación de OpenBSD requiera crear una cuenta del sis
 * Puede hacerse más pública la información que se desee empleando el OpenLDAP LDAP Root Service (ver http://www.openldap.org/faq/data/cache/393.html )
 * Permitir autenticación tanto con el mecanismos estándar de OpenBSD como con el servidor LDAP (por ejemplo Courier-POP3D puede autenticar directamente con el servidor LDAP).
 
-##BIBLIOGRAFÍA
+## BIBLIOGRAFÍA
 
 * Páginas ```man slapd```, ```slapd.conf```, ```login_ldap```
 * http://www.openldap.org/doc/admin22/quickstart.html
