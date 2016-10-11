@@ -297,11 +297,11 @@ Además de su certificado firmado (digamos ```/etc/ssl/server.crt```), la llave 
 Después agregue en ```/etc/openldap/slapd.conf```
 
 <pre>
-!TLSCipherSuite HIGH:MEDIUM:+SSLv2
-!TLSCACertificateFile /etc/ssl/cacert.pem
-!TLSCertificateFile /etc/ssl/server.crt
-!TLSCertificateKeyFile /etc/ssl/private/server.key
-!TLSVerifyClient allow
+TLSCipherSuite HIGH:MEDIUM:+SSLv2
+TLSCACertificateFile /etc/ssl/cacert.pem
+TLSCertificateFile /etc/ssl/server.crt
+TLSCertificateKeyFile /etc/ssl/private/server.key
+TLSVerifyClient allow
 </pre>
 
 Modifique su script de arranque  ```/etc/rc.local``` para que inicie slapd recibiendo conexiones por dos puertos: 389 (ldap) para conexiones planas y 636 (ldaps) para conexiones encriptadas.
