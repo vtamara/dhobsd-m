@@ -3,8 +3,10 @@ title: Majordomo
 date: 2008-06-12
 tags:
 ---
+
 ```majordomo``` es un programa para administrar listas de correo.   Aunque hay otros programas análogos disponibles para OpenBSD y en particular  ```mailman``` que es muy configurable y tiene una interfaz web bastante usable, la ventaja de ```majordomo``` es que no requiere un servidor web.   ```mailman``` por defecto requiere el servidor web ejecutándose fuera de la jaula ```chroot``` lo que aumenta vulnerabilidad del sistema operativo.
 
+A continuación presentamos uso, instalación y configuración con OpenSMTPD, se ha probado con exito en OpenBSD 5.9
 
 ##USO
 
@@ -17,6 +19,7 @@ help
 recibirá en su correo los comandos que puede enviar.  Note que debe enviar los mensajes en el cuerpo del mensaje y no en el tema.
 
 Algunos de los comandos más típicos son:
+
 * ```lists``` que retorna las listas públicas disponibles en el servidor.
 * ```info milista``` que da información sobre la lista ```milista```
 * ```subscribe milista direccion@mi.dominio``` que suscribe el correo ```direccion@mi.dominio``` a la lista ```milista```
@@ -30,16 +33,27 @@ Algunos de los comandos más típicos son:
 
 ##INSTALACIÓN Y CONFIGURACIÓN
 
-* Instale el paquete ```majordomo```. ```cd /usr/ports/mail/majordomo; sudo make install```
-* Agregue el usuario ```daemon``` al grupo _majordomo editando /etc/groups o ejecutando ```sudo usermod -G _majordomo daemon```
-* Editar ```/etc/majordomo/majordomo.cf``` y asegurarse por lo menos de establecer el nombre de la máquina (```whereami```).
-*  Agregar ```_majordomo``` al archivo ```/etc/mail/trusted-users```
-* Agregar alias en  ```/etc/mail/aliases``` (recuerde ejecutar ```make``` después de cambiarlo):
+* Instale el paquete ```majordomo```. ```cd /usr/ports/mail/majordomo; doas make install```
+* Agregue el usuario ```servicio``` al grupo _majordomo editando /etc/groups o ejecutando ```doas usermod -G _majordomo servicio```
+* Edite ```/etc/majordomo/majordomo.cf``` y asegurese de establecer al menos el nombre de la máquina (```whereami```).
+* Establezca una archivo de aliases para su dominio en /etc/mail/smtpd.conf por ejemplo:
+<pre>
+table aliasesp db:/etc/mail/aliasesp.db
+accept from any for domain "pasosdeJesus.org" alias <aliasesp> deliver to maildir
+</pre>
+* Agregue aliases iniciales en ```/etc/mail/aliasep```
 <pre>
    majordomo: "|/usr/local/lib/majordomo/wrapper majordomo"
    Majordomo-Owner: postmaster
 </pre>
-
+* Cada vez que cambie ese archivo de aliases ejecute:
+<pre>
+ makemap -t aliases /etc/mail/aliasesp
+</pre>
+* Cambie dueño:
+<pre>
+chown _smtpd:_smtpd /usr/local/lib/majordomo/wrapper
+</pre>
 
 ##CREACIÓN DE UNA NUEVA LISTA
 
@@ -51,7 +65,7 @@ $EDITOR milista.info
 chmod 664 milista*
 mkdir -p milista.archivo
 chmod 775 milista.archivo
-chown -R _majordomo:_majordomo milista*
+chown -R _smtpd:_smtpd milista*
 chmod g-w milista
 </pre>
 
@@ -61,13 +75,13 @@ se presentará cuando los usuarios empleen el comando info.
 En el archivo ```/var/spool/majordomo/lists/milista``` deje la lista
 inicial de correos.
 
-Después edite ```/etc/mail/aliases``` para agregar:
+Después edite ```/etc/mail/aliases``` para agregar (remplace miusuario por el usuario que administrará la lista):
 
 <pre>
 milista:"|/usr/local/lib/majordomo/wrapper resend -l milista milista-saliente"
-milista-approval: vtamara
-owner-milista:   vtamara
-milista-owner:   vtamara
+milista-approval: miusuario
+owner-milista:   miusuario 
+milista-owner:   miusuario 
 milista-request: "|/usr/local/lib/majordomo/wrapper majordomo -l milista"
 owner-milista-saliente: owner-milista
 milista-saliente: :include:/var/spool/majordomo/lists/milista, \
@@ -78,13 +92,11 @@ milista-saliente: :include:/var/spool/majordomo/lists/milista, \
 Reconstruya bases de datos de correo con:
 <pre>
 cd /etc/mail
-make
+doas make
 </pre>
-y reinicie ```sendmail```:
+y reinicie ```OpenSMTPD```:
 <pre>
-pkill -HUP sendmail
-. /etc/rc.conf.local
-sendmail $sendmail_flags
+doas sh /etc/rc.d/smtpd -d restart
 </pre>
 
 Desde un cliente de correo envie a ```majordomo@listas.pasosdeJesus.org``` el mensaje:
