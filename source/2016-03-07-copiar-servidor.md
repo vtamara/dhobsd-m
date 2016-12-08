@@ -20,14 +20,15 @@ En servidor destino:
 
 En servidor origien:
 
-1. Desde la cuenta ```root``` cree un par de llaves RSA: ```
+- Desde la cuenta ```root``` cree un par de llaves RSA:
+```
 ssh-keygen -t rsa
 ```
-2. Envíe la llave pública como llave autorizada unica para rsyncer en servidor destino:```
+- Envíe la llave pública como llave autorizada unica para rsyncer en servidor destino:
+```
 scp /root/.ssh/id_rsa.pub rsyncer@192.168.1.2:.ssh/authorized_keys
 ```
-
-3. En el servidor origen ejecutar:
+- En el servidor origen ejecutar:
 ```
 /usr/local/bin/rsync --delete  --rsh=ssh -rauvz  -e "ssh" --rsync-path="sudo /usr/local/bin/rsync" "/home/" rsyncer@192.168.1.2:/home/"
 ```
