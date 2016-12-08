@@ -28,7 +28,7 @@ ssh-keygen -t rsa
 ```
 scp /root/.ssh/id_rsa.pub rsyncer@192.168.1.2:.ssh/authorized_keys
 ```
-- En el servidor origen ejecutar:
+Para enviar la copia, ejecute en el servidor origen:
 ```
 /usr/local/bin/rsync --delete  --rsh=ssh -rauvz  -e "ssh" --rsync-path="sudo /usr/local/bin/rsync" "/home/" rsyncer@192.168.1.2:/home/"
 ```
