@@ -25,7 +25,9 @@ En servidor origien:
 ssh-keygen -t rsa
 ```
 2. Envíe la llave pública como llave autorizada unica para rsyncer en servidor destino:
+```
 scp /root/.ssh/id_rsa.pub rsyncer@192.168.1.2:.ssh/authorized_keys
+```
 
 3. En el servidor origen ejecutar:
 ```
