@@ -18,7 +18,7 @@ Un uso típico de LDAP es mantener en un servidor información de los usuarios
 para permitir su autenticación en los computadores o en aplicaciones.
 
 
-OpenBSD incluye (desde OpenBSD 4.8) un servidor para LDAP versión 3, 
+OpenBSD incluye (desde OpenBSD 4.8) un servidor para LDAP versión 2, 
 ```ldapd```. No incluye cliente para LDAP pero desde la línea de comandos 
 pueden emplearse las herramientas del paquete ```openldap-client``` o como interfaz 
 web puede usarse ```phpldapadmin``` .
@@ -312,7 +312,10 @@ recomienda emplear https://github.com/leenooks/phpLDAPadmin
 ```
 para configurarlo (use su editor preferido en lugar de $EDITOR o defina esa 
 variable) es importante que por lo menos quite el comentario a la 
-línea ```$config->custom->jpeg!['tmpdir'] = '/tmp';```
+línea 
+<pre>
+$config->custom->jpeg['tmpdir'] = '/tmp';
+</pre>
 
 También debe asegurar que puede emplearse los dispositivos de generación de 
 números aleatorios en la jaula chroot de Apache.  Para esto verifique 
@@ -332,7 +335,7 @@ Para probar dirigase a ```https://midomino.org/phpldapadmin/``` o si lo requiere
 ### 5.2. Preparando cuentas
 
 Primero cree un grupo posix en grupos.
-A continuación cree cuentas de usuario, tenga en cuenta que en la configuración por defecto debe emplear cifrado SHA para la clave (que no es seguro pero es soportada por ```phpLdapAdmin``` y ```ldadpd```).
+A continuación cree cuentas de usuario, tenga en cuenta que en la configuración por omisión debe emplear cifrado SHA para la clave (que no es seguro pero es soportada por ```phpLdapAdmin``` y ```ldadpd```).
 
 ## 6. DIFERENCIAS CON OPENLDAP
 
