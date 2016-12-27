@@ -5,7 +5,7 @@ tags:
 ---
 En adJ 5.9 es sencillo usar ruby 2.3 con Ruby on Rails 5.  Lo básico se instala de paquetes de OpenBSD y lo más reciente en Ruby directamente como gemas.
 
-#1. Instalación y configuración
+# 1. Instalación y configuración
 
 Asegúrese de tener instalados los paquetes  ruby 2.3.1, libv8 y node, incluidos en el DVD de adJ 5.9
 
@@ -76,12 +76,20 @@ A continuación ingrese a irb y escriba  por ejemplo ```4.``` y presione la tecl
 
 El paquete ```ruby``` incluye ```rubygems``` que manejan gemas (es decir
 librerías) con el programa ```gem```. Puede actualizar a la versión 
-más reciente con:
+más reciente las gemas globales con:
 
 <pre>
 doas gem update --system
 QMAKE=qmake-qt5 make=gmake MAKE=gmake doas gem pristine --all
 </pre>
+
+Para facilitar compilación de algunas extensiones (como las de nokogiri) se recomienda instalar globalmente:
+<pre>
+doas gem install pkg-config 
+</pre>
+
+El directorio donde se instalan las gemas globales es ```/usr/local/lib/ruby/gems/2.3/``` donde sólo pueden
+instalarse con ```doas```. Para minimizar riesgos de seguridad recomendamos instalar la mayoría de gemas como un usuario normal en el directorio ```/var/www/bundler/ruby/2.3```
 
 ##1.4. Bundler
 Para facilitar el manejo de varias gemas en un proyecto es típico
