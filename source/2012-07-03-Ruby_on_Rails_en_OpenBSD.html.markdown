@@ -7,7 +7,7 @@ En adJ 6.0 es sencillo usar ruby 2.4 con Ruby on Rails 5.  Lo básico se instala
 
 # 1. Instalación y configuración
 
-Asegúrese de tener instalados los paquetes  ruby 2.4.0, libv8 y node, incluidos en el DVD de adJ 5.9
+Asegúrese de tener instalados los paquetes  ruby 2.4.0, libv8 y node, incluidos en el DVD de adJ 6.0
 
 Asegúrese de tener enlaces al interprete de ruby y herramientas (como describe el paquete ruby):
 <pre>
