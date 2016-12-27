@@ -88,23 +88,23 @@ Para facilitar compilación de algunas extensiones (como las de nokogiri) se rec
 doas gem install pkg-config 
 </pre>
 
-El directorio donde se instalan las gemas globales es ```/usr/local/lib/ruby/gems/2.3/``` donde sólo pueden
-instalarse con ```doas```. Recomendamos iniciar un directoio para instalar gemas como usuario normal en  ```/var/www/bundler/ruby/2.3```, por 3 razones (1) evitar riesgos de seguridad al instalar gemas como root, (2) evitar problemas de permisos y la dificultad de programas como bundler para usar ```doas``` en lugar de ```sudo``` y (3) alista infraestructura para que sus aplicaciones corran en jaula chroot en ```/var/www```
+El directorio donde se instalan las gemas globales es ```/usr/local/lib/ruby/gems/2.4/``` donde sólo pueden
+instalarse con ```doas```. Recomendamos iniciar un directoio para instalar gemas como usuario normal en  ```/var/www/bundler/ruby/2.4```, por 3 razones (1) evitar riesgos de seguridad al instalar gemas como root, (2) evitar problemas de permisos y la dificultad de programas como bundler para usar ```doas``` en lugar de ```sudo``` y (3) alista infraestructura para que sus aplicaciones corran en jaula chroot en ```/var/www```
 
 Prepare ese directorio con:
 <pre>
-doas mkdir -p /var/www/bundler/ruby/2.3/
+doas mkdir -p /var/www/bundler/ruby/2.4/
 doas chown -R $USER:www /var/www/bundler
 </pre>
 
 Y cuando requiera instalar una gema allí emplee:
 <pre>
-gem install --install-dir /var/www/bundler/ruby/2.3/ json -v '2.0'
+gem install --install-dir /var/www/bundler/ruby/2.4/ json -v '2.0'
 </pre>
 
 O si llega a tener problemas de permisos con:
 <pre>
-doas gem install --install-dir /var/www/bundler/ruby/2.3/ bcrypt -v '3.1.11'
+doas gem install --install-dir /var/www/bundler/ruby/2.4/ bcrypt -v '3.1.11'
 </pre>
 
 
@@ -113,10 +113,10 @@ doas gem install --install-dir /var/www/bundler/ruby/2.3/ bcrypt -v '3.1.11'
 Para facilitar el manejo de varias gemas (y sus interdependencias) en un proyecto es típico emplear ```bundler``` que instala con:
 <pre>
 doas gem install bundler
-doas ln -sf /usr/local/bin/bundle23 /usr/local/bin/bundle
+doas ln -sf /usr/local/bin/bundle24 /usr/local/bin/bundle
 </pre>
 
-Configurelo para que instale gemas localmente en ```/var/www/bundler/ruby/2.3```:
+Configurelo para que instale gemas localmente en ```/var/www/bundler/ruby/2.4```:
 <pre>
 bundler config path /var/www/bundler
 </pre>
@@ -140,11 +140,11 @@ doas gem install rails
 </pre>
 
 Rails requiere en el servidor un interprete de JavaScript, recomendamos ```node.js``` (ver {1}) incluido en 
-el DVD de adJ 5.9 y que se configurará automáticamente.
+el DVD de adJ 6.0 y que se configurará automáticamente.
 
 La gran mayoría de gemas usadas por rails instalarán de la misma forma que se explicó. Algunos casos especiales son:
 
-- ```nokogiri``` que puede requerir ```doas gem install --install-dir /var/www/bundler/ruby/2.3/ nokogiri -- --use-system-libraries --with-xml2-config=/usr/local/bin/xml2-config``` 
+- ```nokogiri``` que puede requerir ```doas gem install --install-dir /var/www/bundler/ruby/2.4/ nokogiri -- --use-system-libraries --with-xml2-config=/usr/local/bin/xml2-config``` 
 
 - ```capybara-webkit``` que podría requerir ```QMAKE=qmake-qt5 MAKE=gmake doas gem install capybara-webkit```).
 
@@ -200,7 +200,7 @@ bundle install
 
 Esto creará una nueva aplicación de ejemplo e instalará todas sus dependencias.   
 Las gemas que no logre instalar por falta de permisos, como se explicó anteriormente
-instalelas con ```doas gem install``` y la opción ```--install-dir /var/www/bundler/ruby/2.3/```
+instalelas con ```doas gem install``` y la opción ```--install-dir /var/www/bundler/ruby/2.4/```
 
 Una vez haya logrado que ```bundle install``` se ejecute completo puede ejecutar:
 
