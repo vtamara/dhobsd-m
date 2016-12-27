@@ -3,22 +3,22 @@ title: Ruby_on_Rails_en_OpenBSD
 date: 2012-07-03
 tags:
 ---
-En adJ 5.9 es sencillo usar ruby 2.3 con Ruby on Rails 5.  Lo básico se instala de paquetes de OpenBSD y lo más reciente en Ruby directamente como gemas.
+En adJ 6.0 es sencillo usar ruby 2.4 con Ruby on Rails 5.  Lo básico se instala de paquetes de OpenBSD y lo más reciente en Ruby directamente como gemas.
 
 # 1. Instalación y configuración
 
-Asegúrese de tener instalados los paquetes  ruby 2.3.1, libv8 y node, incluidos en el DVD de adJ 5.9
+Asegúrese de tener instalados los paquetes  ruby 2.4.0, libv8 y node, incluidos en el DVD de adJ 5.9
 
 Asegúrese de tener enlaces al interprete de ruby y herramientas (como describe el paquete ruby):
 <pre>
 doas sh
- ln -sf /usr/local/bin/ruby23 /usr/local/bin/ruby
- ln -sf /usr/local/bin/erb23 /usr/local/bin/erb
- ln -sf /usr/local/bin/irb23 /usr/local/bin/irb
- ln -sf /usr/local/bin/rdoc23 /usr/local/bin/rdoc
- ln -sf /usr/local/bin/ri23 /usr/local/bin/ri
- ln -sf /usr/local/bin/rake23 /usr/local/bin/rake
- ln -sf /usr/local/bin/gem23 /usr/local/bin/gem
+ ln -sf /usr/local/bin/ruby24 /usr/local/bin/ruby
+ ln -sf /usr/local/bin/erb24 /usr/local/bin/erb
+ ln -sf /usr/local/bin/irb24 /usr/local/bin/irb
+ ln -sf /usr/local/bin/rdoc24 /usr/local/bin/rdoc
+ ln -sf /usr/local/bin/ri24 /usr/local/bin/ri
+ ln -sf /usr/local/bin/rake24 /usr/local/bin/rake
+ ln -sf /usr/local/bin/gem24 /usr/local/bin/gem
 </pre>
 
 ## 1.1. Límites amplios 
@@ -74,7 +74,7 @@ A continuación ingrese a irb y escriba  por ejemplo ```4.``` y presione la tecl
 
 ## 1.3. Gemas
 
-El paquete ```ruby``` incluye ```rubygems``` que manejan gemas (es decir
+El paquete ```ruby``` incluye ```rubygems``` que maneja gemas (es decir
 librerías) con el programa ```gem```. Puede actualizar a la versión 
 más reciente las gemas globales con:
 
