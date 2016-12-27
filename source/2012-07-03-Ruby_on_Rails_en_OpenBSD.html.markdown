@@ -89,20 +89,35 @@ doas gem install pkg-config
 </pre>
 
 El directorio donde se instalan las gemas globales es ```/usr/local/lib/ruby/gems/2.3/``` donde sólo pueden
-instalarse con ```doas```. Para minimizar riesgos de seguridad recomendamos instalar la mayoría de gemas como un usuario normal en el directorio ```/var/www/bundler/ruby/2.3```
+instalarse con ```doas```. Recomendamos iniciar un directoio para instalar gemas como usuario normal en  ```/var/www/bundler/ruby/2.3```, por 3 razones (1) evitar riesgos de seguridad al instalar gemas como root, (2) evitar problemas de permisos y la dificultad de programas como bundler para usar ```doas``` en lugar de ```sudo``` y (3) alista infraestructura para que sus aplicaciones corran en jaula chroot en ```/var/www```
 
-##1.4. Bundler
-Para facilitar el manejo de varias gemas en un proyecto es típico
-emplear ```bundler``` que instala con:
+Prepare ese directorio con:
+<pre>
+doas mkdir -p /var/www/bundler/ruby/2.3/
+doas chown -R $USER:www /var/www/bundler
+</pre>
+
+Y cuando requiera instalar una gema allí emplee:
+<pre>
+gem install --install-dir /var/www/bundler/ruby/2.3/ json -v '2.0'
+</pre>
+
+O si llega a tener problemas de permisos con:
+<pre>
+doas gem install --install-dir /var/www/bundler/ruby/2.3/ bcrypt -v '3.1.11'
+</pre>
+
+
+## 1.4. Bundler
+
+Para facilitar el manejo de varias gemas (y sus interdependencias) en un proyecto es típico emplear ```bundler``` que instala con:
 <pre>
 doas gem install bundler
 doas ln -sf /usr/local/bin/bundle23 /usr/local/bin/bundle
 </pre>
 
-Configurelo para que instale gemas localmente en ```/var/www/bundler/ruby/2.3``` (así evitará problemas de permisos y la dificultad de ```bundler``` para usar ```doas``` en lugar de ```sudo``` mientras alista infraestructura para que sus aplicaciones corran en jaula chroot en ```/var/www```):
+Configurelo para que instale gemas localmente en ```/var/www/bundler/ruby/2.3```:
 <pre>
-doas mkdir -p /var/www/bundler/ruby/2.3/
-doas chown -R $USER:www /var/www/bundler
 bundler config path /var/www/bundler
 </pre>
 
@@ -112,13 +127,9 @@ un archivo ```Gemfile.lock``` con las versiones precisas por instalar de cada ge
 Una vez tenga un proyecto puede instalar las gemas de las que depende con ```bundle install```
 
 Si eventualmente no logra instalar algunas --por problemas de permisos tipicamente--
-puede instalar con ```doas``` e indicar la ruta de las gemas
-locales,  por ejemplo:
-<pre>
-doas gem install --install-dir /var/www/bundler/ruby/2.3/ bcrypt -v '3.1.11'
-</pre>
+puede instalar con ```doas gem install --install-dir /var/www/bundler```
 
-##1.5. Rails
+## 1.5. Rails
 
 Se trata de una popular gema que facilita mucho la creación de sitios dinámicos. 
 
@@ -157,7 +168,7 @@ setlocal tabstop=2
 set expandtab   
 </pre>
 
-#2. Documentación
+# 2. Documentación
 
 Puede aprender por ejemplo con los tutoriales interactivos de
 <https://rubymonk.com>
@@ -176,9 +187,9 @@ gem server
 </pre>
 y con un navegador consultando <http://localhost:8808>
 
-#3. Uso
+# 3. Uso
 
-##3.1 Nueva aplicación usando SQLite
+## 3.1 Nueva aplicación usando SQLite
 
 Genere una nueva aplicación:
 <pre>
@@ -268,7 +279,7 @@ Notará que se genera:
 
 
 
-###3.1.1 Generar un recurso
+### 3.1.1 Generar un recurso
 
 Puede crear un primer recurso (digamos ```Departamento```) con modelo, controlador simple y vistas para operaciones CRUD y RESTful con:
 <pre>
@@ -367,7 +378,7 @@ CREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version"
 );
 </pre>
 
-##3.2 Ayudas para usar una base de datos PostgreSQL existente:
+## 3.2 Ayudas para usar una base de datos PostgreSQL existente:
 
 Se recomienda emplear UTF8 como codificación de PostgreSQL (si emplea otra codificación convierta sacando un respaldo eliminando la base, volviendola a crear con ```-E UTF8``` y restaurando los datos).
 
@@ -476,7 +487,7 @@ end
 </pre>
 
 
-#4. Depuración
+# 4. Depuración
 
 Como se explica en {5}, desde la aplicación en rails puede entrar a depurar:
 * Instale la gema 
@@ -487,7 +498,7 @@ Como se explica en {5}, desde la aplicación en rails puede entrar a depurar:
 Ruby también ofrece facilidades para medir tiempos como se resume en {4}.
 
 
-#5. Referencias
+# 5. Referencias
 
 * {1} <http://guides.rubyonrails.org/getting_started.html>
 * {2} <http://stackoverflow.com/questions/7092107/rails-3-1-error-could-not-find-a-javascript-runtime>
