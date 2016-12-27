@@ -72,7 +72,7 @@ end
 
 A continuación ingrese a irb y escriba  por ejemplo ```4.``` y presione la tecla [Tab] 2 veces para ver los métodos de la clase Integer.
 
-##1.3. Gemas
+## 1.3. Gemas
 
 El paquete ```ruby``` incluye ```rubygems``` que manejan gemas (es decir
 librerías) con el programa ```gem```. Puede actualizar a la versión 
@@ -88,15 +88,18 @@ Para facilitar el manejo de varias gemas en un proyecto es típico
 emplear ```bundler``` que instala con:
 <pre>
 doas gem install bundler
+doas ln -sf /usr/local/bin/bundle23 /usr/local/bin/bundle
 </pre>
 
-Configurelo para que instale gemas localmente (así evitará problemas de permisos y la dificultad de bundler para usar ```doas``` en lugar de ```sudo```):
+Configurelo para que instale gemas localmente en ```/var/www/bundler/ruby/2.3``` (así evitará problemas de permisos y la dificultad de ```bundler``` para usar ```doas``` en lugar de ```sudo``` mientras alista infraestructura para que sus aplicaciones corran en jaula chroot en ```/var/www```):
 <pre>
-bundler config path ~/.bundler
+doas mkdir -p /var/www/bundler/ruby/2.3/
+doas chown -R $USER:www /var/www/bundler
+bundler config path /var/www/bundler
 </pre>
 
 Puede experimentar descargando un proyecto para ruby ya hecho, seguramente verá
-un archivo ```Gemfile```, donde bundler examina de que librerías depende la aplicación y genera
+un archivo ```Gemfile```, donde ```bundler``` examina de que librerías depende la aplicación y genera
 un archivo ```Gemfile.lock``` con las versiones precisas por instalar de cada gema.  
 Una vez tenga un proyecto puede instalar las gemas de las que depende con ```bundle install```
 
@@ -104,15 +107,15 @@ Si eventualmente no logra instalar algunas --por problemas de permisos tipicamen
 puede instalar con ```doas``` e indicar la ruta de las gemas
 locales,  por ejemplo:
 <pre>
-doas gem install --install-dir ~/.bundler/ bcrypt -v '3.1.11'
+doas gem install --install-dir /var/www/bundler/ruby/2.3/ bcrypt -v '3.1.11'
 </pre>
 
 ##1.5. Rails
 
-Se trata de una popular gema que facilita mucho crear sitios web dinámicos. 
+Se trata de una popular gema que facilita mucho la creación de sitios dinámicos. 
 
 Para instalar globalmente (en ```/usr/local/bin``` y ```/usr/local/lib/ruby/gems/```) la versión estable más 
-reciente de Rails (5.0.0 en el momento de este escrito), ejecute
+reciente de Rails (5.0.1 en el momento de este escrito), ejecute
 <pre>
 doas gem install rails
 </pre>
@@ -122,11 +125,12 @@ el DVD de adJ 5.9 y que se configurará automáticamente.
 
 La gran mayoría de gemas usadas por rails instalarán de la misma forma que se explicó. Algunos casos especiales son:
 
-- ```nokogiri``` que puede requerir ```doas gem install --install-dir ~/.bundler/ nokogiri -- --use-system-libraries --with-xml2-config=/usr/local/bin/xml2-config``` 
+- ```nokogiri``` que puede requerir ```doas gem install --install-dir /var/www/bundler/ruby/2.3/ nokogiri -- --use-system-libraries --with-xml2-config=/usr/local/bin/xml2-config``` 
 
 - ```capybara-webkit``` que podría requerir ```QMAKE=qmake-qt5 MAKE=gmake doas gem install capybara-webkit```).
 
 ## 1.6. Editor ```vim```
+
 Para emplear ```vim``` como editor se recomienda asegurarse de haber ejecutado:
 <pre>
 cd ~
@@ -177,7 +181,7 @@ bundle install
 
 Esto creará una nueva aplicación de ejemplo e instalará todas sus dependencias.   
 Las gemas que no logre instalar por falta de permisos, como se explicó anteriormente
-instalelas con ```doas gem install``` y la opción ```--install-dir ~/.bundler/```
+instalelas con ```doas gem install``` y la opción ```--install-dir /var/www/bundler/ruby/2.3/```
 
 Una vez haya logrado que ```bundle install``` se ejecute completo puede ejecutar:
 
