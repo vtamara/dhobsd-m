@@ -148,7 +148,20 @@ La gran mayoría de gemas usadas por rails instalarán de la misma forma que se 
 
 - ```capybara-webkit``` que podría requerir ```QMAKE=qmake-qt5 MAKE=gmake doas gem install capybara-webkit```
 
-## 1.6. Editor ```vim```
+## 1.6 Coffescript
+
+Si su aplicación rails emplea coffescript necesitará un programa que pueda ejecutar javascript al lado del servidor, recomendamos node.js incluido en adJ, que actualice a la versión más reciente de npm con:
+``` 
+doas npm install npm -g
+``` 
+
+y que instale coffeescript con:
+
+``` 
+doas npm install -g coffee-script
+``` 
+
+## 1.7. Editor ```vim```
 
 Para emplear ```vim``` como editor se recomienda asegurarse de haber ejecutado:
 <pre>
