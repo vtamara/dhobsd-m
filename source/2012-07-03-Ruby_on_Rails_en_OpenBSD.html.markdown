@@ -146,7 +146,7 @@ La gran mayoría de gemas usadas por rails instalarán de la misma forma que se 
 
 - ```nokogiri``` que puede requerir ```doas gem install --install-dir /var/www/bundler/ruby/2.4/ nokogiri -- --use-system-libraries --with-xml2-config=/usr/local/bin/xml2-config``` 
 
-- ```capybara-webkit``` que podría requerir ```QMAKE=qmake-qt5 MAKE=gmake doas gem install capybara-webkit```).
+- ```capybara-webkit``` que podría requerir ```QMAKE=qmake-qt5 MAKE=gmake doas gem install capybara-webkit```
 
 ## 1.6. Editor ```vim```
 
