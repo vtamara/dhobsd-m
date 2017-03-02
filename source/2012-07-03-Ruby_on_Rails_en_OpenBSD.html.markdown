@@ -118,7 +118,7 @@ doas ln -sf /usr/local/bin/bundle24 /usr/local/bin/bundle
 
 Configurelo para que instale gemas localmente en ```/var/www/bundler/ruby/2.4```:
 <pre>
-bundler config path /var/www/bundler
+bundler config path /var/www/bundler/ruby/2.4/
 </pre>
 
 Puede experimentar descargando un proyecto para ruby ya hecho, seguramente verá
