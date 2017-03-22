@@ -3,6 +3,17 @@ title: Ruby_on_Rails_en_OpenBSD
 date: 2012-07-03
 tags:
 ---
+
+-----
+### ADVERTENCIA
+
+Esta información más actualizada y completa la puede ubicar en 
+
+http://pasosdejesus.github.io/usuario_adJ/conf-programas.html#ruby
+
+-----
+
+
 En adJ 6.0 es sencillo usar ruby 2.4 con Ruby on Rails 5.  Lo básico se instala de paquetes de OpenBSD y lo más reciente en Ruby directamente como gemas.
 
 # 1. Instalación y configuración
