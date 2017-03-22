@@ -5,9 +5,9 @@ tags:
 ---
 
 -----
-### ADVERTENCIA
+# ADVERTENCIA
 
-Esta información más actualizada y completa la puede ubicar en 
+Esta información se ha incorporado a la documentación de adJ, puede encontrarla más actualizada y completa en:
 
 http://pasosdejesus.github.io/usuario_adJ/conf-programas.html#ruby
 
