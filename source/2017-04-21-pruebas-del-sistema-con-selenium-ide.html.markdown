@@ -127,8 +127,11 @@ Por cada novedad o falla resuelta que reporte el equipo de desarrollo:
 
 ### 3.3 Ayudas para crear cada caso de prueba
 
-Un caso de pruebas en Selenium-IDE consta de una serie de comandos selenese, cada comando selenese puede tener cero, uno o dos argumentos.  El primer argumento cuando existe típicamente es un selector del elemnto al que se aplica el comando y el segundo cuando existe es un valor.  Se recomienda consultar la ayuda de Selenium-IDE (botón Help o disponible en http://www.seleniumhq.org/docs/02_selenium_ide.jsp)
+Un caso de pruebas en Selenium-IDE consta de una serie de ordenes selenese, cada orden selenese puede tener cero, uno o dos argumentos.  El primer argumento cuando existe típicamente es un selector del elemento al que se aplica la orden y el segundo cuando existe es un valor.  Por ejemplo la orden ```click``` utiliza un selector para identificar el elemento sobre el cual realizar una pulsación del ratón pero no requiere valor.  La orden ```type``` requiere los dos argumentos, el selector que indica el elemento donde se escribirá y el valor que escribirá.
 
+Al guardar un caso de prueba, se almacenan las ordenes en un formato de tabla HTML, donde cada fila es una orden y con 3 columnas: la primera para el nombre del comando, la segunda para el selector y la tercera para el valor.
+
+Las ayudas que se presentan a continuación son mínimas, se recomienda consultar la ayuda de Selenium-IDE (botón Help o disponible en http://www.seleniumhq.org/docs/02_selenium_ide.jsp), así como la especificación de cada comando disponible en la pestaña Reference de la interfaz de Selenium-IDE cuando se enfoca la orden en un caso de prueba.
 
 * En general suponer que ya se ha iniciado sesión en la aplicacioń con la cuenta administrativa de prueba y que está
   en la pantalla incial de la aplicación. 
