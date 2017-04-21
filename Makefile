@@ -1,3 +1,3 @@
 
 all:
-	middleman22 build --verbose
+	bundle exec middleman build --verbose

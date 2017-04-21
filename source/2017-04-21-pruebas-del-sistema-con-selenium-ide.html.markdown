@@ -1,5 +1,5 @@
 ---
-title: Pruebas con selenium-ide
+title: Pruebas del sistema con selenium-ide
 date: 2017-04-21 02:34 UTC
 tags:
 ---
