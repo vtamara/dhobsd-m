@@ -4,6 +4,8 @@ date: 2017-04-21 02:34 UTC
 tags:
 ---
 
+# Pruebas del sistema con Selenium-IDE
+
 Como parte del proceso de desarrollo ágil de una aplicación web
 es importante entre otras:  (1) mantener requerimientos en forma
 de historias de usuario y tareas, así como su seguimiento,
@@ -11,34 +13,39 @@ de historias de usuario y tareas, así como su seguimiento,
 y resuelva fallas, (3) que un equipo de pruebas busque fallas y
 reporte
 
-Las pruebas del sistema (https://en.wikipedia.org/wiki/System_testing) "se 
+Las pruebas del sistema  "se 
 realizan a un sistema completo e integrado, para evaluar que cumpla con
 los requerimientos especificados.   Las pruebas del sistema caen dentro
 de la categoría de pruebas de caja negra y por tanto no deben requerir
-conocer el diseño del código fuente o su lógica."
+conocer el diseño del código fuente o su lógica." (<https://en.wikipedia.org/wiki/System_testing>)
 
 A continuación describimos como realizamos pruebas del sistema en
 Pasos de Jesús usando Selenium-IDE, suponiendo que las fuentes de la 
 aplicación (y de las pruebas) se almacenan en un repositorio de github.com 
 y que el seguimiento al desarrollo se realiza en un tablero Trello.
 
-# Tablero Trello
+## 1. Tablero Trello
 
 El tablero Trello sue suele tener columnas para:
-* Historias de Usuarios (y detalles del proceso de desarrollo o contractuales) 
-* Posibilidades de tareas por implmentar (donde se hace división de las 
+
+- Historias de Usuarios (y detalles del proceso de desarrollo o contractuales) 
+
+- Posibilidades de tareas por implmentar (donde se hace división de las 
   historias de usuario en tareas estimbales y se estima esfuerzo en horas).
-* Haciendo (a donde se mueven tarjetas desde posibilidades de acuerdo
+
+- Haciendo (a donde se mueven tarjetas desde posibilidades de acuerdo
   a prioridades acordadas con el cliente o requeridas por el diseño
-* Hecho, donde quedan tareas completas y fallas resueltas
-* Comprometidas, donde quedan actividades de mantenimiento, soporte y logística
+
+- Hecho, donde quedan tareas completas y fallas resueltas
+
+- Comprometidas, donde quedan actividades de mantenimiento, soporte y logística
 
 Solemos estimar que las pruebas del sistema requieren 1/4 del tiempo
 de desarrollo y solemos dejar en el tablero en una columna "Comprometidas"
 una tarjeta con título "P-1 Pruebas" donde se hace parte del seguimiento
 de pruebas.
 
-# Dinámica desarrollo/pruebas del sistema
+## 2. Dinámica desarrollo - /pruebas del sistema
 
 De acuerdo a las prioridades acordadas con clientes (tipicamente en una reunión
 al inicio de cada carrera) y del diseño de la carrera, el equipo 
@@ -51,20 +58,21 @@ semanal (o según el tipo de contrato).
 
 Cada vez que el equipo de desarrollo anuncia cambios (suele ser
 semanal), el equipo de pruebas:
-* Verifica que siga funcionando lo que ya operaba
-* Prueba las novedades buscando hacer fallar la aplicación
-* Reportar en Trello (a más tarda  5 días después del anuncio
+
+- Verifica que siga funcionando lo que ya operaba
+- Prueba las novedades buscando hacer fallar la aplicación
+- Reportar en Trello (a más tarda  5 días después del anuncio
 del equipo de desarrollo, si los anuncios de desarrollo son semanales
 o si el tipo de contrato lo requiere hasta un día despueś).
-* Actualiza pruebas del sistema en directorio test/seleniumide --el
+- Actualiza pruebas del sistema en directorio test/seleniumide --el
   equipo de pruebas tiene a su cargo mantener al día este directorio
   con pruebas para Selenium-IDE que puedan reproducirse y funcionar
   (con excepciones que se mantienen en Trello)
 
 
-# Pruebas del sistema
+## 3. Pruebas del sistema
 
-## A. VERIFICAR QUE LO QUE FUNCIONABA SIGUE FUNCIONANDO
+### 3.1 Verificar que lo que funcionaba siga funcionando
 
 1. Clonar o actualizar el repositorio que se va a probar.  
    Esto en particular actualizará el directorio `test/seleniumide` donde deben 
@@ -97,7 +105,7 @@ o si el tipo de contrato lo requiere hasta un día despueś).
    "Ejecutada suit de pruebas. 2 errores"
   
 
-## B. PROBAR NOVEDADES
+### 3.2 Probar Novedades
 
 Por cada novedad o falla resuelta (no cubierta en casos de prueba
 existentes):
