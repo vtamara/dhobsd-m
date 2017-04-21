@@ -76,7 +76,7 @@ Cada vez que el equipo de desarrollo anuncia cambios el equipo de pruebas:
 1. Clonar o actualizar el repositorio que se va a probar.  
    Esto en particular actualizará el directorio `test/seleniumide` donde deben 
    estar casos de pruebas para las diversas funcionalidades del sistema
-   con títulos que sugieran lo que se prueba y extensión `.selelnium`, así
+   con títulos que sugieran lo que se prueba y extensión `.selenium`, así
    como una suit de pruebas (`pruebas-suit.selenium`) que agrupa todos los 
    casos de prueba.
 
