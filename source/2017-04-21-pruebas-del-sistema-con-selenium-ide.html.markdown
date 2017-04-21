@@ -45,7 +45,7 @@ de desarrollo y solemos dejar en el tablero en una columna "Comprometidas"
 una tarjeta con título "P-1 Pruebas" donde se hace parte del seguimiento
 de pruebas.
 
-## 2. Dinámica desarrollo - /pruebas del sistema
+## 2. Dinámica desarrollo - pruebas del sistema
 
 De acuerdo a las prioridades acordadas con clientes (tipicamente en una reunión
 al inicio de cada carrera) y del diseño de la carrera, el equipo 
