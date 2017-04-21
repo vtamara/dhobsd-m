@@ -49,26 +49,25 @@ de pruebas.
 
 De acuerdo a las prioridades acordadas con clientes (tipicamente en una reunión
 al inicio de cada carrera) y del diseño de la carrera, el equipo 
-de desarrollo debe buscar corregir fallas, implementar novedades, realizar 
-otros tipos de pruebas (unidad, regresión),  poner en el repositorio 
+de desarrollo debe buscar corregir fallas en el código fuente, implementar novedades, 
+realizar otros tipos de pruebas (unidad, regresión),  poner en el repositorio 
 github los cambios, desplegar cambios en sitio de desarrollo (y/o de
 ensayo) y anunciar al equipo de pruebas un resumen de las fallas resueltas 
-y de las novedades implementadas, esto suele hacerse con periodicidad 
+y de las novedades implementadas (eventualmente con indicaciones sobre que
+aspectos concentrar las pruebas), esto suele hacerse con periodicidad 
 semanal (o según el tipo de contrato).
 
-Cada vez que el equipo de desarrollo anuncia cambios (suele ser
-semanal), el equipo de pruebas:
+Cada vez que el equipo de desarrollo anuncia cambios el equipo de pruebas:
 
 - Verifica que siga funcionando lo que ya operaba
 - Prueba las novedades buscando hacer fallar la aplicación
-- Reportar en Trello (a más tarda  5 días después del anuncio
-del equipo de desarrollo, si los anuncios de desarrollo son semanales
-o si el tipo de contrato lo requiere hasta un día despueś).
+- Reporta en Trello (a más tarda  5 días después del anuncio
+  del equipo de desarrollo, si los anuncios de desarrollo son semanales
+  o si el tipo de contrato lo requiere hasta un día despueś).
 - Actualiza pruebas del sistema en directorio test/seleniumide --el
   equipo de pruebas tiene a su cargo mantener al día este directorio
   con pruebas para Selenium-IDE que puedan reproducirse y funcionar
   (con excepciones que se mantienen en Trello)
-
 
 ## 3. Pruebas del sistema
 
@@ -81,19 +80,19 @@ o si el tipo de contrato lo requiere hasta un día despueś).
    como una suit de pruebas (`pruebas-suit.selenium`) que agrupa todos los 
    casos de prueba.
 
-2.  Empleando firefox con Selenium IDE instalado, ingresar a la aplicación 
-    con un usuario y contraseña de administrador, iniciar Selenium IDE
-    cargar la suit de pruebas y ejecutarla completa.
+2.  Empleando firefox con Selenium IDE instalado, ingresar a la aplicación en
+    el sitio de desarrollo con un usuario y contraseña de administrador (de prueba), 
+    iniciar Selenium IDE cargar la suit de pruebas y ejecutarla completa.
 
 3. Por cada falla que se encuentre:
 3.1 Reproducirla manualmente y asegurar que es una falla del sistema 
     (y no de las pruebas o de Selenium-IDE)
 3.2 Si era una falla ya resuleta buscar la tarjeta donde se había reportado
-    y pasarla de la columna "Hecho" del tablero Trelo a "Haciendo"
+    y pasarla de la columna "Hecho" del tablero Trello a "Haciendo"
 3.3 Si es una falla nueva, crear una nueva tarjeta Trello en la columna
     "Haciendo".  Iniciar el título con un código P-n donde n es un número
-    consecutivo respecto a los de otras tarjetas.  Adjuntar a esta tarjeta
-    prueba de Selenium-IDE que fallí, pantallazo y si es el caso
+    consecutivo respecto a las demás tarjetas.  Adjuntar a esta tarjeta
+    la prueba de Selenium-IDE que falló, un pantallazo y si es el caso
     detalles adicionales de como reproducir en comentarios.
 
 4. Si se detienen las pruebas pero no por fallas en la aplicación sino en la 
@@ -107,12 +106,11 @@ o si el tipo de contrato lo requiere hasta un día despueś).
 
 ### 3.2 Probar Novedades
 
-Por cada novedad o falla resuelta (no cubierta en casos de prueba
-existentes):
+Por cada novedad o falla resuelta que reporte el equipo de desarrollo:
 
 1. Iniciar un nuevo caso de prueba en Selenium-IDE, guardar lo que se
-   prueba.  Poner o renombrar para que el nombre corresponda a la
-   funcionalidad que se prueba.
+   prueba.  Poner nombre o renombrar para que el nombre corresponda a la
+   funcionalidad que se prueba.   
 
 2. Referenciar en la tarjeta P-1 del tablero de Trello la novedad o falla 
    que está probando, en un comentario con la referencia a la novedad o
@@ -121,10 +119,20 @@ existentes):
 3. Si una falla supuestamente resuelta sigue fallando, devolver la tarjeta
    de la columna Hecho a Haciendo, agregar comentario, pantallazo y archivo
    para Selenium IDE para reproducirlo (no agregar a github casos de 
-   prueba que fallan).
+   prueba que fallan, pero si los que pasen).
 
-4. Si la prueba pasa agrega la prueba a la suit de pruebas para el sistema, 
-   agrega el archivo al repositorio y actualizar en github.
+4. Si la prueba pasa agregar la prueba a la suit de pruebas con un nombre
+   acorde a la prueba, agrega el archivo al repositorio y actualizar en github.
 
 
+### 3.3 Ayudas para crear cada caso de prueba
 
+Un caso de pruebas en Selenium-IDE consta de una serie de comandos selenese, cada comando selenese puede tener cero, uno o dos argumentos.  El primer argumento cuando existe típicamente es un selector del elemnto al que se aplica el comando y el segundo cuando existe es un valor.  Se recomienda consultar la ayuda de Selenium-IDE (botón Help o disponible en http://www.seleniumhq.org/docs/02_selenium_ide.jsp)
+
+
+* En general suponer que ya se ha iniciado sesión en la aplicacioń con la cuenta administrativa de prueba y que está
+  en la pantalla incial de la aplicación. 
+* De requerirse crear nuevos elementos pero con nombres que no no puedan interferir con una aplicación de producción (en caso de ejecutar sobre una).  Por ejemplo nombres AAAA.
+* En general cada caso de prueba debe eliminar los elementos que cree.
+* Es bueno utilizar comandos assert (el más típico debe ser assertElementPresent) que verifiquen que en un momento dado de la prueba el estado de la aplicación sea el esperado sin lugar a dudas.
+* Selenium-IDE requiere que se le especifiquen esperas cuando se realizan ciertas operaciones demoradas (como cargar otra página o carga de elementos AJAX) para introducirlas es muy útil el comando selenese waitForElementPresent
