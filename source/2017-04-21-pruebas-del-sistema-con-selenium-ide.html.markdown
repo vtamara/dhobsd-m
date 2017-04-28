@@ -73,23 +73,26 @@ Cada vez que el equipo de desarrollo anuncia cambios, el equipo de pruebas:
 
 ### 3.1 Verificar que lo que funcionaba siga funcionando
 
-1. Clonar o actualizar el repositorio que se va a probar.  
+a. Clonar o actualizar el repositorio que se va a probar.  
    Esto en particular actualizará el directorio `test/seleniumide` donde deben 
    estar casos de pruebas para las diversas funcionalidades del sistema
    con títulos que sugieran lo que se prueba y extensión `.selenium`, así
    como una suit de pruebas (`pruebas-suit.selenium`) que agrupa todos los 
    casos de prueba.
 
-2.  Empleando firefox con Selenium IDE instalado, ingresar a la aplicación en
+b.  Empleando firefox con Selenium IDE instalado, ingresar a la aplicación en
     el sitio de desarrollo con un usuario y contraseña de administrador (de prueba), 
     iniciar Selenium IDE cargar la suit de pruebas y ejecutarla completa.
 
-3. Por cada falla que se encuentre:
-3.1 Reproducirla manualmente y asegurar que es una falla del sistema 
+c. Por cada falla que se encuentre:
+
+c.1 Reproducirla manualmente y asegurar que es una falla del sistema 
     (y no de las pruebas o de Selenium-IDE)
-3.2 Si era una falla ya resuleta buscar la tarjeta donde se había reportado
+
+c.2 Si era una falla ya resuleta buscar la tarjeta donde se había reportado
     y pasarla de la columna "Hecho" del tablero Trello a "Haciendo"
-3.3 Si es una falla nueva, crear una nueva tarjeta Trello en la columna
+
+c.3 Si es una falla nueva, crear una nueva tarjeta Trello en la columna
     "Haciendo".  Iniciar el título con un código P-n donde n es un número
     consecutivo respecto a las demás tarjetas.  Adjuntar a esta tarjeta
     la prueba de Selenium-IDE que falló, un pantallazo y si es el caso
