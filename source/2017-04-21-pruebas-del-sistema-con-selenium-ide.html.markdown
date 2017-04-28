@@ -93,7 +93,7 @@ c.2 Si era una falla ya resuleta buscar la tarjeta donde se había reportado
     y pasarla de la columna "Hecho" del tablero Trello a "Haciendo"
 
 c.3 Si es una falla nueva, crear una nueva tarjeta Trello en la columna
-    "Haciendo".  Iniciar el título con un código P-n donde n es un número
+    "Haciendo".  Iniciar el título con un código ```F-n``` donde n es un número
     consecutivo respecto a las demás tarjetas.  Adjuntar a esta tarjeta
     la prueba de Selenium-IDE que falló, un pantallazo y si es el caso
     detalles adicionales de como reproducir en comentarios.
