@@ -98,12 +98,12 @@ c.3 Si es una falla nueva, crear una nueva tarjeta Trello en la columna
     la prueba de Selenium-IDE que falló, un pantallazo y si es el caso
     detalles adicionales de como reproducir en comentarios.
 
-4. Si se detienen las pruebas pero no por fallas en la aplicación sino en la 
-   prueba para Selenium-ID o por cambios en funcionalidad de la aplicación
+c.4. Si se detienen las pruebas pero no por fallas en la aplicación sino en la 
+   prueba para Selenium-IDE o por cambios en funcionalidad de la aplicación
    pero sin errores, se mejora la prueba de Selenium-IDE para que pase 
    y se guarda y actualizan pruebas en github.
 
-5. En la tarjeta P-1 del tablero Trello agregar un comentario  del estilo
+c.5. En la tarjeta P-1 del tablero Trello agregar un comentario  del estilo
    "Ejecutada suit de pruebas. 2 errores"
   
 
@@ -134,11 +134,11 @@ Un caso de pruebas en Selenium-IDE consta de una serie de ordenes selenese, cada
 
 Al guardar un caso de prueba, se almacenan las ordenes en un formato de tabla HTML, donde cada fila es una orden y con 3 columnas: la primera para el nombre del comando, la segunda para el selector y la tercera para el valor.
 
-Las ayudas que se presentan a continuación son mínimas, se recomienda consultar la ayuda de Selenium-IDE (botón Help o disponible en http://www.seleniumhq.org/docs/02_selenium_ide.jsp), así como la especificación de cada comando disponible en la pestaña Reference de la interfaz de Selenium-IDE cuando se enfoca la orden en un caso de prueba.
+Las ayudas que se presentan a continuación son mínimas, se recomienda consultar la ayuda de Selenium-IDE (botón Help o disponible en http://www.seleniumhq.org/docs/02_selenium_ide.jsp), así como la especificación de cada orde selenese disponible en la pestaña Reference de la interfaz de Selenium-IDE cuando se enfoca la orden en un caso de prueba.
 
 * En general suponer que ya se ha iniciado sesión en la aplicacioń con la cuenta administrativa de prueba y que está
   en la pantalla incial de la aplicación. 
-* De requerirse crear nuevos elementos pero con nombres que no no puedan interferir con una aplicación de producción (en caso de ejecutar sobre una).  Por ejemplo nombres AAAA.
-* En general cada caso de prueba debe eliminar los elementos que cree.
-* Es bueno utilizar comandos assert (el más típico debe ser assertElementPresent) que verifiquen que en un momento dado de la prueba el estado de la aplicación sea el esperado sin lugar a dudas.
-* Selenium-IDE requiere que se le especifiquen esperas cuando se realizan ciertas operaciones demoradas (como cargar otra página o carga de elementos AJAX) para introducirlas es muy útil el comando selenese waitForElementPresent
+* De requerirse crear nuevos elementos pero con nombres que no no puedan interferir con una aplicación de producción (en caso de ejecutarse sobre una).  Por ejemplo nombres AAAA.
+* En general cada caso de prueba debe eliminar los elementos que cree (excepión si l suit de pruebas completa elimina con casos de prueba finales lo que crearon los iniciales --digamos un usuario)
+* Es bueno utilizar ordenes selenese assert (el más típico debe ser assertElementPresent) que verifiquen que en un momento dado de la prueba el estado de la aplicación sea el esperado sin lugar a dudas.
+* Selenium-IDE requiere que se le especifiquen esperas cuando se realizan ciertas operaciones demoradas (como cargar otra página o carga de elementos AJAX) para introducirlas es muy útil la orden selenese waitForElementPresent
