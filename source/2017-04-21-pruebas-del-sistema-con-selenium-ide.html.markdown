@@ -26,11 +26,11 @@ y que el seguimiento al desarrollo se realiza en un tablero Trello.
 
 ## 1. Tablero Trello
 
-El tablero Trello sue suele tener columnas para:
+El tablero Trello suele tener columnas para:
 
 - Historias de Usuarios (y detalles del proceso de desarrollo o contractuales) 
 
-- Posibilidades de tareas por implmentar (donde se hace división de las 
+- Posibilidades de tareas por implementar (donde se hace división de las 
   historias de usuario en tareas estimbales y se estima esfuerzo en horas).
 
 - Haciendo (a donde se mueven tarjetas desde posibilidades de acuerdo
@@ -57,14 +57,14 @@ y de las novedades implementadas (eventualmente con indicaciones sobre que
 aspectos concentrar las pruebas), esto suele hacerse con periodicidad 
 semanal (o según el tipo de contrato).
 
-Cada vez que el equipo de desarrollo anuncia cambios el equipo de pruebas:
+Cada vez que el equipo de desarrollo anuncia cambios, el equipo de pruebas:
 
 - Verifica que siga funcionando lo que ya operaba
 - Prueba las novedades buscando hacer fallar la aplicación
 - Reporta en Trello (a más tarda  5 días después del anuncio
   del equipo de desarrollo, si los anuncios de desarrollo son semanales
   o si el tipo de contrato lo requiere hasta un día despueś).
-- Actualiza pruebas del sistema en directorio test/seleniumide --el
+- Actualiza pruebas del sistema en directorio ```test/seleniumide``` --el
   equipo de pruebas tiene a su cargo mantener al día este directorio
   con pruebas para Selenium-IDE que puedan reproducirse y funcionar
   (con excepciones que se mantienen en Trello)
