@@ -10,14 +10,14 @@ Como parte del proceso de desarrollo ágil de una aplicación web
 es importante entre otras:  (1) mantener requerimientos en forma
 de historias de usuario y tareas, así como su seguimiento,
 (2) que un equipo de desarrollo implemente los requerimientos 
-y resuelva fallas, (3) que un equipo de pruebas busque fallas y
-reporte
+y resuelva fallas, (3) que un equipo de pruebas busque fallas, las
+encuentre y reporte al equipo de desarrollo.
 
-Las pruebas del sistema  "se 
-realizan a un sistema completo e integrado, para evaluar que cumpla con
-los requerimientos especificados.   Las pruebas del sistema caen dentro
-de la categoría de pruebas de caja negra y por tanto no deben requerir
-conocer el diseño del código fuente o su lógica." (<https://en.wikipedia.org/wiki/System_testing>)
+Las pruebas del sistema  "se realizan a un sistema completo e integrado, 
+para evaluar que cumpla con los requerimientos especificados.   
+Las pruebas del sistema caen dentro de la categoría de pruebas de caja
+negra y por tanto no deben requerir conocer el diseño del código fuente
+o su lógica." (<https://en.wikipedia.org/wiki/System_testing>)
 
 A continuación describimos como realizamos pruebas del sistema en
 Pasos de Jesús usando Selenium-IDE, suponiendo que las fuentes de la 
@@ -28,20 +28,20 @@ y que el seguimiento al desarrollo se realiza en un tablero Trello.
 
 El tablero Trello suele tener columnas para:
 
-- Historias de Usuarios (y detalles del proceso de desarrollo o contractuales) 
+- Historias de Usuarios. Así como detalles del proceso de desarrollo o contractuales
 
-- Posibilidades de tareas por implementar (donde se hace división de las 
-  historias de usuario en tareas estimbales y se estima esfuerzo en horas).
+- Posibilidades de tareas por implementar. Donde se hace división de las 
+  historias de usuario en tareas estimbales y se estima esfuerzo en horas.
 
-- Haciendo (a donde se mueven tarjetas desde posibilidades de acuerdo
+- Haciendo. A donde se mueven tarjetas desde posibilidades de acuerdo
   a prioridades acordadas con el cliente o requeridas por el diseño
 
-- Hecho, donde quedan tareas completas y fallas resueltas
+- Hecho. Donde quedan tareas completas y fallas resueltas
 
-- Comprometidas, donde quedan actividades de mantenimiento, soporte y logística
+- Comprometidas. Donde quedan actividades de mantenimiento, soporte y logístico/administrativas
 
 Solemos estimar que las pruebas del sistema requieren 1/4 del tiempo
-de desarrollo y solemos dejar en el tablero en una columna "Comprometidas"
+de desarrollo y solemos dejar en el tablero en la columna "Comprometidas"
 una tarjeta con título "P-1 Pruebas" donde se hace parte del seguimiento
 de pruebas.
 
@@ -49,13 +49,13 @@ de pruebas.
 
 De acuerdo a las prioridades acordadas con clientes (tipicamente en una reunión
 al inicio de cada carrera) y del diseño de la carrera, el equipo 
-de desarrollo debe buscar corregir fallas en el código fuente, implementar novedades, 
-realizar otros tipos de pruebas (unidad, regresión),  poner en el repositorio 
-github los cambios, desplegar cambios en sitio de desarrollo (y/o de
-ensayo) y anunciar al equipo de pruebas un resumen de las fallas resueltas 
-y de las novedades implementadas (eventualmente con indicaciones sobre que
-aspectos concentrar las pruebas), esto suele hacerse con periodicidad 
-semanal (o según el tipo de contrato).
+de desarrollo debe buscar corregir primero fallas en el código fuente, 
+refactorizar, implementar novedades,  realizar otros tipos de pruebas 
+(unidad, regresión), poner en el repositorio github los cambios, desplegar 
+cambios en sitio de desarrollo (y/o de ensayo) y anunciar al equipo de pruebas 
+un resumen de las fallas resueltas y de las novedades implementadas (eventualmente
+con indicaciones sobre que aspectos concentrar las pruebas), esto suele hacerse
+con periodicidad semanal (o según el tipo de contrato).
 
 Cada vez que el equipo de desarrollo anuncia cambios, el equipo de pruebas:
 
@@ -130,15 +130,36 @@ Por cada novedad o falla resuelta que reporte el equipo de desarrollo:
 
 ### 3.3 Ayudas para crear cada caso de prueba
 
-Un caso de pruebas en Selenium-IDE consta de una serie de ordenes selenese, cada orden selenese puede tener cero, uno o dos argumentos.  El primer argumento cuando existe típicamente es un selector del elemento al que se aplica la orden y el segundo cuando existe es un valor.  Por ejemplo la orden ```click``` utiliza un selector para identificar el elemento sobre el cual realizar una pulsación del ratón pero no requiere valor.  La orden ```type``` requiere los dos argumentos, el selector que indica el elemento donde se escribirá y el valor que escribirá.
+Un caso de pruebas en Selenium-IDE consta de una serie de ordenes selenese, 
+cada orden selenese puede tener cero, uno o dos argumentos.  El primer 
+argumento cuando existe típicamente es un selector del elemento al que se aplica 
+la orden y el segundo cuando existe es un valor.  Por ejemplo la orden ```click``` 
+utiliza un selector para identificar el elemento sobre el cual realizar una 
+pulsación del ratón pero no requiere valor.  La orden ```type``` requiere los 
+dos argumentos, el selector que indica el elemento donde se escribirá y el 
+valor que escribirá.
 
-Al guardar un caso de prueba, se almacenan las ordenes en un formato de tabla HTML, donde cada fila es una orden y con 3 columnas: la primera para el nombre del comando, la segunda para el selector y la tercera para el valor.
+Al guardar un caso de prueba, se almacenan las ordenes en un formato de tabla 
+HTML, donde cada fila es una orden y con 3 columnas: la primera para el nombre
+del comando, la segunda para el selector y la tercera para el valor.
 
-Las ayudas que se presentan a continuación son mínimas, se recomienda consultar la ayuda de Selenium-IDE (botón Help o disponible en http://www.seleniumhq.org/docs/02_selenium_ide.jsp), así como la especificación de cada orde selenese disponible en la pestaña Reference de la interfaz de Selenium-IDE cuando se enfoca la orden en un caso de prueba.
+Las ayudas que se presentan a continuación son mínimas, se recomienda consultar
+la ayuda de Selenium-IDE (botón Help o disponible en 
+http://www.seleniumhq.org/docs/02_selenium_ide.jsp ), así como la especificación de 
+cada orden selenese disponible en la pestaña Reference de la interfaz de
+Selenium-IDE cuando se enfoca la orden en un caso de prueba.
 
-* En general suponer que ya se ha iniciado sesión en la aplicacioń con la cuenta administrativa de prueba y que está
-  en la pantalla incial de la aplicación. 
-* De requerirse crear nuevos elementos pero con nombres que no no puedan interferir con una aplicación de producción (en caso de ejecutarse sobre una).  Por ejemplo nombres AAAA.
-* En general cada caso de prueba debe eliminar los elementos que cree (excepión si l suit de pruebas completa elimina con casos de prueba finales lo que crearon los iniciales --digamos un usuario)
-* Es bueno utilizar ordenes selenese assert (el más típico debe ser assertElementPresent) que verifiquen que en un momento dado de la prueba el estado de la aplicación sea el esperado sin lugar a dudas.
-* Selenium-IDE requiere que se le especifiquen esperas cuando se realizan ciertas operaciones demoradas (como cargar otra página o carga de elementos AJAX) para introducirlas es muy útil la orden selenese waitForElementPresent
+* En general suponer que ya se ha iniciado sesión en la aplicacioń con la cuenta
+  administrativa de prueba y que está en la pantalla incial de la aplicación. 
+* De requerirse crear nuevos elementos pero con nombres que no no puedan interferir
+  con una aplicación de producción (en caso de ejecutarse sobre una).   Por 
+  ejemplo nombres AAAA.
+* En general cada caso de prueba debe eliminar los elementos que cree (excepión 
+  si la suit de pruebas completa elimina con casos de prueba finales lo que 
+  crearon los iniciales --digamos un usuario)
+* Es bueno utilizar ordenes selenese assert (el más típico debe ser 
+  ```assertElementPresent```) que verifiquen que en un momento dado de la prueba 
+  el estado de la aplicación sea el esperado sin lugar a dudas.
+* Selenium-IDE requiere que se le especifiquen esperas cuando se realizan ciertas 
+  operaciones demoradas (como cargar otra página o carga de elementos AJAX) para 
+  introducirlas es muy útil la orden selenese ```waitForElementPresent```
