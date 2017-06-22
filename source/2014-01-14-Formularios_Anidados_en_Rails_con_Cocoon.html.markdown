@@ -35,14 +35,15 @@ Así que las tablas tiene entre otros los siguientes campos (para este ejemplo s
   + otro
 
 Como nota, los nombres de las tablas legadas de esa aplicación están en singular (mientras que en la convención de Ruby on Rails deberían estar en plural) y las llaves foráneas son de la forma ```id_tabla``` (en lugar de seguir la convención de Rails que sería ```tabla_id```).   Estas diferencias pueden forzarse en Rails así:
-* Poniendo ```!ActiveRecord::Base.pluralize_table_names = false``` en ```config/environment.rb```
+
+* Poniendo ```ActiveRecord::Base.pluralize_table_names = false``` en ```config/environment.rb```
 * Al declarar asociaciones (ver {5}) en los modelos con ```has_many```, ```has_one``` y ```belongs_to``` especificar la llave foranea de manera explícita empleando la opción ```foreign_key``` (ver ejemplos a continuación).
 
 Los 3 modelos incluyendo la declaración requeridas para formularios anidados (ver {9}) son:
 
 ```app/models/caso.rb```:
 <pre> 
-  class Caso < !ActiveRecord::Base
+  class Caso < ActiveRecord::Base
       has_many :presponsable,
         :through => :caso_presponsable
       has_many :caso_presponsable,
@@ -57,7 +58,7 @@ Los 3 modelos incluyendo la declaración requeridas para formularios anidados (v
 
 ```app/models/presponable.rb```
 <pre>
-  class Presponsable < !ActiveRecord::Base
+  class Presponsable < ActiveRecord::Base
     has_many :caso, through: :caso_presponsable
     has_many :caso_presponsable, foreign_key: "id_presponsable", validate: true
   end
@@ -65,13 +66,13 @@ Los 3 modelos incluyendo la declaración requeridas para formularios anidados (v
 
 ```app/models/caso_presponsable.rb```
 <pre>
-  class !CasoPresponsable < !ActiveRecord::Base
+  class CasoPresponsable < ActiveRecord::Base
     belongs_to :caso, foreign_key: "id_caso", validate: true
     belongs_to :presponsable, foreign_key: "id_presponsable", validate: true
   end
 </pre>
 
-Para anidar los formularios en el controlador de caso (```app/controllers/casos_controllers.rb```) además de permitir recibir datos del formulario padre (```Caso```), deben permitirse datos del formulario hijo o anidado (```!Caso_Presponsable```) así como el parámetro especial ```:_destroy``` que permite eliminar registros de ```!Caso_Presponsable```:
+Para anidar los formularios en el controlador de caso (```app/controllers/casos_controllers.rb```) además de permitir recibir datos del formulario padre (```Caso```), deben permitirse datos del formulario hijo o anidado (```Caso_Presponsable```) así como el parámetro especial ```:_destroy``` que permite eliminar registros de ```Caso_Presponsable```:
 <pre>
     def caso_params
       params.require(:caso).permit(:fecha, :titulo,
