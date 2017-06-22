@@ -14,25 +14,25 @@ A continuación explicamos ambos casos.
 
 #1. Contexto y modelos
 
-En el contexto de SIVeL (ver {2}), un caso (modelo Caso) puede tener diversos presuntos responsables (modelo Presponsable), y un mismo presunto responsable puede aparecer en diversos casos.
+En el contexto de SIVeL (ver {2}), un caso (modelo ```Caso```) puede tener diversos presuntos responsables (modelo ```Presponsable```), y un mismo presunto responsable puede aparecer en diversos casos.
 
-La relación muchos a muchos se implementa con la tabla !Caso_Presponsable.   
+La relación muchos a muchos se implementa con la tabla ```Caso_Presponsable```.   
 
 Así que las tablas tiene entre otros los siguientes campos (para este ejemplo sólo emplearemos estos):
 
 * Caso
-** id
-** titulo
-** fecha
+  ** id
+  ** titulo
+  ** fecha
 
 * Presponsable
-** id
-** nombre
+  ** id
+  ** nombre
 
 * !Caso_Presponsable
-** id_caso
-** id_presponsable
-** otro
+  ** id_caso
+  ** id_presponsable
+  ** otro
 
 Como nota, los nombres de las tablas legadas de esa aplicación están en singular (mientras que en la convención de Ruby on Rails deberían estar en plural) y las llaves foráneas son de la forma ```id_tabla``` (en lugar de seguir la convención de Rails que sería ```tabla_id```).   Estas diferencias pueden forzarse en Rails así:
 * Poniendo ```!ActiveRecord::Base.pluralize_table_names = false``` en ```config/environment.rb```
