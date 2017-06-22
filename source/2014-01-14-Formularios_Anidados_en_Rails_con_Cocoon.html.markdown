@@ -29,7 +29,7 @@ Así que las tablas tiene entre otros los siguientes campos (para este ejemplo s
   + id
   + nombre
 
-* !Caso_Presponsable
+* Caso_Presponsable
   + id_caso
   + id_presponsable
   + otro
