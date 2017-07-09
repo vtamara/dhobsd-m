@@ -119,8 +119,9 @@ Por cada novedad o falla resuelta que reporte el equipo de desarrollo:
    que está probando, en un comentario con la referencia a la novedad o
    falla probada (e.g Probadas F-12, R-16).
 
-3. Si una falla supuestamente resuelta sigue fallando, devolver la tarjeta
-   de la columna Hecho a Haciendo, agregar comentario, pantallazo y archivo
+3. Si una falla supuestamente resuelta sigue fallando, examinar posibles
+   comentarios del equipo de desarrollo en la tarjeta y si es el caso devolver 
+   la tarjeta de la columna Hecho a Haciendo, agregar comentario, pantallazo y archivo
    para Selenium IDE para reproducirlo (no agregar a github casos de 
    prueba que fallan, pero si los que pasen).
 
