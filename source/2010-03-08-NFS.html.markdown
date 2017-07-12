@@ -5,7 +5,7 @@ tags:
 ---
 NFS es sigla de Sistema de archivos en Red (Network Filesystem), se trata de un protocolo con servidor y cliente(s) para lograr que parte del sistema de archivos del servidor pueda verse en el computador cliente en un directorio local. A continuación presentamos su uso como servidor y cliente en adJ 5.9.
 
-##1. SERVIDOR
+## 1. SERVIDOR
 
 ## 1.1. Configuración
 
@@ -92,7 +92,7 @@ program 100005 version 3 ready and waiting
 
 Este mismo programa puede usarse desde clientes tipo UNIX donde esté para verificar que pueden verse externamente los servicios RPC.
 
-##2. CLIENTE
+## 2. CLIENTE
 
 ### 2.1. Cliente OpenBSD
 
@@ -130,7 +130,7 @@ Para mantener de manera permanente, agregue a ```/etc/fstab```
 
 
 
-##3. REFERENCIAS
+## 3. REFERENCIAS
 
 * http://www.openbsd.org/faq/faq6.html
 * http://migranpipablog.wordpress.com/2007/01/28/compartiendo-directorios-mediante-nfs-entre-maquinas-ubuntu-y-openbsd/
