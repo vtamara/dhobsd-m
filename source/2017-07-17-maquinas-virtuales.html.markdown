@@ -70,10 +70,12 @@ vm "mv1" {
 
 E inicie la máquina virtual con:
 <pre>
-vmctl start mv1
+vmctl start mv1 -c
 </pre>
 
-Notará que arranca mediante el kernel `/bsd.rd` de la raíz de su disco y que podrá instalar usando el método http siempre y cuando configure la interfaz de red virtual en la misma red local del anfitrión.  Esto se debe a que la máquina virtual estará usando tap0 y que el `switch` que se declaró en `/etc/vm.conf` conecta `em0` con `tap0` (si se inicia otra máquina virtual esta usara tap1 y estará conectada al mismo switch virtual, pero otras que se inicien con tap2 y otros no.
+Notará que arranca mediante el kernel `/bsd.rd` de la raíz de su disco.  Usted verá todo el proceso de arranque y podrá interactuar con el programa de instalacin en la terminal donde ejecute el comando usando la opción -c que establece una conexin (mediante el programa `cu`) con la consola de la máquina virtual.
+
+Podrá instalar usando el método http siempre y cuando configure la interfaz de red virtual en la misma red local del anfitrión.  Esto se debe a que la máquina virtual estará usando tap0 y que el `switch` que se declaró en `/etc/vm.conf` conecta `em0` con `tap0` (si se inicia otra máquina virtual esta usara tap1 y estará conectada al mismo switch virtual, pero otras que se inicien con tap2 y otros no.
 
 
 # Recetas
@@ -83,6 +85,10 @@ Para ver las máquinas virtuales en ejecución:
 vmctl status 
 </pre>
 
+Para establecer conexin a la consola de una máquina virtual que está en ejecucin
+<pre>
+vmctl console mv1
+</pre>
 
 
 # Referencias
