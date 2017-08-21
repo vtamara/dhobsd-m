@@ -8,7 +8,7 @@ tags:
 
 OpenBSD (y adJ) 6.1 para adm64 pueden manejar un monitor
 de máquinas virtuales (vmm) al operar sobre procesadores con 
-tecnología VT-x y paginación anidad o extendida.
+tecnología VT-x y paginación anidada o extendida.
 
 Este monitor puede ejecutar varias máquinas virtuales huespedes
 de manera independiente del anfitrión, cada una tiene una CPU virtual,
@@ -48,8 +48,15 @@ Por ejemplo cree un disco virtual con:
 vmctl create disco.img -s 16G
 </pre>
 
-E ini
-Por ejemplo
+E iniciar una máquina virtual con el mismo con
+<pre>
+vmctl start disco.img
+</pre>
+
+Para ver las máquinas virtuales en ejecución:
+<pre>
+vmctl status 
+</pre>
 
 
 
