@@ -26,7 +26,7 @@ versiones de adJ y de OpenBSD.
 
 La ejecución de las diversas máquinas virtuales depende del servicio
 ```vmd```, el cual puede iniciar las máquinas virtuales que se configuren
-en ```/etc/vmd.conf``` y otras que se inicien por línea de ordenes.
+en ```/etc/vm.conf``` y otras que se inicien por línea de ordenes.
 
 Verifique que está en ejecución con
 <pre>
@@ -41,7 +41,7 @@ doas rcctl start vmd
 
 El control de las máquinas virtuales desde el interprete de ordenes
 se hace con ```vmctl``` que facilita operar con las máquinas configuradas
-en ```/etc/vmd.conf``` u otras que se especifiquen en la línea de ordenes.
+en ```/etc/vm.conf``` u otras que se especifiquen en la línea de ordenes.
 
 Por ejemplo cree un disco virtual de 16G con:
 <pre>
