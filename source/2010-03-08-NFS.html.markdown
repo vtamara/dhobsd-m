@@ -16,7 +16,7 @@ Para compartir un directorio se especifíca en ```/etc/exports``` por ejemplo si
 El archivo ```/etc/rc.conf.local``` debe incluir:
 <pre>
 portmap_flags=
-nfsd_flagsr=
+nfsd_flags=
 </pre>
 
 Para reiniciar ```portmap```
