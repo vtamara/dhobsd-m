@@ -43,15 +43,39 @@ El control de las máquinas virtuales desde el interprete de ordenes
 se hace con ```vmctl``` que facilita operar con las máquinas configuradas
 en ```/etc/vmd.conf``` u otras que se especifiquen en la línea de ordenes.
 
-Por ejemplo cree un disco virtual con:
+Por ejemplo cree un disco virtual de 16G con:
 <pre>
-vmctl create disco.img -s 16G
+doas mkdir /vmm/
+doas vmctl create /vmm/mv1.img -s 16G
 </pre>
 
-E iniciar una máquina virtual con el mismo con
+Edite el archivo `/etc/vm.conf` para que su contenido sea:
 <pre>
-vmctl start disco.img
+switch "local" {
+    add em0
+    add tap0
+    add tap1
+}
+
+vm "mv1" {
+    memory 512M
+    kernel "/bsd.rd"
+    disk "/vmm/mv1.img"
+    interface {
+        switch "local"
+        lladdr 00:20:91:00:00:01
+    }
+}
 </pre>
+
+E inicie la máquina virtual con:
+<pre>
+vmctl start mv1
+</pre>
+
+Notará que arranca mediante el kernel /bsd.rd de la raíz de su disco.
+
+# Recetas
 
 Para ver las máquinas virtuales en ejecución:
 <pre>
