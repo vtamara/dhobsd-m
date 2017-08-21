@@ -22,7 +22,7 @@ de números aleatorios y adaptador SCSI.
 Por lo mismos es una herramienta muy oportuna para probar nuevas
 versiones de adJ y de OpenBSD.
 
-# Prueba mínima
+# Prueba mínima en una red local
 
 La ejecución de las diversas máquinas virtuales depende del servicio
 ```vmd```, el cual puede iniciar las máquinas virtuales que se configuren
@@ -49,7 +49,7 @@ doas mkdir /vmm/
 doas vmctl create /vmm/mv1.img -s 16G
 </pre>
 
-Edite el archivo `/etc/vm.conf` para que su contenido sea:
+Edite el archivo `/etc/vm.conf` para que su contenido sea como el siguiente, pero cambie `em0` por la interfaz de red del servidor anfitrion conectada a la red local: 
 <pre>
 switch "local" {
     add em0
@@ -73,7 +73,8 @@ E inicie la máquina virtual con:
 vmctl start mv1
 </pre>
 
-Notará que arranca mediante el kernel /bsd.rd de la raíz de su disco.
+Notará que arranca mediante el kernel `/bsd.rd` de la raíz de su disco y que podrá instalar usando el método http siempre y cuando configure la interfaz de red virtual en la misma red local del anfitrión.  Esto se debe a que la máquina virtual estará usando tap0 y que el `switch` que se declaró en `/etc/vm.conf` conecta `em0` con `tap0` (si se inicia otra máquina virtual esta usara tap1 y estará conectada al mismo switch virtual, pero otras que se inicien con tap2 y otros no.
+
 
 # Recetas
 
