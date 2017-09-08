@@ -4,19 +4,15 @@ date: 2016-03-18
 tags:
 ---
 
-Para usar freecodecamp sobre adJ 5.9
+Para usar freecodecamp sobre adJ 6.1
 
 ## Prerrequisitos
 
-* gcc-4.9.3p3 y  g++-4.9.3p3 que se instalan por omisión en adJ 5.9
+* gcc-4.9.3p3 y  g++-4.9.3p3 que se instalan por omisión en adJ 6.1
 
 ## Procedimiento
 
-Actualizar npm
-
-<pre>
-doas npm install npm -g
-</pre>
+No actualizar npm (era necesario en versiones anterioes de adJ)
 
 Asegurar que ```npm``` usa paquetes un poco más recientes de los compiladores gcc y g++:
 
