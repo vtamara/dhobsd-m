@@ -3,7 +3,7 @@ title: Formularios_Anidados_en_Rails_con_Cocoon
 date: 2014-01-14
 tags:
 ---
-Al manejar formularios anidados sobre Ruby on Rails 4.1 (ver {6}), Simple Form (ver {8}) y Cocoon (ver {7}), por ejemplo con una relación muchos a muchos, hemos identificado dos formas de manejar la tabla combinada (traducción de {4} de ''join table''):
+Al manejar formularios anidados sobre Ruby on Rails 5 (ver {6}), Simple Form (ver {8}) y Cocoon (ver {7}), por ejemplo con una relación muchos a muchos, hemos identificado dos formas de manejar la tabla combinada (traducción de {4} de ''join table''):
 
 * Cuando tiene llave primaria ```id```
 * Cuando no tiene llave primaria o la llave primaria es múltiple (digamos las llaves de las 2 tablas que relaciona).
@@ -18,7 +18,7 @@ En el contexto de SIVeL (ver {2}), un caso (modelo ```Caso```) puede tener diver
 
 La relación muchos a muchos se implementa con la tabla ```Caso_Presponsable```.   
 
-Así que las tablas tiene entre otros los siguientes campos (para este ejemplo sólo emplearemos estos):
+Así que las tablas tienen entre otros los siguientes campos (para este ejemplo sólo emplearemos estos):
 
 * Caso
   + id
@@ -41,8 +41,8 @@ Como nota, los nombres de las tablas legadas de esa aplicación están en singul
 
 Los 3 modelos incluyendo la declaración requeridas para formularios anidados (ver {9}) son:
 
-```app/models/caso.rb```:
-```
+* ```app/models/caso.rb```
+<pre>
   class Caso < ActiveRecord::Base
       has_many :presponsable,
         :through => :caso_presponsable
@@ -54,23 +54,22 @@ Los 3 modelos incluyendo la declaración requeridas para formularios anidados (v
         allow_destroy: true,
         reject_if: :all_blank
   end
-```
+</pre>
 
-```app/models/presponable.rb```
-```
+* ```app/models/presponable.rb```
+<pre>
   class Presponsable < ActiveRecord::Base
     has_many :caso, through: :caso_presponsable
     has_many :caso_presponsable, foreign_key: "id_presponsable", validate: true
   end
-```
-
-```app/models/caso_presponsable.rb```
-```
+</pre>
+* ```app/models/caso_presponsable.rb```
+<pre>
   class CasoPresponsable < ActiveRecord::Base
     belongs_to :caso, foreign_key: "id_caso", validate: true
     belongs_to :presponsable, foreign_key: "id_presponsable", validate: true
   end
-```
+</pre>
 
 Para anidar los formularios en el controlador de caso (```app/controllers/casos_controllers.rb```) además de permitir recibir datos del formulario padre (```Caso```), deben permitirse datos del formulario hijo o anidado (```Caso_Presponsable```) así como el parámetro especial ```:_destroy``` que permite eliminar registros de ```Caso_Presponsable```:
 <pre>
@@ -97,7 +96,7 @@ En la vista parcial ```app/views/casos/_form.html.erb``` utilizada para crear y 
 </pre>
 
 El formulario parcial ```app/views/casos/_caso_presponsable_fields.html.erb``` incluirá los campos de ```caso_presponsable``` dentro de una sección div con clase ```nested-fields``` y un botón para eliminar un registro de esta tabla:
-<pre>
+```html
 <li>
   <div class='control-group nested-fields'>
     <div class="controls">
@@ -111,7 +110,7 @@ El formulario parcial ```app/views/casos/_caso_presponsable_fields.html.erb``` i
     </div>
   </div>
 </li>
-</pre>
+```
 
 Para que se agreguen y eliminen campos dinamicamente Cocoon provee la lógica para Rails y Javascript que se activa agregando en ```app/assets/javascripts/casos.js.coffee```:
 <pre>
@@ -125,7 +124,7 @@ Para que se agreguen y eliminen campos dinamicamente Cocoon provee la lógica pa
 
 Puede ver las fuentes de un ejemplo que implementamos en:
 https://github.com/vtamara/cocoon-caso-presponsable
-Lo hemos probado en adJ versión 5.4alfa (ver {10}) que incluye Ruby 2.0 (ver {1}).  También puede verlo operando sobre heroku en: http://cocoon-caso-presponsable.herokuapp.com/
+Lo hemos probado en adJ versión 6.1 (ver {10}) que incluye Ruby 2.4.1 (ver {1}).  También puede verlo operando sobre heroku en: http://cocoon-caso-presponsable.herokuapp.com/
 
 Para este caso nos ha resultado necesario incluir el campo ```id``` escondido en el formulario parcial ```app/views/casos/_caso_presponsable_fields.html.erb```
 
