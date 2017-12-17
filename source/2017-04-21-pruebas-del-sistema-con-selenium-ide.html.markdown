@@ -1,10 +1,10 @@
 ---
-title: Pruebas del sistema con selenium-ide
-date: 2017-04-21 02:34 UTC
+title: Pruebas del sistema con sideex
+date: 2017-12-15 02:34 UTC
 tags:
 ---
 
-# Pruebas del sistema con Selenium-IDE
+# Pruebas del sistema con sideex
 
 Como parte del proceso de desarrollo ágil de una aplicación web
 es importante entre otras:  (1) mantener requerimientos en forma
@@ -20,9 +20,9 @@ negra y por tanto no deben requerir conocer el diseño del código fuente
 o su lógica." (<https://en.wikipedia.org/wiki/System_testing>)
 
 A continuación describimos como realizamos pruebas del sistema en
-Pasos de Jesús usando Selenium-IDE, suponiendo que las fuentes de la 
-aplicación (y de las pruebas) se almacenan en un repositorio de github.com 
-y que el seguimiento al desarrollo se realiza en un tablero Trello.
+Pasos de Jesús usando sideex (http://sideex.org/), suponiendo que las fuentes de la 
+aplicación (y de las pruebas) se almacenan en un repositorio de github (https://github.com)
+y que el seguimiento al desarrollo se realiza en un tablero Trello (https://trello.com).
 
 ## 1. Tablero Trello
 
@@ -61,12 +61,12 @@ Cada vez que el equipo de desarrollo anuncia cambios, el equipo de pruebas:
 
 - Verifica que siga funcionando lo que ya operaba
 - Prueba las novedades buscando hacer fallar la aplicación
-- Reporta en Trello (a más tarda  5 días después del anuncio
+- Reporta en Trello (a más tardar  5 días después del anuncio
   del equipo de desarrollo, si los anuncios de desarrollo son semanales
   o si el tipo de contrato lo requiere hasta un día despueś).
-- Actualiza pruebas del sistema en directorio ```test/seleniumide``` --el
+- Actualiza pruebas del sistema en directorio ```test/sideex``` --el
   equipo de pruebas tiene a su cargo mantener al día este directorio
-  con pruebas para Selenium-IDE que puedan reproducirse y funcionar
+  con pruebas para sideex que puedan reproducirse y funcionar
   (con excepciones que se mantienen en Trello)
 
 ## 3. Pruebas del sistema
@@ -74,20 +74,19 @@ Cada vez que el equipo de desarrollo anuncia cambios, el equipo de pruebas:
 ### 3.1 Verificar que lo que funcionaba siga funcionando
 
 a. Clonar o actualizar el repositorio que se va a probar.  
-   Esto en particular actualizará el directorio `test/seleniumide` donde deben 
+   Esto en particular actualizará el directorio `test/sideex` donde deben 
    estar casos de pruebas para las diversas funcionalidades del sistema
-   con títulos que sugieran lo que se prueba y extensión `.selenium`, así
-   como una suit de pruebas (`pruebas-suit.selenium`) que agrupa todos los 
-   casos de prueba.
+   con títulos que sugieran lo que se prueba en una suit de pruebas 
+   (`pruebas-suit.selenium`) que agrupa todos los  casos de prueba.
 
-b.  Empleando firefox con Selenium IDE instalado, ingresar a la aplicación en
-    el sitio de desarrollo con un usuario y contraseña de administrador (de prueba), 
-    iniciar Selenium IDE cargar la suit de pruebas y ejecutarla completa.
+b.  Empleando Chrome con sideex instalado, ingresar a la aplicación en
+    el sitio de desarrollo (o de ensayo) con un usuario y contraseña de administrador 
+    (de prueba),  iniciar sideex, cargar la suit de pruebas y ejecutarla completa.
 
 c. Por cada falla que se encuentre:
 
 c.1 Reproducirla manualmente y asegurar que es una falla del sistema 
-    (y no de las pruebas o de Selenium-IDE)
+    (y no de las pruebas o de sideex)
 
 c.2 Si era una falla ya resuleta buscar la tarjeta donde se había reportado
     y pasarla de la columna "Hecho" del tablero Trello a "Haciendo"
@@ -99,21 +98,25 @@ c.3 Si es una falla nueva, crear una nueva tarjeta Trello en la columna
     detalles adicionales de como reproducir en comentarios.
 
 c.4. Si se detienen las pruebas pero no por fallas en la aplicación sino en la 
-   prueba para Selenium-IDE o por cambios en funcionalidad de la aplicación
-   pero sin errores, se mejora la prueba de Selenium-IDE para que pase 
+   prueba para sideex o por cambios en funcionalidad de la aplicación
+   pero sin errores, se mejora la prueba de sideex para que pase 
    y se guarda y actualizan pruebas en github.
 
 c.5. En la tarjeta P-1 del tablero Trello agregar un comentario  del estilo
    "Ejecutada suit de pruebas. 2 errores"
+   
+c.6 Si hay dificultades que no logran superarse para describir un caso de prueba
+    con sideex guardar el caso de prueba en un solo archivo en la carpeta
+    test/sideex/con_error
   
 
 ### 3.2 Probar Novedades
 
 Por cada novedad o falla resuelta que reporte el equipo de desarrollo:
 
-1. Iniciar un nuevo caso de prueba en Selenium-IDE, guardar lo que se
-   prueba.  Poner nombre o renombrar para que el nombre corresponda a la
-   funcionalidad que se prueba.   
+1. Abrir sideex y la suit de pruebas e iniciar un nuevo caso de prueba, 
+   guardar lo que se prueba.  Poner nombre o renombrar para que el nombre 
+   corresponda a la funcionalidad que se prueba.   
 
 2. Referenciar en la tarjeta P-1 del tablero de Trello la novedad o falla 
    que está probando, en un comentario con la referencia a la novedad o
@@ -122,8 +125,8 @@ Por cada novedad o falla resuelta que reporte el equipo de desarrollo:
 3. Si una falla supuestamente resuelta sigue fallando, examinar posibles
    comentarios del equipo de desarrollo en la tarjeta y si es el caso devolver 
    la tarjeta de la columna Hecho a Haciendo, agregar comentario, pantallazo y archivo
-   para Selenium IDE para reproducirlo (no agregar a github casos de 
-   prueba que fallan, pero si los que pasen).
+   para sideex para reproducirlo (los casos de pruebas que fallan por 
+   dificultades con sideex almacenar en `test/sideex/con_error`.
 
 4. Si la prueba pasa agregar la prueba a la suit de pruebas con un nombre
    acorde a la prueba, agrega el archivo al repositorio y actualizar en github.
@@ -131,10 +134,10 @@ Por cada novedad o falla resuelta que reporte el equipo de desarrollo:
 
 ### 3.3 Ayudas para crear cada caso de prueba
 
-Un caso de pruebas en Selenium-IDE consta de una serie de ordenes selenese, 
+Un caso de pruebas en sideex consta de una serie de ordenes selenese, 
 cada orden selenese puede tener cero, uno o dos argumentos.  El primer 
 argumento cuando existe típicamente es un selector del elemento al que se aplica 
-la orden y el segundo cuando existe es un valor.  Por ejemplo la orden ```click``` 
+la orden y el segundo cuando existe es un valor.  Por ejemplo la orden ```clickAt``` 
 utiliza un selector para identificar el elemento sobre el cual realizar una 
 pulsación del ratón pero no requiere valor.  La orden ```type``` requiere los 
 dos argumentos, el selector que indica el elemento donde se escribirá y el 
@@ -145,7 +148,7 @@ HTML, donde cada fila es una orden y con 3 columnas: la primera para el nombre
 del comando, la segunda para el selector y la tercera para el valor.
 
 Las ayudas que se presentan a continuación son mínimas, se recomienda consultar
-la ayuda de Selenium-IDE (botón Help o disponible en 
+la ayuda de sideex (botón Help o disponible en 
 http://www.seleniumhq.org/docs/02_selenium_ide.jsp ), así como la especificación de 
 cada orden selenese disponible en la pestaña Reference de la interfaz de
 Selenium-IDE cuando se enfoca la orden en un caso de prueba.
@@ -161,6 +164,5 @@ Selenium-IDE cuando se enfoca la orden en un caso de prueba.
 * Es bueno utilizar ordenes selenese assert (el más típico debe ser 
   ```assertElementPresent```) que verifiquen que en un momento dado de la prueba 
   el estado de la aplicación sea el esperado sin lugar a dudas.
-* Selenium-IDE requiere que se le especifiquen esperas cuando se realizan ciertas 
-  operaciones demoradas (como cargar otra página o carga de elementos AJAX) para 
-  introducirlas es muy útil la orden selenese ```waitForElementPresent```
+* Aunque sideex se inspiró en Selenium-IDE, en general no requiere ordenes que 
+  esperen la presencia de un element como ```waitForElementPresent```
