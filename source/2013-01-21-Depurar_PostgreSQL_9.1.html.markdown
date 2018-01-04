@@ -3,7 +3,7 @@ title: Depurar_PostgreSQL_9.1
 date: 2013-01-21
 tags:
 ---
-En general en OpenBSD (adJ) 5.2, no es fácil depurar aplicaciones que manejan múltiples  procesos.   A continuación presentamos como hacerlo en el caso de PostgreSQL.
+En general en adJ (OpenBSD) 6.1, no es fácil depurar aplicaciones que manejan múltiples  procesos.   A continuación presentamos como hacerlo en el caso de PostgreSQL.
 
 ## Prerequisitos
 
@@ -33,7 +33,7 @@ $ psql -h/var/www/tmp -Uusuario mibase
 </pre>
 En otra terminal, puede usar ese PID (digamos 1234) para "pegarse" al proceso en ejecución con ```gdb```:
 <pre>
-$ sudo gdb /usr/ports/pobj/postgresql-9.1.7/postgresql-9.1.7/src/backend/postgres
+$ sudo gdb /usr/ports/pobj/postgresql-9.6.6/postgresql-9.6.6/src/backend/postgres
 > (gdb) attach 1234
 </pre>
 
