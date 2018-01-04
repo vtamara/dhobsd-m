@@ -62,7 +62,9 @@ $1 = (List *) !0x21058dac0
 $2 = {type = !T_List, length = 1, head = !0x21058da98, tail = !0x21058da98}
 </pre>
 
-##Dedicatoria y Bibliografía
+Otras funciones relacionadas con locale donde podrían ponerse puntos de ruptura son `varstr_cmp` y `pg_new_locale_from_collation`
+
+## Dedicatoria y Bibliografía
 
 Este material de dominio público se dedica al que dijo que son bienaventurados quienes oyen la palabra de Dios y la guardan (Lc 11:28).
 
