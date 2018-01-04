@@ -37,9 +37,9 @@ $ sudo gdb /usr/ports/pobj/postgresql-9.6.6/postgresql-9.6.6/src/backend/postgre
 > (gdb) attach 1234
 </pre>
 
-Tras esto habrá interumpido el proceso y ya puede depurar normalmente, por ejemplo poniendo un punto de ruptura al comienzo de una función, digamos ```!DefineCollation``` (puede examinarlas en las fuentes), y continuando la ejecución:
+Tras esto habrá interumpido el proceso y ya puede depurar normalmente, por ejemplo poniendo un punto de ruptura al comienzo de una función, digamos ```DefineCollation``` (puede examinarlas en las fuentes), y continuando la ejecución:
 <pre>
-(gdb) breakpoint !DefineCollation
+(gdb) breakpoint DefineCollation
 (gdb) cont
 </pre>
 
@@ -51,15 +51,15 @@ Desde el cliente de PostgreSQL ya puede dar comandos.
 Y desde la sesión de ```gdb``` una vez el punto de ruptura se alcanzado, puede dar comandos para avanzar como ```next``` o ```step``` o examinar el estado o las demás operaciones de ```gdb```, por ejemplo:
 
 <pre>
-Breakpoint 1, !DefineCollation (names=!0x21058dac0, parameters=!0x21058dbe8)
+Breakpoint 1, DefineCollation (names=0x21058dac0, parameters=0x21058dbe8)
     at collationcmds.c:49
-49              !DefElem    *fromEl = NULL;
+49              DefElem    *fromEl = NULL;
 (gdb) next
 50              DefElem    *localeEl = NULL;
 (gdb) print names
-$1 = (List *) !0x21058dac0
+$1 = (List *) 0x21058dac0
 (gdb) print *names
-$2 = {type = !T_List, length = 1, head = !0x21058da98, tail = !0x21058da98}
+$2 = {type = T_List, length = 1, head = 0x21058da98, tail = 0x21058da98}
 </pre>
 
 Otras funciones relacionadas con locale donde podrían ponerse puntos de ruptura son `varstr_cmp` y `pg_new_locale_from_collation`
