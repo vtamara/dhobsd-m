@@ -8,7 +8,7 @@ En general en adJ (OpenBSD) 6.1, no es fácil depurar aplicaciones que manejan m
 ## Prerequisitos
 
 Suponemos que:
-* Tiene un porte de PostgreSQL "especial" copiando de ```/usr/ports/database/postgresql``` a ```/usr/ports/mystuff/database/postgresql``` y actualizando la versión y siguiendo sugerencia de {2} añadiendo las opciones de configuración ```--enable-debug``` y ```--enable-cassert```.
+* Tiene un porte de PostgreSQL "especial" copiando de ```/usr/ports/database/postgresql``` a ```/usr/ports/mystuff/database/postgresql``` y actualizando la versión y siguiendo sugerencia de {2} añadiendo las opciones de configuración ```--enable-debug```,  ```--enable-cassert``` y `CFLAGS="-ggdb -O0 -g3 -fno-omit-frame-pointer"`.
 * Ya compiló las fuentes del porte con ```sudo make``` y  puede encontrarlas en ```/usr/ports/pobj/postgresql-9.6.6/postgresql-9.6.6/```
 
 ## Procedimiento
