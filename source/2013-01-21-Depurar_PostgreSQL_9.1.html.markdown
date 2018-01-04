@@ -9,7 +9,7 @@ En general en OpenBSD (adJ) 5.2, no es fácil depurar aplicaciones que manejan m
 
 Suponemos que:
 * Tiene un porte de PostgreSQL "especial" copiando de ```/usr/ports/database/postgresql``` a ```/usr/ports/mystuff/database/postgresql``` y actualizando la versión y siguiendo sugerencia de {2} añadiendo las opciones de configuración ```--enable-debug``` y ```--enable-cassert```.
-* Ya compiló las fuentes del porte con ```sudo make``` y  puede encontrarlas en ```/usr/ports/pobj/postgresql-9.1.7/postgresql-9.1.7/```
+* Ya compiló las fuentes del porte con ```sudo make``` y  puede encontrarlas en ```/usr/ports/pobj/postgresql-9.6.6/postgresql-9.6.6/```
 
 ## Procedimiento
 
@@ -22,7 +22,7 @@ sudo sh /etc/rc.d/postgres stop
 Inicie con su versión ya compilada en modo de depuración --recomendable dentro de una sesión de ```tmux``` para que pueda examinar la copiosa salida en modo de depuración (```-d 5```):
 
 <pre>
-$ cd /usr/ports/pobj/postgresql-9.1.7/postgresql-9.1.7/src/backend
+$ cd /usr/ports/pobj/postgresql-9.6.6/postgresql-9.6.6/src/backend
 $ sudo su _postgresql -c "./postgres -D /var/postgresql/data -d 5"
 </pre>
 
