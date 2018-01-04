@@ -9,21 +9,21 @@ En general en adJ (OpenBSD) 6.1, no es fácil depurar aplicaciones que manejan m
 
 Suponemos que:
 * Tiene un porte de PostgreSQL "especial" copiando de ```/usr/ports/database/postgresql``` a ```/usr/ports/mystuff/database/postgresql``` y actualizando la versión y siguiendo sugerencia de {2} añadiendo las opciones de configuración ```--enable-debug```,  ```--enable-cassert``` y `CFLAGS="-ggdb -O0 -g3 -fno-omit-frame-pointer"`.
-* Ya compiló las fuentes del porte con ```sudo make``` y  puede encontrarlas en ```/usr/ports/pobj/postgresql-9.6.6/postgresql-9.6.6/```
+* Ya compiló las fuentes del porte con ```doas make``` y  puede encontrarlas en ```/usr/ports/pobj/postgresql-9.6.6/postgresql-9.6.6/```
 
 ## Procedimiento
 
 Detenga el servicio PostgreSQL
 
 <pre>
-sudo sh /etc/rc.d/postgres stop
+doas sh /etc/rc.d/postgres stop
 </pre>
 
 Inicie con su versión ya compilada en modo de depuración --recomendable dentro de una sesión de ```tmux``` para que pueda examinar la copiosa salida en modo de depuración (```-d 5```):
 
 <pre>
 $ cd /usr/ports/pobj/postgresql-9.6.6/postgresql-9.6.6/src/backend
-$ sudo su _postgresql -c "./postgres -D /var/postgresql/data -d 5"
+$ doas su _postgresql -c "./postgres -D /var/postgresql/data -d 5"
 </pre>
 
 A continuación inicie un cliente en otra terminal y examine el número del nuevo proceso ```postgres``` que lo atiende:
@@ -33,7 +33,7 @@ $ psql -h/var/www/tmp -Uusuario mibase
 </pre>
 En otra terminal, puede usar ese PID (digamos 1234) para "pegarse" al proceso en ejecución con ```gdb```:
 <pre>
-$ sudo gdb /usr/ports/pobj/postgresql-9.6.6/postgresql-9.6.6/src/backend/postgres
+$ doas gdb /usr/ports/pobj/postgresql-9.6.6/postgresql-9.6.6/src/backend/postgres
 > (gdb) attach 1234
 </pre>
 
