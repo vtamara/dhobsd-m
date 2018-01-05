@@ -28,7 +28,7 @@ $ doas su _postgresql -c "./postgres -D /var/postgresql/data -d 5"
 
 A continuación inicie un cliente en otra terminal y examine el número del nuevo proceso ```postgres``` que lo atiende:
 <pre>
-$ psql -h/var/www/tmp -Uusuario mibase
+$ psql -h/var/www/var/run/postgresql -Uusuario mibase
 =# SELECT pg_backend_pid(); 
 </pre>
 En otra terminal, puede usar ese PID (digamos 1234) para "pegarse" al proceso en ejecución con ```gdb```:
