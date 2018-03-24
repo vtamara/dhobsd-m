@@ -5,7 +5,7 @@ tags:
 ---
 Metasploit Framework es un ambiente para realizar auditorias de seguridad. Puede instalarse en OpenBSD adJ 4.9 (con PostgreSQL preinstalado) para realizar auditorias en las organizaciones donde tenga autorización.
 
-##Instalación
+## Instalación
 
 Instale los paquetes necesarios
 <pre>
@@ -45,7 +45,7 @@ sudo make
 sudo make install
 </pre>
 
-##Uso
+## Uso
 
 Una completa referencia se encuentra en {1}.
 
@@ -60,7 +60,7 @@ db_driver postgresql
 db_connect msf:msf@localhost/msf
 </pre>
 
-!Sniffer
+### Sniffer
 Una vez configurada una base de datos,  para iniciar el sniffer:
 <pre>
 sudo ./msfconsole
@@ -74,7 +74,7 @@ creds
 </pre>
 
 
-!Escaneo de puertos
+### Escaneo de puertos
 Una vez configurada una base de datos para hacer un escaneo a las direcciones 10.0.0.1 a 10.0.0.255:
 <pre>
 db_nmap 10.0.0.0/24
