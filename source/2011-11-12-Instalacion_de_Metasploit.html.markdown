@@ -78,6 +78,7 @@ creds
 Una vez configurada una base de datos para hacer un escaneo a las direcciones 10.0.0.1 a 10.0.0.255:
 <pre>
 db_nmap 10.0.0.0/24
+
 ## Bibliografía
 
-* http://www.offensive-security.com/metasploit-unleashed/
+* {1} http://www.offensive-security.com/metasploit-unleashed/
