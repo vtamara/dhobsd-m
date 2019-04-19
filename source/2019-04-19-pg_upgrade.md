@@ -54,7 +54,9 @@ Se documenta en el paquete `postgresql-pg_upgrade` pero con estos cambios:
   loadable_libraries.txt
   ```
   Seguramente faltó instalar `postgresql-contrib` que incluye `accent` y otros módulos.  Instalar y repetir
+  
 9. Iniciar nueva base con configuración por omisión de manera temporal
+
 10. Actualizar estadísticas con 
   ```
   ./analyze_new_cluster.sh
