@@ -10,7 +10,7 @@ Se documenta en el paquete `postgresql-pg_upgrade` pero con estos cambios:
   ```
   pkg_delete postgresql-client postgresql-docs
   ```
-4. Instalar paquetes ```postgresql-client``` y ```postgresql-server``` nuevos (no instalar ```postgresql-docs``` aún porque tiene conflicto con ```postgresql-previous```).
+4. Instalar paquetes `postgresql-client`, `postgresql-server` y `postgresql-contrib` nuevos (no instalar ```postgresql-docs``` aún porque tiene conflicto con ```postgresql-previous```).
   ```
   PKG_PATH=. doas pkg_add ./postgresql-server-11.2p0.tgz ./postgresql-contrib-11.2.tgz
   ```
