@@ -43,7 +43,7 @@ Se documenta en el paquete `postgresql-pg_upgrade` pero con estos cambios:
   doas su - _postgresql
   pg_upgrade -b /usr/local/bin/postgresql-10/ -B /usr/local/bin -U postgres -d /var/postgresql/data-10/ -D /var/postgresql/data
   ```
-Si llega a fallar con:
+  Si llega a fallar con:
   ```
    $ pg_upgrade -b /usr/local/bin/postgresql-10/ -B /usr/local/bin -U postgres -d /var/postgresql/data-10/ -D /var/postgresql/dat
    Checking for presence of required libraries fatal
