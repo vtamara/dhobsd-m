@@ -66,5 +66,7 @@ Se documenta en el paquete `postgresql-pg_upgrade` pero con estos cambios:
   unix_socket_directories = '/var/www/var/run/postgresql' # comma-separated list of directories
   ```
   En `data/pg_hba.conf` volver a dejar `md5` en lugar de `trust`
+  
 12. Iniciar servicio y comprobar operación
+
 13. Una vez se complete con éxito se puede eliminar el cluster anterior
