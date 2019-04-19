@@ -61,12 +61,17 @@ Se documenta en el paquete `postgresql-pg_upgrade` pero con estos cambios:
   ```
   ./analyze_new_cluster.sh
   ```
-11. Detener nuevamente servicio postgresql, modificar `/var/postgresql/data/postgresql.conf` para cambiar ubicación del socket y activar tcp en localhost 5432
+11. Asegurar nueva clave.  Revisela con `cat /tmp/clave.txt` y establezcala con:
+  ```
+  psql -U postgres template1
+  alter user postgres with password 'nuevaaqui';
+  ```
+12. Detener nuevamente servicio postgresql, modificar `/var/postgresql/data/postgresql.conf` para cambiar ubicación del socket y activar tcp en localhost 5432
   ```
   unix_socket_directories = '/var/www/var/run/postgresql' # comma-separated list of directories
   ```
   En `data/pg_hba.conf` volver a dejar `md5` en lugar de `trust`
   
-12. Iniciar servicio y comprobar operación
+13. Iniciar servicio y comprobar operación
 
-13. Una vez se complete con éxito se puede eliminar el cluster anterior
+14. Una vez se complete con éxito se puede eliminar el cluster anterior
