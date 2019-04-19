@@ -14,7 +14,7 @@ Se documenta en el paquete `postgresql-pg_upgrade` pero con estos cambios:
   ```
   PKG_PATH=. doas pkg_add ./postgresql-server-11.2p0.tgz ./postgresql-contrib-11.2.tgz
   ```
-5. De extra-amd64 descargar paquetes ```postgresql-pg_upgrade``` y ```postgresql-previous``` e instalarlos.
+5. De <http://adj.pasosdejesus.org/pub/AprendiendoDeJesus/6.4-extra/> descargar paquetes ```postgresql-pg_upgrade``` y ```postgresql-previous``` e instalarlos.
   ```
   PKG_PATH=. doas pkg_add -D unsigned ./postgresql-previous-10.6.tgz ./postgresql-pg_upgrade-11.2.tgz
   ```
