@@ -66,7 +66,7 @@ Se documenta en el paquete `postgresql-pg_upgrade` pero con estos cambios:
   psql -U postgres template1
   alter user postgres with password 'nuevaaqui';
   ```
-12. Detener nuevamente servicio postgresql, modificar `/var/postgresql/data/postgresql.conf` para cambiar ubicación del socket y activar tcp en localhost 5432
+12. Detener nuevamente servicio postgresql, modificar `/var/postgresql/data/postgresql.conf` para cambiar ubicación del socket y en general rehacer la configuración que tenía su base (e.g conexiones TCP, llaves, etc).
   ```
   unix_socket_directories = '/var/www/var/run/postgresql' # comma-separated list of directories
   ```
