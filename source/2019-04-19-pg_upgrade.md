@@ -18,10 +18,10 @@ Se documenta en el paquete `postgresql-pg_upgrade` pero con estos cambios:
   ```
   PKG_PATH=. doas pkg_add -D unsigned ./postgresql-previous-10.6.tgz ./postgresql-pg_upgrade-11.2.tgz
   ```
-6. Generar nueva clave e iniciar nueva base así:
+6. Iniciar nueva base con clave de administrador de la anterio con:
   ```
   doas su - _postgresql
-  apg | grep -v "'" | head -n 1 > /tmp/clave.txt 
+  grep postgres .pgpass |  sed  -e  "s/.*://g" > /tmp/clave.txt
   initdb --encoding=UTF-8 -U postgres --auth=md5 --pwfile=/tmp/clave.txt  -D/var/postgresql/data
   ```
   (si no se especifica ```LC_ALL```, la bases template  inician con ```es_CO.UTF-8```)
