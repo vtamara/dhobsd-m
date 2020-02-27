@@ -23,7 +23,7 @@ GEM
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
     erubis (2.7.0)
-    eventmachine (1.2.3)
+    eventmachine (1.2.7)
     execjs (2.7.0)
     fast_blank (1.0.0)
     fastimage (2.1.0)
@@ -124,4 +124,4 @@ DEPENDENCIES
   wdm (~> 0.1.0)
 
 BUNDLED WITH
-   1.14.6
+   1.17.3
