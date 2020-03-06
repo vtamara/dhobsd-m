@@ -19,13 +19,13 @@ Se documenta en el paquete `postgresql-pg_upgrade`, aunque para adJ 6.6 aplican 
   ```
   PKG_PATH=. doas pkg_add -D unsigned ./postgresql-previous-11.6.tgz ./postgresql-pg_upgrade-12.2.tgz
   ```
-6. Iniciar nueva base con clave de administrador de la anterior (suponiendo que está en el archivo `.pgpass` de la cuenta `_postgresql` como ocurre por omisión en adJ) con:
+7. Iniciar nueva base con clave de administrador de la anterior (suponiendo que está en el archivo `.pgpass` de la cuenta `_postgresql` como ocurre por omisión en adJ) con:
   ```
   doas su - _postgresql
   grep postgres .pgpass |  sed  -e  "s/.*://g" > /tmp/clave.txt
   initdb --encoding=UTF-8 -U postgres --auth=md5 --pwfile=/tmp/clave.txt  -D/var/postgresql/data
   ```
-7. Mientras se restaura mantener configuración por omisión (no mover sockets) y cambiar `pg_hba.conf` de `data` y de `data-11` para modificar
+8. Mientras se restaura mantener configuración por omisión (no mover sockets) y cambiar `pg_hba.conf` de `data` y de `data-11` para modificar
   ```
   local all all md5
   ```
@@ -33,7 +33,7 @@ Se documenta en el paquete `postgresql-pg_upgrade`, aunque para adJ 6.6 aplican 
   ```
   local all all trust
   ```
-8. Iniciar restauración así:
+9. Iniciar restauración así:
   ```
   doas su - _postgresql
   pg_upgrade -b /usr/local/bin/postgresql-11/ -B /usr/local/bin -U postgres -d /var/postgresql/data-11/ -D /var/postgresql/data
@@ -50,23 +50,23 @@ Se documenta en el paquete `postgresql-pg_upgrade`, aunque para adJ 6.6 aplican 
   ```
   Seguramente faltó instalar `postgresql-contrib` que incluye `accent` y otros módulos.  Instalar y repetir
   
-9. Iniciar nueva base con configuración por omisión de manera temporal
+10. Iniciar nueva base con configuración por omisión de manera temporal
 
-10. Actualizar estadísticas con 
+11. Actualizar estadísticas con 
   ```
   ./analyze_new_cluster.sh
   ```
-11. Asegurar nueva clave.  Revisela con `cat /tmp/clave.txt` y establezcala con:
+12. Asegurar nueva clave.  Revisela con `cat /tmp/clave.txt` y establezcala con:
   ```
   psql -U postgres template1
   alter user postgres with password 'nuevaaqui';
   ```
-12. Detener nuevamente servicio postgresql, modificar `/var/postgresql/data/postgresql.conf` para cambiar ubicación del socket y en general rehacer la configuración que tenía su base (e.g conexiones TCP, llaves, etc).
+13. Detener nuevamente servicio postgresql, modificar `/var/postgresql/data/postgresql.conf` para cambiar ubicación del socket y en general rehacer la configuración que tenía su base (e.g conexiones TCP, llaves, etc).
   ```
   unix_socket_directories = '/var/www/var/run/postgresql' # comma-separated list of directories
   ```
   En `data/pg_hba.conf` volver a dejar `md5` en lugar de `trust`
   
-13. Iniciar servicio y comprobar operación
+14. Iniciar servicio y comprobar operación
 
-14. Una vez se complete con éxito se puede eliminar el cluster anterior
+15. Una vez se complete con éxito se puede eliminar el cluster anterior
