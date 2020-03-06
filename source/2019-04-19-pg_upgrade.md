@@ -1,20 +1,20 @@
 # Actualización de PostgreSQL con `pg_upgrade` en adJ
 
-Es un método más rápido que sacar volcados SQL, actualizar paquete y restaurar volcados.
+Es un método más rápido que el clásico (sacar volcados SQL, actualizar paquete y restaurar volcados).
 
-Se documenta en el paquete `postgresql-pg_upgrade` pero con estos cambios:
+Se documenta en el paquete `postgresql-pg_upgrade`, aunque para adJ aplican los siguientes cambios:
 
-1. Sacar los respaldos tipicos: i.e volcado en `pga-5.sql` y binarios copiados en `data--20180319.tar.gz`
-2. Detener base anterior, mover `/var/postgresql/data` a `/var/postgresql/data-10`
+1. Sacar los respaldos tipicos: i.e si está usando inst-adJ permitir que saque volcado en `pga-5.sql` y binarios copiados en `data--20180319.tar.gz` y detener cuando pregunte "Desea eliminar la actual versión de PostgreSQL"
+2. Detener base anterior (digamos con `doas rcctl stop postgresql`) y  mover `/var/postgresql/data` a `/var/postgresql/data-10`
 3. Desinstalar paquetes de postgresql anteriores:
   ```
   pkg_delete postgresql-client postgresql-docs
   ```
-4. Instalar paquetes `postgresql-client`, `postgresql-server` y `postgresql-contrib` nuevos (no instalar ```postgresql-docs``` aún porque tiene conflicto con ```postgresql-previous```).
+4. Instalar paquetes `postgresql-client`, `postgresql-server` y `postgresql-contrib` nuevos (inicialmente no instalar `postgresql-docs` porque tiene conflicto con `postgresql-previous`).
   ```
   PKG_PATH=. doas pkg_add ./postgresql-server-11.2p0.tgz ./postgresql-contrib-11.2.tgz
   ```
-5. De <http://adj.pasosdejesus.org/pub/AprendiendoDeJesus/6.4-extra/> descargar paquetes ```postgresql-pg_upgrade``` y ```postgresql-previous``` e instalarlos.
+5. De <http://adj.pasosdejesus.org/pub/AprendiendoDeJesus/6.6-extra/> descargar paquetes ```postgresql-pg_upgrade``` y ```postgresql-previous``` e instalarlos.
   ```
   PKG_PATH=. doas pkg_add -D unsigned ./postgresql-previous-10.6.tgz ./postgresql-pg_upgrade-11.2.tgz
   ```
