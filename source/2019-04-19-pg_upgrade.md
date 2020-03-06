@@ -8,7 +8,7 @@ Se documenta en el paquete `postgresql-pg_upgrade`, aunque para adJ aplican los 
 2. Detener base anterior (digamos con `doas rcctl stop postgresql`) y  mover `/var/postgresql/data` a `/var/postgresql/data-10`
 3. Desinstalar paquetes de postgresql anteriores:
   ```
-  pkg_delete postgresql-client postgresql-docs
+  doas mpkg_delete postgresql-client postgresql-docs
   ```
 4. Instalar paquetes `postgresql-client`, `postgresql-server` y `postgresql-contrib` nuevos (inicialmente no instalar `postgresql-docs` porque tiene conflicto con `postgresql-previous`).
   ```
