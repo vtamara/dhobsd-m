@@ -6,88 +6,75 @@ tags:
 
 ---
 
-Es un método más rápido que sacar volcados SQL, actualizar paquete 
-y restaurar volcados.
+# Actualización de PostgreSQL con `pg_upgrade` en adJ
 
-Se documenta en el paquete postgresql-pg_upgrade pero con estos cambios:
+Es un método más rápido que el clásico (sacar volcados SQL, actualizar paquete y restaurar volcados).
 
-1. Antes de actualizar sacar los respaldos tipicos: i.e volcado en 
-   pga-5.sql y binarios copiados en data--20180319.tar.gz
+Se documenta en el paquete `postgresql-pg_upgrade`, aunque para adJ 6.6 aplican los siguientes cambios:
 
-2. Si se está actualizando adJ con inst-adJ.sh, detener el proceso cuando 
-   pregunte "Desea eliminar la actual versión de PostgreSQL"
+1. Sacar los respaldos tipicos: i.e si está usando inst-adJ permitir que saque volcado en `pga-5.sql` y binarios copiados en `data--20200319.tar.gz` y detener cuando pregunte "Desea eliminar la actual versión de PostgreSQL"
+2. En casos excepcionales, preparar datos.  No se requirió entre versiones 9-10, 10-11, pero de la 11 a la 12 debe quitar columnas OIDS de las diversas tablas con `ALTER TABLE x SET WITHOUT OIDS;`
+3. Detener base anterior (digamos con `doas rcctl stop postgresql`) y  mover `/var/postgresql/data` a `/var/postgresql/data-11`
+4. Desinstalar paquetes de postgresql anteriores:
+  ```
+  doas mpkg_delete postgresql-client postgresql-docs
+  ```
+5. Instalar paquetes `postgresql-client`, `postgresql-server` y `postgresql-contrib` nuevos (inicialmente no instalar `postgresql-docs` porque tiene conflicto con `postgresql-previous`).
+  ```
+  PKG_PATH=. doas pkg_add ./postgresql-server-12.2.tgz ./postgresql-contrib-12.2.tgz
+  ```
+6. De <http://adj.pasosdejesus.org/pub/AprendiendoDeJesus/6.6-extra/> descargar paquetes ```postgresql-pg_upgrade``` y ```postgresql-previous``` e instalarlos.
+  ```
+  PKG_PATH=. doas pkg_add -D unsigned ./postgresql-previous-11.6.tgz ./postgresql-pg_upgrade-12.2.tgz
+  ```
+7. Iniciar nueva base con clave de administrador de la anterior (suponiendo que está en el archivo `.pgpass` de la cuenta `_postgresql` como ocurre por omisión en adJ) con:
+  ```
+  doas su - _postgresql
+  grep postgres .pgpass |  sed  -e  "s/.*://g" > /tmp/clave.txt
+  initdb --encoding=UTF-8 -U postgres --auth=md5 --pwfile=/tmp/clave.txt  -D/var/postgresql/data
+  ```
+8. Mientras se restaura mantener configuración por omisión (no mover sockets) y cambiar `pg_hba.conf` de `data` y de `data-11` para modificar
+  ```
+  local all all md5
+  ```
+  por
+  ```
+  local all all trust
+  ```
+9. Iniciar restauración así:
+  ```
+  doas su - _postgresql
+  pg_upgrade -b /usr/local/bin/postgresql-11/ -B /usr/local/bin -U postgres -d /var/postgresql/data-11/ -D /var/postgresql/data
+  ```
+  Si llega a fallar con:
+  ```
+   $ pg_upgrade -b /usr/local/bin/postgresql-11/ -B /usr/local/bin -U postgres -d /var/postgresql/data-11/ -D /var/postgresql/data
+   Checking for presence of required libraries fatal
+  Your installation references loadable libraries that are missing from the
+  new installation. You can add these libraries to the new installation,
+  or remove the functions using them from the old installation. A list of
+  problem libraries is in the file:
+  loadable_libraries.txt
+  ```
+  Seguramente faltó instalar `postgresql-contrib` que incluye `accent` y otros módulos.  Instalar y repetir
+  
+10. Iniciar nueva base con configuración por omisión de manera temporal
 
-3. Detener base anterior
+11. Actualizar estadísticas con 
+  ```
+  ./analyze_new_cluster.sh
+  ```
+12. Asegurar nueva clave.  Revisela con `cat /tmp/clave.txt` y establezcala con:
+  ```
+  psql -U postgres template1
+  alter user postgres with password 'nuevaaqui';
+  ```
+13. Detener nuevamente servicio postgresql, modificar `/var/postgresql/data/postgresql.conf` para cambiar ubicación del socket y en general rehacer la configuración que tenía su base (e.g conexiones TCP, llaves, etc).
+  ```
+  unix_socket_directories = '/var/www/var/run/postgresql' # comma-separated list of directories
+  ```
+  En `data/pg_hba.conf` volver a dejar `md5` en lugar de `trust`
+  
+14. Iniciar servicio y comprobar operación
 
-4. Desinstalar postgresql-docs y postgresql-client (que desinstalar otro 
-   incluyendo postgresql-server)
-
-5. Mover /var/postgresql/data a /var/postgresql/data-9.6
-
-v=`cat data/PG_VERSION`
-mv data data-$v
-
-6. Instalar paquete postgresql-server (que instalará postgresql-client) y
-   postgresql-contrib. No 
-   instalar postgresql-docs aún porque tiene conflicto con 
-   postgresql-previous
-
-cd ../6.4-amd64/paquetes/
-PKG_PATH=. doas pkg_add postgresql-server
-
-7.Instalar paquetes postgresql-pg_upgrade y postgresql-previous se
-  descargan de directorio 6.4-extra
-
-  PKG_PATH=. doas pkg_add -D unsigned postgresql-previous-10.6.tgz
-  PKG_PATH=. doas pkg_add -D unsigned postgresql-pg_upgrade-11.2.tgz   
-
-8. Inicializar base para nueva version asi:
-
-apg | head -n | > /tmp/clave.txt
-
-LC_ALL=C doas su - _postgresql -c "initdb --encoding=UTF-8 -U postgres --auth=md5 --pwfile=/tmp/clave.txt  -D/var/postgresql/data"
-
-(si no se especifica LC_ALL, la bases template  inician con es_CO.UTF-8)
-
-Para facilitar operacion es recomendable poner la clave de /tmp/clave.txt
-en /var/postgresql/.pgpass
-
-9. Para realizar la restauración se sugiere mantener configuración por 
-   omisión (no mover sockets) pero cambiar pg_hba.conf de data y de 
-   data-$v para modificar
-
-   local all all md5
-
-por
-
-    local all all trust
-
-
-10. Iniciar restauración así:
-  doas su _postgresql -c "pg_upgrade -b /usr/local/bin/postgresql-$v/ -B /usr/local/bin -U postgres -d /var/postgresql/data-$v/ -D /var/postgresql/data"
-
-12. Una vez se complete con exito lo anterior actualizar estadísticas con 
-
- ./analyze_new_cluster.sh
-
-13. Se puede eliminar el cluster anterior
-  ./delete_old_cluster.sh
-
-14. Aplicar los cambios tipicos al archivo de configuración
-    /var/postgresql/data/postgresql.conf
-    Dejar unix_socket_directories en /var/www/var/run/postgresql
-    y dejar listen_address en 127.0.0.1
-Iniciar servicio postgres de la forma típica
-
-15. Si se requiere cambiar clave de usuario postgres y replicar en .pgpass
-
-16. Detener servicio postgres
-
-17. Restaurar pg_hba.conf
-local   all             all                                     md5
-
-18. Verificar que ingresa como postgres con la clave de .pgpass y
-    que están las bases actualizadas
-
-19. Continuar actualización con adJ si se había interrumpido pero sin
-    crear respaldo, ni eliminar PostgreSQL, ni restaurar volcado
+15. Una vez se complete con éxito se puede eliminar el cluster anterior
