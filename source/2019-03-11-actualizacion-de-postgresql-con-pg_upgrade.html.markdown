@@ -10,7 +10,7 @@ tags:
 
 Es un método más rápido que el clásico (sacar volcados SQL, actualizar paquete y restaurar volcados).
 
-Se documenta en el paquete `postgresql-pg_upgrade`, aunque para adJ 6.6 aplican los siguientes cambios:
+Se documenta en el paquete `postgresql-pg_upgrade`, que para el caso de adJ pueden aplicarse de la siguiente forma:
 
 1. Sacar los respaldos tipicos: i.e si está usando inst-adJ permitir que saque volcado en `pga-5.sql` y binarios copiados en `data--20200319.tar.gz` y detener cuando pregunte "Desea eliminar la actual versión de PostgreSQL"
 2. En casos excepcionales, preparar datos.  No se requirió entre versiones 9-10, 10-11, pero de la 11 a la 12 debe quitar columnas OIDS de las diversas tablas con `ALTER TABLE x SET WITHOUT OIDS;`.  Puede ser, primero identificar bases con:
@@ -42,6 +42,7 @@ y por cada base (excepto postgres, template0, template1) ejecutar:
   ```
 5. Instalar paquetes `postgresql-client`, `postgresql-server` y `postgresql-contrib` nuevos (inicialmente no instalar `postgresql-docs` porque tiene conflicto con `postgresql-previous`).
   ```
+  cd 6.6-amd64/paquetes
   PKG_PATH=. doas pkg_add ./postgresql-server-12.2p0.tgz ./postgresql-contrib-12.2.tgz
   ```
 6. De <http://adj.pasosdejesus.org/pub/AprendiendoDeJesus/6.6-extra/> descargar paquetes ```postgresql-pg_upgrade``` y ```postgresql-previous``` e instalarlos.
