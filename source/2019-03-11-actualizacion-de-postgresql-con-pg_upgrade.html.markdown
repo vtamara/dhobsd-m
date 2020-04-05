@@ -19,7 +19,8 @@ Se documenta en el paquete `postgresql-pg_upgrade`, aunque para adJ 6.6 aplican 
     $ psql -U postgres -h /var/www/var/run/postgresql/
     postgres=# SELECT datname FROM pg_database;
     ```
-y por cada base (excepto psotgres, template0, template1) ejecutar
+y por cada base (excepto postgres, template0, template1) ejecutar:
+
     ```
     \c base
     base=# psql -U postgres -h /var/www/var/run/postgresql/
