@@ -42,7 +42,7 @@ y por cada base (excepto postgres, template0, template1) ejecutar:
   ```
 5. Instalar paquetes `postgresql-client`, `postgresql-server` y `postgresql-contrib` nuevos (inicialmente no instalar `postgresql-docs` porque tiene conflicto con `postgresql-previous`).
   ```
-  PKG_PATH=. doas pkg_add ./postgresql-server-12.2.tgz ./postgresql-contrib-12.2.tgz
+  PKG_PATH=. doas pkg_add ./postgresql-server-12.2p0.tgz ./postgresql-contrib-12.2.tgz
   ```
 6. De <http://adj.pasosdejesus.org/pub/AprendiendoDeJesus/6.6-extra/> descargar paquetes ```postgresql-pg_upgrade``` y ```postgresql-previous``` e instalarlos.
   ```
