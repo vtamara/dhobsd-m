@@ -35,10 +35,10 @@ y por cada base (excepto postgres, template0, template1) ejecutar:
     base=# \gexec
     ```
 
-3. Detener base anterior (digamos con `doas rcctl stop postgresql`) y  mover `/var/postgresql/data` a `/var/postgresql/data-11`
+3. Detener base anterior (digamos con `doas rcctl stop postgresql`) y  mover `/var/postgresql/data` a `/var/postgresql/data-11` (con `doas mv /var/postgresql/data /var/postgresql/data-11` )
 4. Desinstalar paquetes de postgresql anteriores:
   ```
-  doas mpkg_delete postgresql-client postgresql-docs
+  doas pkg_delete postgresql-client postgresql-docs
   ```
 5. Instalar paquetes `postgresql-client`, `postgresql-server` y `postgresql-contrib` nuevos (inicialmente no instalar `postgresql-docs` porque tiene conflicto con `postgresql-previous`).
   ```
