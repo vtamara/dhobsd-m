@@ -33,6 +33,7 @@ y por cada base (excepto psotgres, template0, template1) ejecutar
     WHERE table_schema = 'public' and table_type='BASE TABLE';
     base=# \gexec
     ```
+
 3. Detener base anterior (digamos con `doas rcctl stop postgresql`) y  mover `/var/postgresql/data` a `/var/postgresql/data-11`
 4. Desinstalar paquetes de postgresql anteriores:
   ```
