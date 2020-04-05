@@ -13,7 +13,19 @@ Es un método más rápido que el clásico (sacar volcados SQL, actualizar paque
 Se documenta en el paquete `postgresql-pg_upgrade`, aunque para adJ 6.6 aplican los siguientes cambios:
 
 1. Sacar los respaldos tipicos: i.e si está usando inst-adJ permitir que saque volcado en `pga-5.sql` y binarios copiados en `data--20200319.tar.gz` y detener cuando pregunte "Desea eliminar la actual versión de PostgreSQL"
-2. En casos excepcionales, preparar datos.  No se requirió entre versiones 9-10, 10-11, pero de la 11 a la 12 debe quitar columnas OIDS de las diversas tablas con `ALTER TABLE x SET WITHOUT OIDS;`
+2. En casos excepcionales, preparar datos.  No se requirió entre versiones 9-10, 10-11, pero de la 11 a la 12 debe quitar columnas OIDS de las diversas tablas con `ALTER TABLE x SET WITHOUT OIDS;`.  Puede ser con:
+    ```
+    doas su - _postgresql
+    psql -U postgres -h /var/www/var/run/postgresql/
+    SELECT format(
+      'ALTER TABLE %I.%I.%I SET WITHOUT OIDS;',
+      table_catalog,
+      table_schema,
+      table_name
+    ) 
+    FROM information_schema.tables
+    WHERE table_schema = 'public' and table_type='BASE TABLE';
+    ```
 3. Detener base anterior (digamos con `doas rcctl stop postgresql`) y  mover `/var/postgresql/data` a `/var/postgresql/data-11`
 4. Desinstalar paquetes de postgresql anteriores:
   ```
