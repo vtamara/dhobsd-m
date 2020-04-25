@@ -13,7 +13,7 @@ Es un método más rápido que el clásico (sacar volcados SQL, actualizar paque
 Se documenta en el paquete `postgresql-pg_upgrade`, que para el caso de adJ pueden aplicarse de la siguiente forma:
 
 1. Sacar los respaldos tipicos: i.e si está usando inst-adJ permitir que saque volcado en `pga-5.sql` y binarios copiados en `data--20200319.tar.gz` y detener cuando pregunte "Desea eliminar la actual versión de PostgreSQL"
-2. En casos excepcionales, preparar datos.  No se requirió entre versiones 9-10, 10-11, pero de la 11 a la 12 debe quitar columnas OIDS de las diversas tablas con `ALTER TABLE x SET WITHOUT OIDS;`.  Puede ser, primero identificar bases con:
+2. En casos excepcionales, preparar datos.  No se requirido entre versiones 9-10, 10-11, pero de la 11 a la 12 debe quitar columnas OIDS de las diversas tablas con `ALTER TABLE x SET WITHOUT OIDS;`.  Primero identificar bases con:
     ```
     $ doas su - _postgresql
     $ psql -U postgres -h /var/www/var/run/postgresql/
@@ -23,8 +23,7 @@ y por cada base (excepto postgres, template0, template1) ejecutar:
 
     ```
     \c base
-    base=# psql -U postgres -h /var/www/var/run/postgresql/
-    SELECT format(
+    base=# SELECT format(
       'ALTER TABLE %I.%I.%I SET WITHOUT OIDS;',
       table_catalog,
       table_schema,
