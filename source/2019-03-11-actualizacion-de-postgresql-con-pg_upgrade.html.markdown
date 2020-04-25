@@ -13,27 +13,19 @@ Es un método más rápido que el clásico (sacar volcados SQL, actualizar paque
 Se documenta en el paquete `postgresql-pg_upgrade`, que para el caso de adJ pueden aplicarse de la siguiente forma:
 
 1. Sacar los respaldos tipicos: i.e si está usando inst-adJ permitir que saque volcado en `pga-5.sql` y binarios copiados en `data--20200319.tar.gz` y detener cuando pregunte "Desea eliminar la actual versión de PostgreSQL"
-2. En casos excepcionales, preparar datos.  No se requirido entre versiones 9-10, 10-11, pero de la 11 a la 12 debe quitar columnas OIDS de las diversas tablas con `ALTER TABLE x SET WITHOUT OIDS;`.  Primero identificar bases con:
+2. En casos excepcionales, preparar datos.  No se requirido entre versiones 9-10, 10-11, pero de la 11 a la 12 debe quitar columnas OIDS de las diversas tablas con `ALTER TABLE x SET WITHOUT OIDS;`.  Primero identificar bases y crear un script que por cada base llame a otro script que borre oids:
     ```
     $ doas su - _postgresql
     $ psql -U postgres -h /var/www/var/run/postgresql/
-    postgres=# SELECT datname FROM pg_database;
+    postgres=# \t on
+    postgres=# \o /tmp/quitaoids.sh
+    postgres=# SELECT '/usr/local/adJ/pg_quita_oids.sh ' || datname FROM pg_database WHERE datname NOT IN ('template0', 'template1', 'postgres');
+    postgres=# \q
     ```
-y por cada base (excepto postgres, template0, template1) ejecutar:
-
-    ```
-    \c base
-    base=# SELECT format(
-      'ALTER TABLE %I.%I.%I SET WITHOUT OIDS;',
-      table_catalog,
-      table_schema,
-      table_name
-    ) 
-    FROM information_schema.tables
-    WHERE table_schema = 'public' and table_type='BASE TABLE';
-    base=# \gexec
-    ```
-
+note que se exluyen las bases postgres, template0, template1.  El script `/usr/local/adJ/pg_quita_oids.sh` está disponible en `https://github.com/pasosdeJesus/adJ/blob/master/arboldd/usr/local/adJ/pg_quita_oids.sh`.  Si no tiene adJ, una vez lo copia ejecute:
+```
+$ sh /tmp/quita_oids.sh
+```
 3. Detener base anterior (digamos con `doas rcctl stop postgresql`) y  mover `/var/postgresql/data` a `/var/postgresql/data-11` (con `doas mv /var/postgresql/data /var/postgresql/data-11` )
 4. Desinstalar paquetes de postgresql anteriores:
   ```
