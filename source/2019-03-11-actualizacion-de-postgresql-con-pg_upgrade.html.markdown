@@ -31,22 +31,20 @@ $ sh /tmp/quita_oids.sh
   ```
   doas pkg_delete postgresql-client postgresql-docs
   ```
-5. Instalar paquetes `postgresql-client`, `postgresql-server` y `postgresql-contrib` nuevos (inicialmente no instalar `postgresql-docs` porque tiene conflicto con `postgresql-previous`).
+5. Instalar paquetes `postgresql-client`, `postgresql-server`, `postgresql-contrib`, `postgresql-previous` y `postgresql-pg_upgrade` (inicialmente no instalar `postgresql-docs` porque tiene conflicto con `postgresql-previous`).
   ```
   cd 6.6-amd64/paquetes
-  PKG_PATH=. doas pkg_add ./postgresql-server-12.2p0.tgz ./postgresql-contrib-12.2.tgz
+  PKG_PATH=. doas pkg_add ./postgresql-server-12.2p0.tgz ./postgresql-contrib-12.2.tgz postgresql-previous-11.6p1.tgz postgresql-pg_upgrade-12.2.tgz
   ```
-6. Instalar los paquetes  ```postgresql-pg_upgrade``` y ```postgresql-previous```  (si está corriendo una versión de adJ anterior a la 6.6 los puede encontrar en <http://adj.pasosdejesus.org/pub/AprendiendoDeJesus/> en un directorio de la forma `6.5-extra`).
-  ```
-  PKG_PATH=. doas pkg_add -D unsigned ./postgresql-previous-11.6.tgz ./postgresql-pg_upgrade-12.2.tgz
-  ```
-7. Iniciar nueva base con clave de administrador de la anterior (suponiendo que está en el archivo `.pgpass` de la cuenta `_postgresql` como ocurre por omisión en adJ) con:
+  Si está corriendo una versión de adJ anterior a la 6.6 puede encontrar los paquetes `postgresql-previous` y `postgresql-pg_upgrade` en  <http://adj.pasosdejesus.org/pub/AprendiendoDeJesus/> en un directorio de la forma `6.5-extra` y al momento de insalarlo con `pkg_add` usar la opción `-D unsigned`).
+
+6. Iniciar nueva base con clave de administrador de la anterior (suponiendo que está en el archivo `.pgpass` de la cuenta `_postgresql` como ocurre por omisión en adJ) con:
   ```
   doas su - _postgresql
   grep postgres .pgpass |  sed  -e  "s/.*://g" > /tmp/clave.txt
   initdb --encoding=UTF-8 -U postgres --auth=md5 --pwfile=/tmp/clave.txt  -D/var/postgresql/data
   ```
-8. Mientras se restaura mantener configuración por omisión (no mover sockets) y cambiar `pg_hba.conf` de `data` y de `data-11` para modificar
+7. Mientras se restaura mantener configuración por omisión (no mover sockets) y cambiar `pg_hba.conf` de `data` y de `data-11` para modificar
   ```
   local all all md5
   ```
@@ -54,7 +52,7 @@ $ sh /tmp/quita_oids.sh
   ```
   local all all trust
   ```
-9. Iniciar restauración así:
+8. Iniciar restauración así:
   ```
   doas su - _postgresql
   pg_upgrade -b /usr/local/bin/postgresql-11/ -B /usr/local/bin -U postgres -d /var/postgresql/data-11/ -D /var/postgresql/data
@@ -71,23 +69,23 @@ $ sh /tmp/quita_oids.sh
   ```
   Seguramente faltó instalar `postgresql-contrib` que incluye `accent` y otros módulos.  Instalar y repetir
   
-10. Iniciar nueva base con configuración por omisión de manera temporal
+9. Iniciar nueva base con configuración por omisión de manera temporal
 
-11. Actualizar estadísticas con 
+10. Actualizar estadísticas con 
   ```
   ./analyze_new_cluster.sh
   ```
-12. Asegurar nueva clave.  Revisela con `cat /tmp/clave.txt` y establezcala con:
+11. Asegurar nueva clave.  Revisela con `cat /tmp/clave.txt` y establezcala con:
   ```
   psql -U postgres template1
   alter user postgres with password 'nuevaaqui';
   ```
-13. Detener nuevamente servicio postgresql, modificar `/var/postgresql/data/postgresql.conf` para cambiar ubicación del socket y en general rehacer la configuración que tenía su base (e.g conexiones TCP, llaves, etc).
+12. Detener nuevamente servicio postgresql, modificar `/var/postgresql/data/postgresql.conf` para cambiar ubicación del socket y en general rehacer la configuración que tenía su base (e.g conexiones TCP, llaves, etc).
   ```
   unix_socket_directories = '/var/www/var/run/postgresql' # comma-separated list of directories
   ```
   En `data/pg_hba.conf` volver a dejar `md5` en lugar de `trust`
   
-14. Iniciar servicio y comprobar operación
+13. Iniciar servicio y comprobar operación
 
-15. Una vez se complete con éxito se puede eliminar el cluster anterior
+14. Una vez se complete con éxito se puede eliminar el cluster anterior
