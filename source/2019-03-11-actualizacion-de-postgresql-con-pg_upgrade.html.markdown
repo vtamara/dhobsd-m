@@ -36,7 +36,7 @@ $ sh /tmp/quita_oids.sh
   cd 6.6-amd64/paquetes
   PKG_PATH=. doas pkg_add ./postgresql-server-12.2p0.tgz ./postgresql-contrib-12.2.tgz
   ```
-6. De <http://adj.pasosdejesus.org/pub/AprendiendoDeJesus/6.6-extra/> descargar paquetes ```postgresql-pg_upgrade``` y ```postgresql-previous``` e instalarlos.
+6. Instalar los paquetes  ```postgresql-pg_upgrade``` y ```postgresql-previous```  (si está corriendo una versión de adJ anterior a la 6.6 los puede encontrar en <http://adj.pasosdejesus.org/pub/AprendiendoDeJesus/> en un directorio de la forma `6.5-extra`).
   ```
   PKG_PATH=. doas pkg_add -D unsigned ./postgresql-previous-11.6.tgz ./postgresql-pg_upgrade-12.2.tgz
   ```
