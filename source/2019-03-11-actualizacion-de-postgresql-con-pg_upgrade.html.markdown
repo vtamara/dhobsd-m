@@ -8,6 +8,8 @@ tags:
 
 # Actualización de PostgreSQL con `pg_upgrade` en adJ
 
+Documento actualizado: 2020-04-27
+
 Es un método más rápido que el clásico (sacar volcados SQL, actualizar paquete y restaurar volcados).
 
 Se documenta en el paquete `postgresql-pg_upgrade`, que para el caso de adJ pueden aplicarse de la siguiente forma:
@@ -22,7 +24,7 @@ Se documenta en el paquete `postgresql-pg_upgrade`, que para el caso de adJ pued
     postgres=# SELECT '/usr/local/adJ/pg_quita_oids.sh ' || datname FROM pg_database WHERE datname NOT IN ('template0', 'template1', 'postgres');
     postgres=# \q
     ```
-note que se exluyen las bases postgres, template0, template1.  El script `/usr/local/adJ/pg_quita_oids.sh` está disponible en `https://github.com/pasosdeJesus/adJ/blob/master/arboldd/usr/local/adJ/pg_quita_oids.sh`.  Si no tiene adJ, una vez lo copia ejecute:
+note que se exluyen las bases postgres, template0, template1.  El script `/usr/local/adJ/pg_quita_oids.sh` está disponible en `https://github.com/pasosdeJesus/adJ/blob/master/arboldd/usr/local/adJ/pg_quita_oids.sh`.  Una vez lo copie ejecute:
 ```
 $ sh /tmp/quita_oids.sh
 ```
@@ -36,7 +38,7 @@ $ sh /tmp/quita_oids.sh
   cd 6.6-amd64/paquetes
   PKG_PATH=. doas pkg_add ./postgresql-server-12.2p0.tgz ./postgresql-contrib-12.2.tgz postgresql-previous-11.6p1.tgz postgresql-pg_upgrade-12.2.tgz
   ```
-  Si está corriendo una versión de adJ anterior a la 6.6 puede encontrar los paquetes `postgresql-previous` y `postgresql-pg_upgrade` en  <http://adj.pasosdejesus.org/pub/AprendiendoDeJesus/> en un directorio de la forma `6.5-extra` y al momento de insalarlo con `pkg_add` usar la opción `-D unsigned`).
+  Si está corriendo una versión de adJ anterior a la 6.6 puede encontrar los paquetes `postgresql-previous` y `postgresql-pg_upgrade` en  <http://adj.pasosdejesus.org/pub/AprendiendoDeJesus/> en un directorio de la forma `6.5-extra`. Al momento de insalarlo con `pkg_add` use la opción `-D unsigned`).
 
 6. Iniciar nueva base con clave de administrador de la anterior (suponiendo que está en el archivo `.pgpass` de la cuenta `_postgresql` como ocurre por omisión en adJ) con:
   ```
