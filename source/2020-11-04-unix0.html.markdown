@@ -1,6 +1,6 @@
 ---
 
-title: unix0
+title: Unix0
 date: 2020-11-04 01:59 UTC
 tags: sistema-operativo
 
@@ -21,39 +21,44 @@ que más pudieron del fracasado proyecto Multics (un diseño y comienzo de
 implementación de un sistema operativo demasiado futurista y costos para 
 mediados de 1960).
 
+![Foto de Dennis Ritchie (de pie) y Kennet Thompson (sentado) de 1972 en
+Laboratorios Bell](https://d1p0gxnqcu0lvz.cloudfront.net/images/blog-image-orion-penzias-wilson-jefferts.height-600.png)
+
 Buscaron implementar un sistema operativo a bajo costo y en un computador 
-sencillo que tuvieron disponible (un minicomputador PDP-7 producido por la 
-empresa DEC).  Los conceptos principales eran un sistema de archivos, 
-operación multiusuario (para compartir simultaneamente entre varios
-usuarios cada uno desde un teletipo el costoso tiempo de usar un computador) 
-mediante procesos y un interprete de ordenes.
+"sencillo" que tuvieron disponible (un minicomputador PDP-7 producido por la 
+empresa DEC que aunque costaba alrededor de US$70.000 era más económico
+que los empleandos para desarrollar Multics).  
+Los conceptos principales que desarrollo e implementaron fueron un sistema 
+de archivos, operación multiusuario (para compartir el computador 
+simultaneamente entre varios usuarios cada uno desde un teletipo),
+procesos y un interprete de ordenes.
 
 Tanto en ese entonces como ahora los computadores sólo entienden lenguaje
-de máquina binario muy básico (a su representación como texto legible para
+de máquina binario muy básico (a su representación como texto más legible para
 humanos se le llama lenguaje ensamblador, aún cuando es complejo para
 los humanos por su detalle y por tanto extensión). El lenguaje de máquina, se 
 trata de una serie de instrucciones muy sencillas ordenadas y numeradas 
 de manera lineal (digamos de 1 a N), que se ejecutan una después de otra.  
 Estas instrucciones permiten por ejemplo mover datos de un área de la 
 memoria a otra, comparar dos posiciones de memoria,  
-saltar no a la siguiente instrucción sino a otra anterior o a otra 
+saltar no a la siguiente instrucción sino a otra anterior o 
 posterior. Es decir no tienen el concepto de usuario, archivo ni proceso. 
-Esos son conceptos que el sistema operativo ofrece, los implementa sobre
-las instrucciones tan básicas del lenguaje de máquina.
+Esos son conceptos que el sistema operativo ofrece implementandolos sobre
+esas instrucciones tan básicas del lenguaje de máquina.
 
-El sistema de archivos que diseñaron e implementó Thompson permitía tener
-archivos y directorios, los cuales a su vez tenían archivos y directorios.
-Cada archivo o directorio estaba en unos bloques de disco especiales
-(se les llamó nodos-i) que tenían información de los permisos del archivo, 
-el tamaño y los bloques del disco donde estaba la información del archivo
-o directorio.  Para cada usuario había un directorio, y aunque
-era posible, no era fácil cambiar de directorio o enlazar archivos de un 
-directorio a otro.
+El sistema de archivos que diseñaron e implementaron (especialmente Thompson) 
+permitía tener archivos y directorios, los cuales a su vez tenían archivos 
+y directorios. Cada archivo o directorio estaba en unos bloques de 
+disco especiales (se les llamó nodos-i) que tenían información de los 
+permisos del archivo, el tamaño y los bloques del disco donde estaba la 
+información del archivo o directorio.  Para cada usuario había un directorio, 
+y aunque era posible, no era fácil cambiar de directorio o enlazar archivos 
+de un directorio a otro.
 
 Contó con un sistema de procesos que inicialmente sólo
-permitía un proceso por terminal, pero que si permitía operación 
-simultanea a varios usuarios desde varias terminales (inicialmente dos
-terminales). Los programas que estaban en disco al empezar a ejecutarse se 
+permitía un proceso por teletipo, pero que si permitía operación 
+simultanea a varios usuarios desde varios teletipo (inicialmente dos
+teletipos). Los programas que estaban en disco al empezar a ejecutarse se 
 llamaron procesos. El interprete de ordenes iniciaba tales procesos
 y podía operar con el sistema de archivos --inicialmente el sistema de archivos,
 el sistema de procesos y el interprete formaban una unidad llamada el 
@@ -61,7 +66,8 @@ kernel del sistema operativo, aunque posteriormente (y ahora) el interprete
 de ordenes de implementó como un programa.
 
 Otra idea importante que empezó a implementarse en Unix0 fue manejar 
-algunos dispositivos (como el video y el teclado de la terminal) como si fuesen archivos, y manejar la entrada y la
+algunos dispositivos (como pantalla o teclado) como si 
+fuesen archivos, y manejar la entrada y la
 salida de los procesos también como si fuesen archivos.  Así fue 
 evolucionando la idea de redireccionar la entrada y la salida de los
 procesos y la idea de tuberías que permitían conectar la salida de un 
@@ -71,18 +77,21 @@ Finalmente junto con Unix0 se desarrollo el lenguaje B del cual fue sucesor el
 lenguaje C en el cual están escritos practicamente todos los sistemas
 operativos en la actualidad.
 
-Como se ve tanto el diseño e implementación del sistema operativo Unix como 
+Como se ve, tanto el diseño e implementación del sistema operativo Unix como 
 de los lenguajes B y C, se hizo para facilitar el uso del computador a
-usuarios, que en lugar de manejar muchisimos detalles que deben proramarse en 
-lenguaje de máquina, emplean ordenes cortas y sencillas que manejan
-conceptos abstractos más fáciles de entender para nosotros.
+sus usuarios, que en lugar de manejar muchisimos detalles que deben 
+programarse en lenguaje de máquina, emplean ordenes cortas y sencillas que 
+manejan conceptos abstractos más fáciles de entender para nosotros.
 
-El vìdeo disponible en <https://www.youtube.com/watch?v=pvaPaWyiuLA> muestra
-en operación Unix0 en un PDP-7 real.   No es fácil tener una de esas máquinas para
-volver a ver la forma de trabajo en 1969 para desarrollar Unix0, pero es posible
-emular ese computador, compilar las fuentes en ensamblador de Unix0 y verlo operando
-en un computador actual (la pantalla obrará como el papel en el que escribía el teletipo
-y el teclado como el teclado del teletipo del video).
+El vídeo disponible en <https://www.youtube.com/watch?v=pvaPaWyiuLA> muestra
+en operación Unix0 en un PDP-7 real con un teletipo (con escritor de cintas
+perforadas), lector de cinta perforada y un disco duro.   No es fácil 
+contar con una de esas máquinas para volver a ver la forma de trabajo en 
+1969 para desarrollar Unix0, pero es posible emular ese computador, compilar 
+las fuentes en ensamblador de Unix0 y verlo operando
+en un computador actual (la pantalla obrará como el papel en el que 
+respondía el computador en el teletipo y el teclado como el teclado 
+del teletipo donde los usuarios daban ordenes al computador en el vídeo).
 
 
 ## Emular un PDP-7 en adJ
@@ -92,58 +101,51 @@ antiguas puede emular un PDP-7.
 
 A noviembre de 2020 para poder correr Unix0 se requiere la versión
 en desarrollo de este emulador, que está en la rama master del repositorio
-de github https://github.com/simh/simh
+de github <https://github.com/simh/simh>
 
 Los pasos a seguir en un sistema adJ u OpenBSD son:
 
-```
-$ doas pkg_add gcc
-$ mkdir -p ~/comp/unix
-$ git clone git@github.com:simh/simh.git
-$ cd  simh
-$ GCC=egcc gmake pdp7
-```
+        $ doas pkg_add gcc
+        $ mkdir -p ~/comp/unix
+        $ git clone git@github.com:simh/simh.git
+        $ cd  simh
+        $ GCC=egcc gmake pdp7
 
-La salida esperada de estas ordenes puede verse en [unix0ADJ].
+La salida esperada de estas ordenes puede verse en [Unix0ADJ], y lo
+que harán es producir un programa `BIN/pdp7` que puede ejecutar con:
 
-Una vez compilado  puede ejecutarse con:
-
-```
-$ BIN/pdp7
-```
+        $ BIN/pdp7
 
 Esto corresponde a encender un PDP-7 sin un programa a ejecutar, por lo que
 no hará más que dejarlo en la línea de ordenes de simh, donde
 por ejemplo puede examinar la configuración del computador con
 `show device` y salir con `q`:
 
-```
-sim> show device
-PDP-7 simulator configuration
+        sim> show device
+        PDP-7 simulator configuration
 
-CPU     idle disabled
-CLK     60Hz, devno=00
-PTR     devno=01
-PTP     devno=02
-TTI     devno=03
-TTO     devno=04
-LPT     devno=65-66
-DRM     disabled
-RB      disabled
-DT      devno=75-76, 8 units
-G2OUT   devno=05
-G2IN    devno=43-44
-DPY     disabled
-sim> q
-Goodbye
-```
+        CPU     idle disabled
+        CLK     60Hz, devno=00
+        PTR     devno=01
+        PTP     devno=02
+        TTI     devno=03
+        TTO     devno=04
+        LPT     devno=65-66
+        DRM     disabled
+        RB      disabled
+        DT      devno=75-76, 8 units
+        G2OUT   devno=05
+        G2IN    devno=43-44
+        DPY     disabled
+        sim> q
+        Goodbye
 
 La siguiente tabla (extraida analizando las fuentes de simh y su documentación) explica
 los dispositivos mencionados:
 
-| Dispositivo | Del inglés | Descripción |
-| CPU | Central Processing Unit | Procesador de 18bit con 32K de memoria |
-| CLK | Clock | Reloj |
+| __Dispositivo__ | __Del inglés__ | __Descripción__ |
+| CPU | Central Processing Unit | Procesador del PDP-7 de 18bit con 32K de memoria, ver foto en <https://es.wikipedia.org/wiki/PDP-7> |
+| CLK | Clock | Reloj interno |
 | PTR | Paper Tape Reader  | Lector de rollos de cinta perforada. Ver fotos en <https://en.wikipedia.org/wiki/Punched_tape> |
 | PTP | Paper Tape Punch | Perforador de rollos de cinta perforada |
 | TTI | Teletype Input| Entrada de teletipo KSR 33. Es decir lo que se tecleara en el teclado. Un teletipo recibía ordenes para el computador por teclado  e imprimía los resultados emitidos por el computador en su impresora.  Ver fotos en <https://en.wikipedia.org/wiki/Teletype_Model_33> |
@@ -152,9 +154,10 @@ los dispositivos mencionados:
 | DRM  | Drum head disk | Tambor magnético (precursor de los discos duros) Ver foto en <https://en.wikipedia.org/wiki/Drum_memory> |
 | RB  | RB09 fixed head disk | Disco con una cabeza de lectura/escritura por cada pista. Diagrama en <http://www.edwardbosworth.com/My5155_Slides/Chapter12/DiskBasics.htm>  | 
 | DT | DECtape | Cinta magnética de almacenamiento de la compañia DEC. Podía tener hasta 8 unidades cada una con su cinta. Ver foto en <https://en.wikipedia.org/wiki/DECtape> |
-| G2IN | GRAPHICS-2 Input |Teclado y botones del subsistema "GRAPHICS-2" |
-| G2OUT | GRAPHICS-2 Output | Pantalla del subsistema "GRAPHICS-2" (hardware de gráficos vectoriales) Puede verse simulado para jugar Space Travel en <http://sebras.se/space-travel-2.mp4> |
-| DPY | PDP-7 Type 340 Interface. Precision Incremental CRT Display. Pantalla con tubo de rayos catódicos de precisión incremental. Ver fotos en <https://es.wikipedia.org/wiki/Tubo_de_rayos_cat%C3%B3dicos> |
+| G2IN | GRAPHICS-2 Input |Teclado y botones del subsistema "GRAPHICS-2" (hardware de gráficos vectoriales, ver por ejemplo <https://en.wikipedia.org/wiki/DEC_GT40>)|
+| G2OUT | GRAPHICS-2 Output | Pantalla del subsistema "GRAPHICS-2".  Puede verse simulado la forma de jugar Space Travel en <http://sebras.se/space-travel-2.mp4> |
+| DPY | PDP-7 Type 340 Interface. Precision Incremental CRT Display | Pantalla con tubo de rayos catódicos de precisión incremental. Ver fotos en <https://es.wikipedia.org/wiki/Tubo_de_rayos_cat%C3%B3dicos> |
+
 
 
 ## Compilación cruzada de Unix0 
@@ -178,35 +181,134 @@ un PDP-7 real.  Fue un gran trabajo concluido en 2019, justo para celebrar los
 
 El código fuente de todo esto estaba escrito en ensamblador para el PDP-7,
 como parte del proyecto se afinó y se hicieron otras herramientas
-(incluyendo  una implementación de compilador de lenguaje B en lenguaje B).
-El resultado se ha publicado como código abierto en https://github.com/DoctorWkt/pdp7-unix
+(incluyendo  un ensamblador cruzado para PDP-7 escrito en lenguaje Perl
+y una implementación de compilador de lenguaje B en lenguaje B).
+El resultado se ha publicado como código abierto en 
+<https://github.com/DoctorWkt/pdp7-unix>
 
 Suponiendo que simh se haya dejado en la ubicación de la sección anterior
-es posible prepara pdp7-unix asi:
+es posible prepara `pdp7-unix` asi:
 
-```
-$ cd ~/comp/unix
-$ git clone git@github.com:DoctorWkt/pdp7-unix.git
-$ cd pdp7-unix
-$ gmake
-```
+        $ cd ~/comp/unix
+        $ git clone git@github.com:DoctorWkt/pdp7-unix.git
+        $ cd pdp7-unix
+        $ gmake
 
-La salida esperada de estas ordenes puede verse en [unix0ADJ] y
-el resultado será el archivo `build/image.fs` con una
-imagen de un disco duro RB09 que contiene en código de máquina
-el sistema operativo, herramientas para el mismo y directorios con 
-datos de prueba para los usuarios ken, dmr y doug.
+La salida esperada de estas ordenes puede verse en [Unix0ADJ] y
+resultaran:
+
+1. El archivo `build/image.fs` con una imagen de un disco duro RB09 
+    que contiene en código de máquina el sistema operativo, herramientas 
+    para el mismo y directorios con datos de prueba para los usuarios 
+    ken, dmr y doug.  El sistema operativo y sus herramientas queda en el 
+    directorio `system`.  Los datos de los usuario `ken` y `doug` seran 
+    fuentes en ensamblador para una parte del sistema. En el directorio
+    del usuario `dmr` quedan también otras fuentes del sistema y 
+    archivo necesarios para compilar programas escritos en lenguaje B
+    y un ejemplo del mismo (un simple programa que escribe Hola Mundo
+    en el teletipo.
+2. El archivo boot.rim con el código de máquina necesario para
+   iniciar el sistema operativo del disco duro.  Emulando que esta 
+   información estuviera en una cinta perforada --que era el
+   método de arranque del PDP-7.
 
 
-## Ejecutar unix0 compilado en el PDP-7 emulador
+## Ejecutar Unix0 compilado en el PDP-7 emulado
 
-Una vez preparado puede ejecutarse con:
-```
+Una vez compilado puede ejecutarse como se presenta a continuaciòn
+(las teclas Control-E detendrán momentaneamente la emulación y lo
+dejarán en la línea de ordenes de `simh`):
+
+      $ cd ~/comp/unix/pdp7-unix/build
+      $ PDP7=../../simh/BIN/pdp7 gmake run
+        ../../simh/BIN/pdp7 unixv0.simh
+
+        PDP-7 simulator V4.0-0 Current        git commit id: e3572e1a
+        CPU     idle disabled
+        8KW, EAE
+        .../pdp7-unix/build/unixv0.simh-13> att rb image.fs
+        RB: buffering file in memory
+        .../pdp7-unix/build/unixv0.simh-17> att -U g2in 12345
+        Listening on port 12345
+        PDP-7 simulator configuration
+
+        CPU     idle disabled
+        CLK     60Hz, devno=00
+        PTR     devno=01
+        PTP     devno=02
+        TTI     devno=03
+        TTO     devno=04
+        LPT     disabled
+        DRM     disabled
+        RB      devno=71
+        DT      disabled
+        G2OUT   devno=05
+        G2IN    devno=43-44
+        DPY     disabled
 
 
+        login: 
+        Simulation stopped, PC: 01057 (DAC 5525)
+        sim> q
+        Goodbye
+        RB: writing buffer to file
 
 
+Lo que esto hará es iniciar el emulador y establecer:
 
+* En la CPU: 8K de RAM, uso del elemento aritmético extendido (EAE),
+    que el emulador mantenga últimas 100 instrucciones ejecutadas
+
+* Activar dispositivos: disco de cabezas fijas RB09 con imagen inicial 
+  `image.fs`. Habilita teclado y pantalla TELNET en dispositivo GRAPHICS-2 
+* Deshabilita dispositivos desconocidos para Unix0: Impresora de líneas,
+  tambor magnético y DECtape.
+* Inicia computador empleando `boot.rim` como si estuviera en una
+  cinta perforada.
+* Así cuando se completa el arranque Unix presenta el mensaje `login:`
+  para dar la oportunidad de ingresar un usuario y su clave.
+
+
+Si ingresa como cualquiera de los usuarios (la clave es el mismo login)
+podrá ejecutar cualquiera de las herramientas del sistema operativo. 
+De varias herramientas (incluyendo el interprete de ordenes
+saldrá con Control-D).
+
+A continuación se describen brevemente las conocidas
+(el manual completo más cercano es de 1970 y describe el Unix para PDP-11, 
+ver [man-r])
+
+| __Orden__ | __Descripción__ |
+| as | Ensamblador |
+| b |  Compilador del lenguaje B     |
+| cat | Presenta contenido de un archivo      |
+| check | Chequea consistencia del sistema de archivos |
+| chmod | Cambio permisos de un directorio o archivo |
+| chown | Cambia dueño de un directorio o archivo |
+| chrm |  Elimina directorio |
+| cp |  Copia un archivo fuente en uno destino  |
+| date |  Fecha actual     |
+| db | Depurador      |
+| dskres | Sobreescribe sistema de archivos de lado 1 al lado 0 |
+| dsksav |  Sobreescribe sistema de archivos de lado 0 al lado 1 |
+| ed | Editor de lìneas      |
+| init |  Carga como proceso 1 para manejar procesos |
+| ln  |   Crea un enlace de un archivo a otro    |
+| ls |  Lista archivos y directorios      |
+| mv | Mueve un archivo o lo renombra |
+| od | Presenta contenido de un archivo en binario       |
+| rm | Elimina archivo(s)      |
+| roff | Prcoesa páginas del manual|
+| sh | Interprete de ordenes      |
+| stat | Presenta detalles de un archivo      |
+| tm | Presenta la hora |
+| ttt | Triqui |
+| st | Juego space travel (requiere terminal gráfica) |
+
+Si ingresa como usuario `dmr` verá entre los archivos `hello.b` que
+son fuentes de un programa en B que imprime en el teletipo `Hello World!`
+También encontrará instrucciones para compilar en el archivo
+`b_readme`  y en el vìdeo  <https://www.youtube.com/watch?v=pvaPaWyiuLA>
 
 
 ## Referencia bibliográficas
@@ -217,7 +319,7 @@ Una vez preparado puede ejecutarse con:
           <https://www.bell-labs.com/usr/dmr/www/hist.html>. 
           Recuperado en Nov.2020
  
-[unix0ADJ] Támara-Patiño, Vladimir. Support for pdp7-unix on OpenBSD and adJ. 
+[Unix0ADJ] Támara-Patiño, Vladimir. Support for pdp7-unix on OpenBSD and adJ. 
           <https://github.com/DoctorWkt/pdp7-unix/pull/229>
 
 [Behind2019] Ayse H. Restoring UNIX v0 on a PDP-7: A look behind the scenes.
@@ -227,3 +329,11 @@ Una vez preparado puede ejecutarse con:
           <https://www.soemtron.org/pdp7.html>
 
 [simh] <https://github.com/simh/simh>
+
+[simh-pdp18b]  Supnik, Robert M. PDP-4/7/9/15 Simulator Usage 28-Apr-2020.
+	<https://github.com/simh/simh/blob/master/doc/pdp18b_doc.doc>
+
+
+[man-r] Ritchie, D.M. The UNIX Time-Sharing System. Draft.  1970.
+  https://www.tuhs.org/Archive/Distributions/Research/McIlroy_v0/UnixEditionZero.txt  (era también para Unix-11 que operaba en PDP-11).
+
