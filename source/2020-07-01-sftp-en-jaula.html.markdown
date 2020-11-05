@@ -15,15 +15,13 @@ con un gid no usado (digamos 1002):
 Indique a sshd la configuración especial para estos usuarios agregando a
 `/etc/ssh/sshd_config` :
 
-```
-Match group jaulasftp
-  ForceCommand internal-sftp
-  ChrootDirectory /restovar/jaulasftp
-  PermitTunnel no
-  AllowAgentForwarding no
-  AllowTcpForwarding no
-  X11Forwarding no
-```
+        Match group jaulasftp
+          ForceCommand internal-sftp
+          ChrootDirectory /restovar/jaulasftp
+          PermitTunnel no
+          AllowAgentForwarding no
+          AllowTcpForwarding no
+          X11Forwarding no
 
 Note que no se le permite realizar túneles ni reenvíos y sólo puede
 usar el sistema `internal-sftp` confinado a `/restovar/jaulasftp`
@@ -52,12 +50,11 @@ permisos típico se lo permita.
 
 ### Referencias y lecturas recomendadas 
 
-Las siguientes páginas man: sshd 8, sftp 1.
+* Las siguientes páginas man: sshd 8, sftp 1.
 
-Separación de privilegios:
-<http://www.counterpane.com/alert-openssh.html>
+* Separación de privilegios: <http://www.counterpane.com/alert-openssh.html>
 
-Página web: <http://www.openssh.com>
+* Página web: <http://www.openssh.com>
 
-Ejemplo de jaula sftp: <https://www.golinuxcloud.com/sftp-chroot-restrict-user-specific-directory/>
+* Ejemplo de jaula sftp: <https://www.golinuxcloud.com/sftp-chroot-restrict-user-specific-directory/>
 

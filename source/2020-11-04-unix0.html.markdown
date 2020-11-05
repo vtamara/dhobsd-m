@@ -1,0 +1,221 @@
+---
+
+title: unix0
+date: 2020-11-04 01:59 UTC
+tags: sistema-operativo
+
+---
+
+# Emulación de Unix0
+
+## Historia de Unix0
+
+Un sistema operativo es un programa que implementa una serie de conceptos o 
+abstracciones para facilitarle a un usuario y a otros programas
+la operación de un computador.
+
+Según [DMR1979] la primera versión de Unix operó en 1969 en Laboratorio Bell en 
+New Jersey, Estados Unidos, debido al esfuerzo de Kenneth Thompson, 
+Denis Ritchie, M. D. McIlroy y  J. F. Ossanna de retomar e implementar lo 
+que más pudieron del fracasado proyecto Multics (un diseño y comienzo de 
+implementación de un sistema operativo demasiado futurista y costos para 
+mediados de 1960).
+
+Buscaron implementar un sistema operativo a bajo costo y en un computador 
+sencillo que tuvieron disponible (un minicomputador PDP-7 producido por la 
+empresa DEC).  Los conceptos principales eran un sistema de archivos, 
+operación multiusuario (para compartir simultaneamente entre varios
+usuarios cada uno desde un teletipo el costoso tiempo de usar un computador) 
+mediante procesos y un interprete de ordenes.
+
+Tanto en ese entonces como ahora los computadores sólo entienden lenguaje
+de máquina binario muy básico (a su representación como texto legible para
+humanos se le llama lenguaje ensamblador, aún cuando es complejo para
+los humanos por su detalle y por tanto extensión). El lenguaje de máquina, se 
+trata de una serie de instrucciones muy sencillas ordenadas y numeradas 
+de manera lineal (digamos de 1 a N), que se ejecutan una después de otra.  
+Estas instrucciones permiten por ejemplo mover datos de un área de la 
+memoria a otra, comparar dos posiciones de memoria,  
+saltar no a la siguiente instrucción sino a otra anterior o a otra 
+posterior. Es decir no tienen el concepto de usuario, archivo ni proceso. 
+Esos son conceptos que el sistema operativo ofrece, los implementa sobre
+las instrucciones tan básicas del lenguaje de máquina.
+
+El sistema de archivos que diseñaron e implementó Thompson permitía tener
+archivos y directorios, los cuales a su vez tenían archivos y directorios.
+Cada archivo o directorio estaba en unos bloques de disco especiales
+(se les llamó nodos-i) que tenían información de los permisos del archivo, 
+el tamaño y los bloques del disco donde estaba la información del archivo
+o directorio.  Para cada usuario había un directorio, y aunque
+era posible, no era fácil cambiar de directorio o enlazar archivos de un 
+directorio a otro.
+
+Contó con un sistema de procesos que inicialmente sólo
+permitía un proceso por terminal, pero que si permitía operación 
+simultanea a varios usuarios desde varias terminales (inicialmente dos
+terminales). Los programas que estaban en disco al empezar a ejecutarse se 
+llamaron procesos. El interprete de ordenes iniciaba tales procesos
+y podía operar con el sistema de archivos --inicialmente el sistema de archivos,
+el sistema de procesos y el interprete formaban una unidad llamada el 
+kernel del sistema operativo, aunque posteriormente (y ahora) el interprete
+de ordenes de implementó como un programa.
+
+Otra idea importante que empezó a implementarse en Unix0 fue manejar 
+algunos dispositivos (como el video y el teclado de la terminal) como si fuesen archivos, y manejar la entrada y la
+salida de los procesos también como si fuesen archivos.  Así fue 
+evolucionando la idea de redireccionar la entrada y la salida de los
+procesos y la idea de tuberías que permitían conectar la salida de un 
+proceso con la entrada de otro.
+
+Finalmente junto con Unix0 se desarrollo el lenguaje B del cual fue sucesor el
+lenguaje C en el cual están escritos practicamente todos los sistemas
+operativos en la actualidad.
+
+Como se ve tanto el diseño e implementación del sistema operativo Unix como 
+de los lenguajes B y C, se hizo para facilitar el uso del computador a
+usuarios, que en lugar de manejar muchisimos detalles involucrados en 
+lenguaje de máquina, emplea ordenes cortas y sencillas que manejan
+conceptos abstractos más fáciles de entender para nosotros.
+
+
+## Emular un PDP-7 en adJ
+
+Es posible usar el simulador `simh` (ver [simh]) que entre muchas otras máquinas 
+antiguas puede emular un PDP-7.
+
+A noviembre de 2020 para poder correr Unix0 se requiere la versión
+en desarrollo de este emulador, que está en la rama master del repositorio
+de github https://github.com/simh/simh
+
+Los pasos a seguir en un sistema adJ u OpenBSD son:
+
+```
+$ doas pkg_add gcc
+$ mkdir -p ~/comp/unix
+$ git clone git@github.com:simh/simh.git
+$ cd  simh
+$ GCC=egcc gmake pdp7
+```
+
+La salida esperada de estas ordenes puede verse en [unix0ADJ].
+
+Una vez compilado  puede ejecutarse con:
+
+```
+$ BIN/pdp7
+```
+
+Esto corresponde a encender un PDP-7 sin un programa a ejecutar, por lo que
+no hará más que dejarlo en la línea de ordenes de simh, donde
+por ejemplo puede examinar la configuración del computador con
+`show device` y salir con `q`:
+
+```
+sim> show device
+PDP-7 simulator configuration
+
+CPU     idle disabled
+CLK     60Hz, devno=00
+PTR     devno=01
+PTP     devno=02
+TTI     devno=03
+TTO     devno=04
+LPT     devno=65-66
+DRM     disabled
+RB      disabled
+DT      devno=75-76, 8 units
+G2OUT   devno=05
+G2IN    devno=43-44
+DPY     disabled
+sim> q
+Goodbye
+```
+
+La siguiente tabla (extraida analizando las fuentes de simh) explica
+los dispositivos mencionados:
+
+| Dispositivo | Del inglés | Descripción |
+| CPU | Central Processing Unit | Procesador de 18bit con 32K de memoria |
+| CLK | Clock | Reloj |
+| PTR | Paper Tape Reader  | Lector de rollos de cinta perforada. Ver fotos en <https://en.wikipedia.org/wiki/Punched_tape> |
+| PTP | Paper Tape Punch | Perforador de rollos de cinta perforada |
+| TTI | Teletype Input| Entrada de teletipo KSR 33. Es decir lo que se tecleara en el teclado. Un teletipo recibía ordenes para el computador por teclado  e imprimía los resultados emitidos por el computador en su impresora.  Ver fotos en https://en.wikipedia.org/wiki/Teletype_Model_33 |
+| TTO | Teletype Output | Salida en teltipo. Es decir lo que se imprimiera. |
+| LPT  | Line Printer | Impresora de líneas |
+| DRM  | Drum head disk | Tambor magnético (precursor de los discos duros) Ver foto en https://en.wikipedia.org/wiki/Drum_memory |
+| RB  | RB09 fixed head disk | Disco con una cabeza de lectura/escritura por cada pista. Diagrama en http://www.edwardbosworth.com/My5155_Slides/Chapter12/DiskBasics.htm  | 
+| DT | DECtape | Cinta magnética de almacenamiento de la compañia DEC. Podía tener hasta 8 unidades cada una con su cinta. Ver foto en https://en.wikipedia.org/wiki/DECtape |
+| G2IN | GRAPHICS-2 Input |Teclado y botones del subsistema "GRAPHICS-2" |
+| G2OUT | GRAPHICS-2 Output | Pantalla del subsistema "GRAPHICS-2" (hardware de gráficos vectoriales) Puede verse simulado para jugar Space Travel en http://sebras.se/space-travel-2.mp4 |
+| DPY | PDP-7 Type 340 Interface. Precision Incremental CRT Display. Pantalla con tubo de rayos catódicos de precisión incremental. Ver fotos en https://es.wikipedia.org/wiki/Tubo_de_rayos_cat%C3%B3dicos |
+
+
+## Compilación cruzada de Unix0 
+
+El video disponible en https://www.youtube.com/watch?v=pvaPaWyiuLA presenta
+el esfuerzo por parte del museo Living Computers para restaurar Unix0 en 
+un PDP-7 real.  Fue un gran trabajo concluido en 2019, justo para celebrar los
+50 años de Unix, e incluyó:
+
+1. Conseguir uno de los 5 computadores PDP-7 de los que actualmente se
+   sabe que existen (de los cerca de 120 producidos hacia 1964 muchos 
+   ya fueron desbaratados o destruidos y de los que se tiene noticia
+   quedan sólo 2 pueden operar, ver [InvPDP7]) 
+2. Completar hardware incompleto o perdido (disco) con hardware diseñado sobre 
+   FPGA.  
+3. Conseguir fuentes de Unix0 en assembler y de varios programas que
+   se desarrollaron junto con Unix0 para ese PDP-7.  
+4. Hacer un controlador para ese Unix0 para el disco diseñado sobre  FPGA.
+5. Desarrollar herramientas para convertir el código ensamblador en
+   código ejecutable y ponerlo a operar en el hardware montado.  
+
+El código fuente de todo esto estaba escrito en ensamblador para el PDP-7
+y hay también parte en el lenguaje B.  Todo fue ajustado y preparado y
+se ha dejado como código abierto en https://github.com/DoctorWkt/pdp7-unix
+
+Suponiendo que simh se haya dejado en la ubicación de la sección anterior
+es posible prepara pdp7-unix asi:
+
+```
+$ cd ~/comp/unix
+$ git clone git@github.com:DoctorWkt/pdp7-unix.git
+$ cd pdp7-unix
+$ gmake
+```
+
+La salida esperada de estas ordenes puede verse en [unix0ADJ] y
+el resultado será el archivo `build/image.fs` con una
+imagen de un disco duro RB09 que contiene en código de máquina
+el sistema operativo, herramientas para el mismo y directorios con 
+datos de prueba para los usuarios ken, dmr y doug.
+
+
+## Ejecutar unix0 compilado en el PDP-7 emulador
+
+Una vez preparado puede ejecutarse con:
+```
+
+
+
+
+
+
+
+## Referencia bibliográficas
+
+[DMR1979] Ritchie, Dennis.M. The Evolution of the Unix Time-sharing System.
+          AT&T Bell Laboratories Technical Journal 63 No. 6 Part 2, 
+          October 1984, pp. 1577-93.
+          https://www.bell-labs.com/usr/dmr/www/hist.html. 
+          Recuperado en Nov.2020
+ 
+[unix0ADJ] Támara-Patiño, Vladimir. Support for pdp7-unix on OpenBSD and adJ. 
+          https://github.com/DoctorWkt/pdp7-unix/pull/229
+
+[Behind2019] Ayse H. Restoring UNIX v0 on a PDP-7: A look behind the scenes.
+          https://livingcomputers.org/Blog/Restoring-UNIX-v0-on-a-PDP-7-A-look-behind-the-sce.aspx
+
+[InvPDP7] The Digital Equipment Corporation PDP–7. 
+          https://www.soemtron.org/pdp7.html
+
+[simh] https://github.com/simh/simh 
