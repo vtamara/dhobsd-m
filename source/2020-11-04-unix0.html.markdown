@@ -6,7 +6,7 @@ tags: sistema-operativo
 
 ---
 
-# Emulación de Unix0
+# Emulación de Unix0 en adJ
 
 ## Historia de Unix0
 
@@ -73,9 +73,16 @@ operativos en la actualidad.
 
 Como se ve tanto el diseño e implementación del sistema operativo Unix como 
 de los lenguajes B y C, se hizo para facilitar el uso del computador a
-usuarios, que en lugar de manejar muchisimos detalles involucrados en 
-lenguaje de máquina, emplea ordenes cortas y sencillas que manejan
+usuarios, que en lugar de manejar muchisimos detalles que deben proramarse en 
+lenguaje de máquina, emplean ordenes cortas y sencillas que manejan
 conceptos abstractos más fáciles de entender para nosotros.
+
+El vìdeo disponible en <https://www.youtube.com/watch?v=pvaPaWyiuLA> muestra
+en operación Unix0 en un PDP-7 real.   No es fácil tener una de esas máquinas para
+volver a ver la forma de trabajo en 1969 para desarrollar Unix0, pero es posible
+emular ese computador, compilar las fuentes en ensamblador de Unix0 y verlo operando
+en un computador actual (la pantalla obrará como el papel en el que escribía el teletipo
+y el teclado como el teclado del teletipo del video).
 
 
 ## Emular un PDP-7 en adJ
@@ -131,7 +138,7 @@ sim> q
 Goodbye
 ```
 
-La siguiente tabla (extraida analizando las fuentes de simh) explica
+La siguiente tabla (extraida analizando las fuentes de simh y su documentación) explica
 los dispositivos mencionados:
 
 | Dispositivo | Del inglés | Descripción |
@@ -139,20 +146,20 @@ los dispositivos mencionados:
 | CLK | Clock | Reloj |
 | PTR | Paper Tape Reader  | Lector de rollos de cinta perforada. Ver fotos en <https://en.wikipedia.org/wiki/Punched_tape> |
 | PTP | Paper Tape Punch | Perforador de rollos de cinta perforada |
-| TTI | Teletype Input| Entrada de teletipo KSR 33. Es decir lo que se tecleara en el teclado. Un teletipo recibía ordenes para el computador por teclado  e imprimía los resultados emitidos por el computador en su impresora.  Ver fotos en https://en.wikipedia.org/wiki/Teletype_Model_33 |
+| TTI | Teletype Input| Entrada de teletipo KSR 33. Es decir lo que se tecleara en el teclado. Un teletipo recibía ordenes para el computador por teclado  e imprimía los resultados emitidos por el computador en su impresora.  Ver fotos en <https://en.wikipedia.org/wiki/Teletype_Model_33> |
 | TTO | Teletype Output | Salida en teltipo. Es decir lo que se imprimiera. |
 | LPT  | Line Printer | Impresora de líneas |
-| DRM  | Drum head disk | Tambor magnético (precursor de los discos duros) Ver foto en https://en.wikipedia.org/wiki/Drum_memory |
-| RB  | RB09 fixed head disk | Disco con una cabeza de lectura/escritura por cada pista. Diagrama en http://www.edwardbosworth.com/My5155_Slides/Chapter12/DiskBasics.htm  | 
-| DT | DECtape | Cinta magnética de almacenamiento de la compañia DEC. Podía tener hasta 8 unidades cada una con su cinta. Ver foto en https://en.wikipedia.org/wiki/DECtape |
+| DRM  | Drum head disk | Tambor magnético (precursor de los discos duros) Ver foto en <https://en.wikipedia.org/wiki/Drum_memory> |
+| RB  | RB09 fixed head disk | Disco con una cabeza de lectura/escritura por cada pista. Diagrama en <http://www.edwardbosworth.com/My5155_Slides/Chapter12/DiskBasics.htm>  | 
+| DT | DECtape | Cinta magnética de almacenamiento de la compañia DEC. Podía tener hasta 8 unidades cada una con su cinta. Ver foto en <https://en.wikipedia.org/wiki/DECtape> |
 | G2IN | GRAPHICS-2 Input |Teclado y botones del subsistema "GRAPHICS-2" |
-| G2OUT | GRAPHICS-2 Output | Pantalla del subsistema "GRAPHICS-2" (hardware de gráficos vectoriales) Puede verse simulado para jugar Space Travel en http://sebras.se/space-travel-2.mp4 |
-| DPY | PDP-7 Type 340 Interface. Precision Incremental CRT Display. Pantalla con tubo de rayos catódicos de precisión incremental. Ver fotos en https://es.wikipedia.org/wiki/Tubo_de_rayos_cat%C3%B3dicos |
+| G2OUT | GRAPHICS-2 Output | Pantalla del subsistema "GRAPHICS-2" (hardware de gráficos vectoriales) Puede verse simulado para jugar Space Travel en <http://sebras.se/space-travel-2.mp4> |
+| DPY | PDP-7 Type 340 Interface. Precision Incremental CRT Display. Pantalla con tubo de rayos catódicos de precisión incremental. Ver fotos en <https://es.wikipedia.org/wiki/Tubo_de_rayos_cat%C3%B3dicos> |
 
 
 ## Compilación cruzada de Unix0 
 
-El video disponible en https://www.youtube.com/watch?v=pvaPaWyiuLA presenta
+El video disponible en <https://www.youtube.com/watch?v=pvaPaWyiuLA> presenta
 el esfuerzo por parte del museo Living Computers para restaurar Unix0 en 
 un PDP-7 real.  Fue un gran trabajo concluido en 2019, justo para celebrar los
 50 años de Unix, e incluyó:
@@ -160,8 +167,8 @@ un PDP-7 real.  Fue un gran trabajo concluido en 2019, justo para celebrar los
 1. Conseguir uno de los 5 computadores PDP-7 de los que actualmente se
    sabe que existen (de los cerca de 120 producidos hacia 1964 muchos 
    ya fueron desbaratados o destruidos y de los que se tiene noticia
-   quedan sólo 2 pueden operar, ver [InvPDP7]) 
-2. Completar hardware incompleto o perdido (disco) con hardware diseñado sobre 
+   sólo 2 pueden operar, ver [InvPDP7]) 
+2. Completar hardware perdido (disco duro) con hardware diseñado sobre 
    FPGA.  
 3. Conseguir fuentes de Unix0 en assembler y de varios programas que
    se desarrollaron junto con Unix0 para ese PDP-7.  
@@ -169,9 +176,10 @@ un PDP-7 real.  Fue un gran trabajo concluido en 2019, justo para celebrar los
 5. Desarrollar herramientas para convertir el código ensamblador en
    código ejecutable y ponerlo a operar en el hardware montado.  
 
-El código fuente de todo esto estaba escrito en ensamblador para el PDP-7
-y hay también parte en el lenguaje B.  Todo fue ajustado y preparado y
-se ha dejado como código abierto en https://github.com/DoctorWkt/pdp7-unix
+El código fuente de todo esto estaba escrito en ensamblador para el PDP-7,
+como parte del proyecto se afinó y se hicieron otras herramientas
+(incluyendo  una implementación de compilador de lenguaje B en lenguaje B).
+El resultado se ha publicado como código abierto en https://github.com/DoctorWkt/pdp7-unix
 
 Suponiendo que simh se haya dejado en la ubicación de la sección anterior
 es posible prepara pdp7-unix asi:
@@ -206,16 +214,16 @@ Una vez preparado puede ejecutarse con:
 [DMR1979] Ritchie, Dennis.M. The Evolution of the Unix Time-sharing System.
           AT&T Bell Laboratories Technical Journal 63 No. 6 Part 2, 
           October 1984, pp. 1577-93.
-          https://www.bell-labs.com/usr/dmr/www/hist.html. 
+          <https://www.bell-labs.com/usr/dmr/www/hist.html>. 
           Recuperado en Nov.2020
  
 [unix0ADJ] Támara-Patiño, Vladimir. Support for pdp7-unix on OpenBSD and adJ. 
-          https://github.com/DoctorWkt/pdp7-unix/pull/229
+          <https://github.com/DoctorWkt/pdp7-unix/pull/229>
 
 [Behind2019] Ayse H. Restoring UNIX v0 on a PDP-7: A look behind the scenes.
-          https://livingcomputers.org/Blog/Restoring-UNIX-v0-on-a-PDP-7-A-look-behind-the-sce.aspx
+          <https://livingcomputers.org/Blog/Restoring-UNIX-v0-on-a-PDP-7-A-look-behind-the-sce.aspx>
 
 [InvPDP7] The Digital Equipment Corporation PDP–7. 
-          https://www.soemtron.org/pdp7.html
+          <https://www.soemtron.org/pdp7.html>
 
-[simh] https://github.com/simh/simh 
+[simh] <https://github.com/simh/simh>
