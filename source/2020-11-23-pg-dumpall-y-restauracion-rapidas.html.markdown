@@ -38,13 +38,15 @@ de datos de 1.2G medida desde `psql` con `select pg_database_size('nombrebase');
 
 | Opciones para `pg_dump` | Tamaño del volcado | Tiempo de volcado | Velocidad |
 |--|--|--|--|
-| | 6.9G | 187s | 0.03 G/s |
-| `--column-inserts` |  |  | |
+| Ninguna | 6.9G | 187s | 0.03 G/s |
+| `--column-inserts` | 7.3G | 183s |  0.03G/s |
 | `--inserts` |  6.9G | 193s | 0.03 G/s |
-| `-j 8 -Fd -f /tmp/volcado-pg.dir` |   |  | |
+| `-j 8 -Fd -f /tmp/volcado-pg8.dir` |   |  | |
 
-Siguiendo
-https://stackoverflow.com/questions/2094963/postgresql-improving-pg-dump-pg-restore-performance
+
+# Referencias
+
+* https://stackoverflow.com/questions/2094963/postgresql-improving-pg-dump-pg-restore-performance
 
 
 
