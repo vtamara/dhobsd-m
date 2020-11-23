@@ -41,7 +41,9 @@ de datos de 1.2G medida desde `psql` con `select pg_database_size('nombrebase');
 | Ninguna | 6.9G | 187s | 0.03 G/s |
 | `--column-inserts` | 7.3G | 183s |  0.03G/s |
 | `--inserts` |  6.9G | 193s | 0.03 G/s |
+| `-Fc` | 1.5G | 293s | 0.005 G/s |
 | `-j 8 -Fd -f /tmp/volcado-pg8.dir` | 1.5G | 323s | 0.004 G/s |
+| `-j 32 -Fd -f /tmp/volcado-pg32.dir` | 1.5G | 323s | 0.004 G/s |
 
 
 # Referencias
