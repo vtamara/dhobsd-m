@@ -27,36 +27,26 @@ datos de 22G medidos desde el sistema operativo
 con `du -sh /var/postgresql/data`.
 
 | Opciones para `pg_dumpall` | Tamaño del volcado | Tiempo de volcado | 
-| | 12.7G | 317s | 
+|--|--|--|
+| Ninguna | 12.7G | 317s | 
 | `--inserts --columns-inserts` | 14.4G | 365s |
-| `--inserts` |  14.4G | 360s |
-| `--column-inserts` |  14.4G | 360s |
+| `--inserts` |  13.2G | 371s |
+| `--column-inserts` |  14.4G | 364s |
 
 Para el caso de `pg_dump` hicimos la medición sacando copia de una base
 de datos de 1.2G medida desde `psql` con `select pg_database_size('nombrebase');`
 
 | Opciones para `pg_dump` | Tamaño del volcado | Tiempo de volcado | 
+|--|--|--|
 | | 12.7G | 317s | 
 | `--inserts --columns-inserts` | 14.4G | 360s |
 | `--inserts` |  14.4G | 360s |
 | `--column-inserts` |  14.4G | 360s |
-
-
-
-
-
 | -j 8 -Fd -f /tmp/volcado-pg.dir | 
 
 Siguiendo
 https://stackoverflow.com/questions/2094963/postgresql-improving-pg-dump-pg-restore-performance
 
-
-, en mediciones que hicimos 
-vemos un promedio 
-4.1G / 90s = 0.04G/s
-4.5G / 77s = 0.05G/s
-1.7G / 36s = 0.04G/s
-kkk
 
 
 
