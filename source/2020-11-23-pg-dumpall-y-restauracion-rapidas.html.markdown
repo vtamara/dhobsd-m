@@ -26,23 +26,22 @@ Para el caso de `pg_dumpall` hicimos medición con un grupo de bases de
 datos de 22G medidos desde el sistema operativo 
 con `du -sh /var/postgresql/data`.
 
-| Opciones para `pg_dumpall` | Tamaño del volcado | Tiempo de volcado | 
-|--|--|--|
-| Ninguna | 12.7G | 317s | 
-| `--inserts --columns-inserts` | 14.4G | 365s |
-| `--inserts` |  13.2G | 371s |
-| `--column-inserts` |  14.4G | 364s |
+| Opciones para `pg_dumpall` | Tamaño del volcado | Tiempo de volcado | Velocidad |
+|--|--|--|--|
+| Ninguna | 12.7G | 317s | .040 G/s |
+| `--inserts --columns-inserts` | 14.4G | 365s | .039 G/s |
+| `--inserts` |  13.2G | 371s |  .035 G/s |
+| `--column-inserts` |  14.4G | 364s | .039 G/s |
 
-Para el caso de `pg_dump` hicimos la medición sacando copia de una base
+Para el caso de `pg_dump` hicimos inicialmente la medición sacando copia de una sola base
 de datos de 1.2G medida desde `psql` con `select pg_database_size('nombrebase');`
 
-| Opciones para `pg_dump` | Tamaño del volcado | Tiempo de volcado | 
-|--|--|--|
-| | 12.7G | 317s | 
-| `--inserts --columns-inserts` | 14.4G | 360s |
-| `--inserts` |  14.4G | 360s |
-| `--column-inserts` |  14.4G | 360s |
-| -j 8 -Fd -f /tmp/volcado-pg.dir | 
+| Opciones para `pg_dump` | Tamaño del volcado | Tiempo de volcado | Velocidad |
+|--|--|--|--|
+| | 6.9G | 187s | 0.03 G/s |
+| `--column-inserts` |  |  | |
+| `--inserts` |  6.9G | 193s | 0.03 G/s |
+| `-j 8 -Fd -f /tmp/volcado-pg.dir` |   |  | |
 
 Siguiendo
 https://stackoverflow.com/questions/2094963/postgresql-improving-pg-dump-pg-restore-performance
