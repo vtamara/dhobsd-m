@@ -150,6 +150,22 @@ Ingrese al sitio con un navegador y complete la instalación, pedirá tiítulo p
 
 Después es recomdable que instale wp-cli para realizar operacoines administrativas desde la línea de ordenes.
 
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+
+php wp-cli.phar --info
+chmod +x wp-cli.phar
+mv wp-cli.phar wp
+
+./wp cache flush
+
+Si cambia la URL de un sitio, es importante que cambie las opciones siteurl y home
+
+wp option set home https://nuevo.misitio.org
+
+wp option set siteurl https://nuevo.misitio.org
+
+ 
+
 Por ejemplo si un plugin se llama fg-spip-to-wp, lo instala con:
 
         ./wp-cli.phar plugin install fg-spip-to-wp
