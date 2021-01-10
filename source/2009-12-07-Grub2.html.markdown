@@ -128,7 +128,7 @@ sudo gedit /etc/default/grub
 
 y cambie las siguientes líneas:
 <pre>
-GRUB_DEFAULT=0
+GRUB_DEFAULT=4   # Cambie 4 por el númer de la entrada de OpenBSD en el menu
 #!GRUB_HIDDEN_TIMEOUT=0
 !GRUB_HIDDEN_TIMEOUT_QUIET=true
 </pre>
