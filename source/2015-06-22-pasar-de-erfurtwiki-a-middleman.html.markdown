@@ -21,7 +21,7 @@ Middleman hicimos esto:
 
 * Sacamos un volcado de articulos de la base PostgreSQL en formato CSV:
 <pre>
-COPY (SELECT DISTCINT pagename, 
+COPY (SELECT DISTINCT pagename, 
     (TIMESTAMP 'epoch' + created * INTERVAL '1 SECOND')::DATE, 
     version, content 
   FROM ewiki 

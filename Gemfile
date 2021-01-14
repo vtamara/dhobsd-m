@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 gem "middleman" #, "~>3.3.12"
 gem "middleman-blog"
 
-gem 'nokogiri'
+gem 'nokogiri', '>= 1.11.1'
 gem 'builder'
 # Live-reloading plugin
 gem "middleman-livereload" #, "~> 3.1.0"

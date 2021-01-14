@@ -17,3 +17,20 @@
 # Ignore .DS_store file
 .DS_Store
 *~
+source/apple*
+borrador/
+build-o/
+config-*
+source/crossdomain.xml
+source/favicon.ico
+source/feed.xml.builder
+source/humans.txt
+source/images/
+source/img/.gitignore
+source/js/vendor/
+source/proxy-tgm.markdown
+source/robots.txt
+source/stylesheets/
+t/
+tmp/
+uso/

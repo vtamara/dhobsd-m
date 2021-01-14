@@ -6,7 +6,7 @@ tags:
 
 Desde 9.10 Ubuntu viene con Grub 2 que tiene nuevas formas de configuración. A continuación se presenta como configurarlo para iniciar OpenBSD o adJ.
 
-## Identificar partición de OpenBSD/adJ y partición EFI 
+## 1. Identificar partición de OpenBSD/adJ y partición EFI 
 
 Desde Ubuntu para ver que partición es la de OpenBSD/adJ:
 <pre>
@@ -29,7 +29,7 @@ que tome nota de la partición EFI con sistema FAT, puede ser algo como:
 
 Presione q para salir. 
 
-## Configuración
+## 2. Configuración
 
 Edite el archivo ```/etc/grub.d/40_custom``` por ejemplo con
 <pre>
@@ -40,9 +40,13 @@ y agregue algunas lineas al final empezando en una nueva línea.
 
 Las lineas por agregar dependen de la arquitectura del procesador, de la versión de Grub2 y de si su instalación fue UEFI o uso modo BIOS legado.
 
-### Para Grub2-2.04 incluido en Ubuntu 20.04 en modo UEFI
+### 2.1. Para Grub2-2.04 incluido en Ubuntu 20.04 en modo UEFI
 
-Puede verificar que la instalación de OpenBSD/adJ dejó los archivos de arranque UEFI en la partición EFI.  Para eso puede bien reiniciar el computador y desde Grub pasar a la línea de ordenes (con F2) e intentar autocompletar la siguiente orden que debe adaptar según la partición EFI que determinó (también puede autocompletar con TAB).
+Puede verificar que la instalación de OpenBSD/adJ dejó los archivos de 
+arranque UEFI en la partición EFI.  Para eso puede bien reiniciar el 
+computador y desde Grub pasar a la línea de ordenes (con F2) e intentar 
+autocompletar la siguiente orden que debe adaptar según la partición 
+EFI que determinó (también puede autocompletar con TAB).
 
 <pre>
 set root=(hd0, gpt1)
@@ -53,7 +57,8 @@ Despues puede autocompletar con TAB
 chainloader /
 </pre>
 
-Para confirmar que existe la ruta `/efi/Boot/bootx64.efi` y de ser así las líneas por agregar a `/etc/grub.d/40_custom` son:
+Para confirmar que existe la ruta `/efi/Boot/bootx64.efi` y de ser así las 
+líneas por agregar a `/etc/grub.d/40_custom` son:
 
 <pre>
 menuentry "adJ" {
@@ -63,7 +68,7 @@ menuentry "adJ" {
 </pre>
 
 
-### Para Grub2-1.99 incluido en Ubuntu 12.04 en modo de arranque BIOS legado
+### 2.2. Para Grub2-1.99 incluido en Ubuntu 12.04 en modo de arranque BIOS legado
 
 <pre>
 menuentry "adJ" {
@@ -82,7 +87,7 @@ El comando ```kopenbsd``` puede tener algunos parametros que pueden verse con ``
 - ```-r wd0a``` o por ejemplo  ```-r sd0a``` Para establecer subpartición root
 - ```-h com![,velocidad]``` para usar consola serial 
 
-### Para Ubuntu 11.04  en modo de arranque BIOS legado
+### 2.3. Para Ubuntu 11.04  en modo de arranque BIOS legado
 <pre>
 menuentry "adJ" {
   set root=(hd0,msdos3)
@@ -100,7 +105,7 @@ menuentry "adJ" {
 }
 </pre>
 
-### Grub2 de UbuntuCE 10.04 y 9.10 y arquitectura amd64:
+### 2.4. Grub2 de UbuntuCE 10.04 y 9.10 y arquitectura amd64:
 
 <pre>
 menuentry "adJ" {
@@ -109,7 +114,7 @@ menuentry "adJ" {
 }
 </pre>
 
-### Grub2 de UbuntuCE 10.04 y 9.10 y arquitectura i386  en modo de arranque BIOS legado
+### 2.5. Grub2 de UbuntuCE 10.04 y 9.10 y arquitectura i386  en modo de arranque BIOS legado
 
 <pre>
 menuentry "adJ" {
@@ -118,7 +123,7 @@ menuentry "adJ" {
 }
 </pre>
 
-## Pasos finales de configuración
+## 3. Pasos finales de configuración
 
 Salve el archivo con el ícono guardar y salga cerrando la ventana. Para que pueda ver el menú de Grub durante el arranque desde una terminal ejecute:
 
@@ -142,11 +147,11 @@ sudo update-grub2
 Tras lo cual puede reiniciar y probar.
 
 
-## Referencias
+## 4. Referencias
 * Ejemplo de configuración en Ubuntu 9.10 ```/usr/share/doc/grub-pc/examples/grub.cfg```
 * http://www.crice.org/?q=node/364
 * http://ubuntuforums.org/showthread.php?t=1195275
 
-## Agradecimientos
+## 5. Agradecimientos
 
 A Dios y a Carlos, Angélica y Antonia.
