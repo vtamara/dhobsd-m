@@ -46,7 +46,7 @@ en ```/etc/vm.conf``` u otras que se especifiquen en la línea de ordenes.
 Por ejemplo cree un disco virtual de 16G con:
 <pre>
 doas mkdir /vmm/
-doas vmctl create /vmm/mv1.img -s 16G
+doas vmctl create -s 16G /vmm/mv1.qcow2
 </pre>
 
 Edite el archivo `/etc/vm.conf` para que su contenido sea como el siguiente, pero cambie `em0` por la interfaz de red del servidor anfitrion conectada a la red local: 
@@ -70,10 +70,10 @@ vm "mv1" {
 
 E inicie la máquina virtual con:
 <pre>
-vmctl start mv1 -c
+vmctl start -c mv1
 </pre>
 
-Notará que arranca mediante el kernel `/bsd.rd` de la raíz de su disco.  Usted verá todo el proceso de arranque y podrá interactuar con el programa de instalacin en la terminal donde ejecute el comando usando la opción -c que establece una conexin (mediante el programa `cu`) con la consola de la máquina virtual.
+Notará que arranca mediante el kernel `/bsd.rd` de la raíz de su disco.  Usted verá todo el proceso de arranque y podrá interactuar con el programa de instalacin en la terminal donde ejecute el comando usando la opción -c que establece una conexión (mediante el programa `cu`) con la consola de la máquina virtual.
 
 Podrá instalar usando el método http siempre y cuando configure la interfaz de red virtual en la misma red local del anfitrión.  Esto se debe a que la máquina virtual estará usando tap0 y que el `switch` que se declaró en `/etc/vm.conf` conecta `em0` con `tap0` (si se inicia otra máquina virtual esta usara tap1 y estará conectada al mismo switch virtual, pero otras que se inicien con tap2 y otros no.
 
