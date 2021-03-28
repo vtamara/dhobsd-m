@@ -93,4 +93,4 @@ note que se exluyen las bases postgres, template0, template1.  El script `/usr/l
   
 13. Iniciar servicio y comprobar operación
 
-14. Una vez se complete con éxito se puede eliminar el cluster anterior
+14. Una vez se complete con éxito se puede eliminar el cluster anterior `./delete_old_cluster.sh`
