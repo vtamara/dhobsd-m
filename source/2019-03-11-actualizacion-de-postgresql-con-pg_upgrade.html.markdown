@@ -94,3 +94,5 @@ note que se exluyen las bases postgres, template0, template1.  El script `/usr/l
 13. Iniciar servicio y comprobar operación
 
 14. Una vez se complete con éxito se puede eliminar el cluster anterior `./delete_old_cluster.sh`
+
+15. Si detuvo la actualizaciónd de `inst-adJ.sh` vuelva a ejecutar y a la pregunta "Desea eliminar la actual versiónd de PostgreSQL y los datos asociados para actualizarla" responda No.
