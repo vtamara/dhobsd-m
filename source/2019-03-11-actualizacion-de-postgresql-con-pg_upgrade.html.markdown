@@ -74,7 +74,7 @@ note que se exluyen las bases postgres, template0, template1.  El script `/usr/l
   ```
   Seguramente faltó instalar `postgresql-contrib` que incluye `accent` y otros módulos.  Instalar y repetir
   
-9. Iniciar nueva base con configuración por omisión de manera temporal
+9. Iniciar nueva base con configuración por omisión de manera temporal con  `doas rcctl start postgresql`
 
 10. Actualizar estadísticas con 
   ```
