@@ -8,7 +8,7 @@ tags:
 
 # Actualización de PostgreSQL con `pg_upgrade` en adJ
 
-Documento actualizado: 2020-04-27
+Documento actualizado: 2021-03-28
 
 Es un método más rápido que el clásico (sacar volcados SQL, actualizar paquete y restaurar volcados).
 
