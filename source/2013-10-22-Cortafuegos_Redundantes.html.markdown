@@ -18,13 +18,14 @@ SMTP intentar que sea backup el cortafuegos 2.
 Seguimos el procedimiento de {5} que nos ha permitido preservar usuarios y permisos.
 
 En el cortafuegos 2:
+
 * Cree el directorio donde recibirá los archivos ```mkdir /var/respaldoc1/```
-* Agregue un usuario rsyncer
-* Dele permiso de utilizar sudo para poner los archivos que rsync envíe, ejecutando ```visudo``` y agregando la línea ```rsyncer ALL=SETENV:NOPASSWD:/usr/local/bin/rrsync /var/respaldoc1```
+* Agregue un usuario `rsyncer`
+* Dele permiso de utilizar `doas` para poner los archivos que `rsync` envíe, ejecutando ```doas vi /etc/doas.conf``` y agregue la línea ```permit nopass rsyncer as root cmd /usr/local/bin/rsync```
 
 En el cortafuegos 1 como usuario root:
 * Genere llaves (sin clave para automatizar) con ```ssh-keygen```
-* Agregue la llave pública a ~/.ssh/authorizaed_keys del usuario rsyncer en el cortafuegos2: scp /root/.ssh/id_rsa2.pub rsyncer@c2:.ssh/authorized_keys
+* Agregue la llave pública a `~/.ssh/authorized_keys` del usuario `rsyncer en el cortafuegos2: scp /root/.ssh/id_rsa2.pub rsyncer@c2:.ssh/authorized_keys
 
 En el cortafuegos 2 como usuario rsyncer:
 * Edite ```authorized_keys``` y al comienzo de la línea agregue ```from="192.168.2.1",command="sudo -E /usr/local/bin/rrsync /var/respaldoc1"```
