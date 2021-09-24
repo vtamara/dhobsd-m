@@ -12,7 +12,7 @@ Con la primera forma es más sencillo implementar los formularios anidados, pero
 
 A continuación explicamos ambos casos. 
 
-#1. Contexto y modelos
+# 1. Contexto y modelos
 
 En el contexto de SIVeL (ver {2}), un caso (modelo ```Caso```) puede tener diversos presuntos responsables (modelo ```Presponsable```), y un mismo presunto responsable puede aparecer en diversos casos.
 
@@ -41,8 +41,9 @@ Como nota, los nombres de las tablas legadas de esa aplicación están en singul
 
 Los 3 modelos incluyendo la declaración requeridas para formularios anidados (ver {9}) son:
 
-* ```app/models/caso.rb```
-<pre>
+* `app/models/caso.rb` es
+
+```rb
   class Caso < ActiveRecord::Base
       has_many :presponsable,
         :through => :caso_presponsable
@@ -54,25 +55,27 @@ Los 3 modelos incluyendo la declaración requeridas para formularios anidados (v
         allow_destroy: true,
         reject_if: :all_blank
   end
-</pre>
+```
 
-* ```app/models/presponable.rb```
-<pre>
+* `app/models/presponable.rb` es
+```rb
   class Presponsable < ActiveRecord::Base
     has_many :caso, through: :caso_presponsable
     has_many :caso_presponsable, foreign_key: "id_presponsable", validate: true
   end
-</pre>
-* ```app/models/caso_presponsable.rb```
-<pre>
+```
+
+* `app/models/caso_presponsable.rb` es
+```rb
   class CasoPresponsable < ActiveRecord::Base
     belongs_to :caso, foreign_key: "id_caso", validate: true
     belongs_to :presponsable, foreign_key: "id_presponsable", validate: true
   end
-</pre>
+```
 
-Para anidar los formularios en el controlador de caso (```app/controllers/casos_controllers.rb```) además de permitir recibir datos del formulario padre (```Caso```), deben permitirse datos del formulario hijo o anidado (```Caso_Presponsable```) así como el parámetro especial ```:_destroy``` que permite eliminar registros de ```Caso_Presponsable```:
-<pre>
+Para anidar los formularios en el controlador de caso (`app/controllers/casos_controllers.rb`) además de permitir recibir datos del formulario padre (`caso`), deben permitirse datos del formulario hijo o anidado (`caso_presponsable`) así como el parámetro especial `:_destroy` que permite eliminar registros de `caso_presponsable`:
+
+```rb
     def caso_params
       params.require(:caso).permit(:fecha, :titulo,
         :caso_presponsable_attributes => [
@@ -80,9 +83,9 @@ Para anidar los formularios en el controlador de caso (```app/controllers/casos_
         ]
       )
     end
-</pre>
+```
 
-En la vista parcial ```app/views/casos/_form.html.erb``` utilizada para crear y actualizar casos, además de los campos de la tabla ```Caso``` es necesario incluir el formulario anidado como parcial y un botón para permitir añadir Presuntos Responsables:
+En la vista parcial ```app/views/casos/_form.html.erb``` utilizada para crear y actualizar casos, además de los campos de la tabla ```caso``` es necesario incluir el formulario anidado como parcial y un botón para permitir añadir Presuntos Responsables:
 
 ```erb
   <ul>
@@ -120,9 +123,9 @@ Para que se agreguen y eliminen campos dinamicamente Cocoon provee la lógica pa
 //= require cocoon
 ``` 
 
-#2. Implementaciones posibles para la tabla combinada
+# 2. Implementaciones posibles para la tabla combinada
 
-##2.1 Con llave primaria `id`
+## 2.1 Con llave primaria `id`
 
 Puede ver las fuentes de un ejemplo que implementamos en:
 <https://github.com/vtamara/cocoon-caso-presponsable>
@@ -142,7 +145,7 @@ add_index "caso_presponsable", ["id_caso", "id_presponsable"],
   unique: true
 ```
 
-##2.2 Sin llave primaria
+## 2.2 Sin llave primaria
 
 Puede ver fuentes en la rama ```sin-indice``` del mismo repositorio:
 <https://github.com/vtamara/cocoon-caso-presponsable/tree/sin-indice>
@@ -158,15 +161,15 @@ Comparando ambas posibilidades (ver comparación de los repositorios en
 * En la vista parcial `app/views/casos/_caso_presponsable_fields.html.erb` tampoco se requiere el campo `id`
 
 
-#3. Conclusión
+# 3. Conclusión
 
 Para hacer formulario anidados es más directo con Rails 4.1 y Cocoon 1.2.6 emplear tablas combinadas que tengan una llave  primaria `id`.  
 
 Sin embargo en aplicaciones que se estén migrando, así como en las tablas combinadas generadas por Rails, no habrá llave primaria `id` en tablas combinadas.  Aún así y al menos para casos como el aquí ejemplificado es posible emplear formularios anidados y Cocoon, siempre y cuando se eliminen en el controlador del formulario papá los campos relacionados en la tabla combinada antes de actualizar o eliminar un registro de la tabla papá.  Es un método un poco más riesgoso, pues en caso de fallas al actualizar se perderán los registros que se eliminan.
 
-#4. Referencias
+# 4. Referencias
 
-* {1} [Ruby on Rails en OpenBSD]
+* {1} http://pasosdejesus.github.io/usuario_adJ/conf-programas.html#ruby
 * {2} http://sivel.sf.net
 * {3} http://guides.rubyonrails.org/migrations.html
 * {4} http://www.interglot.com/dictionary/en/es/translate/outer%20join
