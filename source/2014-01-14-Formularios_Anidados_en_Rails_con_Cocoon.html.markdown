@@ -98,7 +98,7 @@ En la vista parcial ```app/views/casos/_form.html.erb``` utilizada para crear y 
 
 El formulario parcial `app/views/casos/_caso_presponsable_fields.html.erb` incluirá los campos de `caso_presponsable` dentro de una sección div con clase `nested-fields` y un botón para eliminar un registro de esta tabla:
 
-```html
+```erb
 <li>
   <div class='control-group nested-fields'>
     <div class="controls">
@@ -115,14 +115,14 @@ El formulario parcial `app/views/casos/_caso_presponsable_fields.html.erb` inclu
 ```
 
 Para que se agreguen y eliminen campos dinamicamente Cocoon provee la lógica para Rails y Javascript que se activa agregando en `app/assets/javascripts/casos.js.coffee`:
-<pre>
+
+```coffee 
 //= require cocoon
-</pre>
+``` 
 
 #2. Implementaciones posibles para la tabla combinada
 
-
-##2.1 Con llave primaria ```id```
+##2.1 Con llave primaria `id`
 
 Puede ver las fuentes de un ejemplo que implementamos en:
 <https://github.com/vtamara/cocoon-caso-presponsable>
@@ -130,17 +130,17 @@ Lo hemos probado en adJ versión 6.1 (ver {10}) que incluye Ruby 2.4.1 (ver {1})
 
 Para este caso nos ha resultado necesario incluir el campo `id` escondido en el formulario parcial `app/views/casos/_caso_presponsable_fields.html.erb`
 
-<pre>
+```erb
 <%= f.input :id, as: :hidden %>
-</pre>
+```
 
 Se ha preferido asegurar que no pueda relacionarse más de una vez el mismo presunto responsable a un caso con un índice en `db/schema.rb`:
 
-<pre>
+```rb
 add_index "caso_presponsable", ["id_caso", "id_presponsable"], 
   name: "index_caso_presponsable_on_caso_id_and_presponsable_id", 
   unique: true
-</pre>
+```
 
 ##2.2 Sin llave primaria
 
