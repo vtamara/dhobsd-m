@@ -83,7 +83,8 @@ Para anidar los formularios en el controlador de caso (```app/controllers/casos_
 </pre>
 
 En la vista parcial ```app/views/casos/_form.html.erb``` utilizada para crear y actualizar casos, además de los campos de la tabla ```Caso``` es necesario incluir el formulario anidado como parcial y un botón para permitir añadir Presuntos Responsables:
-<pre>
+
+```erb
   <ul>
   <%= f.simple_fields_for :caso_presponsable do |caso_presponsable| %>
       <%= render 'caso_presponsable_fields', :f => caso_presponsable %>
@@ -93,9 +94,10 @@ En la vista parcial ```app/views/casos/_form.html.erb``` utilizada para crear y 
     <%= link_to_add_association 'Añadir Presunto Responsable', f,
       :caso_presponsable, :class => 'btn-primary' %>
   </div>
-</pre>
+```
 
-El formulario parcial ```app/views/casos/_caso_presponsable_fields.html.erb``` incluirá los campos de ```caso_presponsable``` dentro de una sección div con clase ```nested-fields``` y un botón para eliminar un registro de esta tabla:
+El formulario parcial `app/views/casos/_caso_presponsable_fields.html.erb` incluirá los campos de `caso_presponsable` dentro de una sección div con clase `nested-fields` y un botón para eliminar un registro de esta tabla:
+
 ```html
 <li>
   <div class='control-group nested-fields'>
@@ -112,7 +114,7 @@ El formulario parcial ```app/views/casos/_caso_presponsable_fields.html.erb``` i
 </li>
 ```
 
-Para que se agreguen y eliminen campos dinamicamente Cocoon provee la lógica para Rails y Javascript que se activa agregando en ```app/assets/javascripts/casos.js.coffee```:
+Para que se agreguen y eliminen campos dinamicamente Cocoon provee la lógica para Rails y Javascript que se activa agregando en `app/assets/javascripts/casos.js.coffee`:
 <pre>
 //= require cocoon
 </pre>
@@ -123,16 +125,16 @@ Para que se agreguen y eliminen campos dinamicamente Cocoon provee la lógica pa
 ##2.1 Con llave primaria ```id```
 
 Puede ver las fuentes de un ejemplo que implementamos en:
-https://github.com/vtamara/cocoon-caso-presponsable
-Lo hemos probado en adJ versión 6.1 (ver {10}) que incluye Ruby 2.4.1 (ver {1}).  También puede verlo operando sobre heroku en: http://cocoon-caso-presponsable.herokuapp.com/
+<https://github.com/vtamara/cocoon-caso-presponsable>
+Lo hemos probado en adJ versión 6.1 (ver {10}) que incluye Ruby 2.4.1 (ver {1}).  También puede verlo operando sobre heroku en: <http://cocoon-caso-presponsable.herokuapp.com/>
 
-Para este caso nos ha resultado necesario incluir el campo ```id``` escondido en el formulario parcial ```app/views/casos/_caso_presponsable_fields.html.erb```
+Para este caso nos ha resultado necesario incluir el campo `id` escondido en el formulario parcial `app/views/casos/_caso_presponsable_fields.html.erb`
 
 <pre>
 <%= f.input :id, as: :hidden %>
 </pre>
 
-Se ha preferido asegurar que no pueda relacionarse más de una vez el mismo presunto responsable a un caso con un índice en ```db/schema.rb```:
+Se ha preferido asegurar que no pueda relacionarse más de una vez el mismo presunto responsable a un caso con un índice en `db/schema.rb`:
 
 <pre>
 add_index "caso_presponsable", ["id_caso", "id_presponsable"], 
@@ -143,24 +145,24 @@ add_index "caso_presponsable", ["id_caso", "id_presponsable"],
 ##2.2 Sin llave primaria
 
 Puede ver fuentes en la rama ```sin-indice``` del mismo repositorio:
-https://github.com/vtamara/cocoon-caso-presponsable/tree/sin-indice
-o ya desplegada en heroku en: http://cocoon-caso-presponsable-sin-i.herokuapp.com/
+<https://github.com/vtamara/cocoon-caso-presponsable/tree/sin-indice>
+o ya desplegada en heroku en: <http://cocoon-caso-presponsable-sin-i.herokuapp.com/>
 
 Comparando ambas posibilidades (ver comparación de los repositorios en 
-https://github.com/vtamara/cocoon-caso-presponsable/compare/sin-indice )
+<https://github.com/vtamara/cocoon-caso-presponsable/compare/sin-indice> )
  notará las siguientes diferencias:
 
-* En db/schema.rb (o cuando fuere el caso en la migración) debe agregar el parámetro ```id: false``` cuando se crea la tabla ```caso_presponsable``` y por lo mismo no debe crearse índice.  Esto ocurre  por defecto cuando genera la migración como se explica en la documentación oficial (ver {3}), e.g: ```rails g migration !CreateJoinTableCasoPresponsable``` 
-* Entre los parametros por definir en el controlador ya no se requiere ```id``` en ```caso_parametro_attributes``` en el método ```caso_params``` de ```app/controllers/casos_controllers.rb```.
-* Al actualizar o eliminar un caso es necesario eliminar todas las entradas de la tabla ```caso_presponsable``` relacionadas (con ```@caso.caso_presponsable.clear```) en los métodos ```update``` y ```destroy``` de ```app/controllers/casos_controllers.rb```.
-* En la vista parcial ```app/views/casos/_caso_presponsable_fields.html.erb``` tampoco se requiere el campo ```id```
+* En <db/schema.rb> (o cuando fuere el caso en la migración) debe agregar el parámetro `id: false` cuando se crea la tabla `caso_presponsable` y por lo mismo no debe crearse índice.  Esto ocurre  por defecto cuando genera la migración como se explica en la documentación oficial (ver {3}), e.g: `rails g migration !CreateJoinTableCasoPresponsable` 
+* Entre los parametros por definir en el controlador ya no se requiere `id` en `caso_parametro_attributes` en el método `caso_params` de `app/controllers/casos_controllers.rb`.
+* Al actualizar o eliminar un caso es necesario eliminar todas las entradas de la tabla `caso_presponsable` relacionadas (con `@caso.caso_presponsable.clear`) en los métodos `update` y `destroy` de `app/controllers/casos_controllers.rb`.
+* En la vista parcial `app/views/casos/_caso_presponsable_fields.html.erb` tampoco se requiere el campo `id`
 
 
 #3. Conclusión
 
-Para hacer formulario anidados es más directo con Rails 4.1 y Cocoon 1.2.6 emplear tablas combinadas que tengan una llave  primaria ```id```.  
+Para hacer formulario anidados es más directo con Rails 4.1 y Cocoon 1.2.6 emplear tablas combinadas que tengan una llave  primaria `id`.  
 
-Sin embargo en aplicaciones que se estén migrando, así como en las tablas combinadas generadas por Rails, no habrá llave primaria ```id``` en tablas combinadas.  Aún así y al menos para casos como el aquí ejemplificado es posible emplear formularios anidados y Cocoon, siempre y cuando se eliminen en el controlador del formulario papá los campos relacionados en la tabla combinada antes de actualizar o eliminar un registro de la tabla papá.  Es un método un poco más riesgoso, pues en caso de fallas al actualizar se perderán los registros que se eliminan.
+Sin embargo en aplicaciones que se estén migrando, así como en las tablas combinadas generadas por Rails, no habrá llave primaria `id` en tablas combinadas.  Aún así y al menos para casos como el aquí ejemplificado es posible emplear formularios anidados y Cocoon, siempre y cuando se eliminen en el controlador del formulario papá los campos relacionados en la tabla combinada antes de actualizar o eliminar un registro de la tabla papá.  Es un método un poco más riesgoso, pues en caso de fallas al actualizar se perderán los registros que se eliminan.
 
 #4. Referencias
 
