@@ -6,7 +6,7 @@ tags:
 Al manejar formularios anidados sobre Ruby on Rails 5 (ver {6}), Simple Form (ver {8}) y Cocoon (ver {7}), por ejemplo con una relación muchos a muchos, hemos identificado dos formas de manejar la tabla combinada (traducción de {4} de ''join table''):
 
 * Cuando tiene llave primaria ```id```
-* Cuando no tiene llave primaria o la llave primaria es múltiple (digamos las llaves de las 2 tablas que relaciona).
+* Cuando no tiene llave primaria o la llave primaria es múltiple (digamos compuesta por las llaves de las 2 tablas que relaciona).
 
 Con la primera forma es más sencillo implementar los formularios anidados, pero la segunda es la que Rails genera por defecto al crear tablas combinadas.
 
