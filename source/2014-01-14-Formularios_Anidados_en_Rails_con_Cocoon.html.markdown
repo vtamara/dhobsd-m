@@ -3,14 +3,41 @@ title: Formularios_Anidados_en_Rails_con_Cocoon
 date: 2014-01-14
 tags:
 ---
+
+
+
 Al manejar formularios anidados sobre Ruby on Rails 5 (ver {6}), Simple Form (ver {8}) y Cocoon (ver {7}), por ejemplo con una relación muchos a muchos, hemos identificado dos formas de manejar la tabla combinada (traducción de {4} de ''join table''):
 
 * Cuando tiene llave primaria ```id```
 * Cuando no tiene llave primaria o la llave primaria es múltiple (digamos compuesta por las llaves de las 2 tablas que relaciona).
 
-Con la primera forma es más sencillo implementar los formularios anidados, pero la segunda es la que Rails genera por defecto al crear tablas combinadas.
+Con la primera forma es más sencillo implementar los formularios anidados, pero la segunda es la que Rails genera por defecto al crear tablas combinadas --como se ve en la sección 0.  
 
-A continuación explicamos ambos casos. 
+En este artículo explicamos ambos casos a partir de la sección 1.
+
+# 0 Generación automática de migración para crear tabla combinada con rails
+
+Por ejemplo en una aplicación que tenga tabla `caso` y tabla `presponsable` al usar `bin/rails g migration CreateJoinTableCasoPresponsable caso presponsable` se crearía la migración:
+```
+class CreateJoinTableCasoPresponsable < ActiveRecord::Migration[6.1]              
+  def change                                                                     
+    create_join_table :caso, :presponsable do |t|           
+      # t.index [:caso_id, :presponsable_id]                
+      # t.index [:presponsable_id, :caso_id]                
+    end                                                                          
+  end                                                                            
+end   
+```
+Y al ejecutarse crearía una tabla `caso_presponsable` sin marca de tiempo y sin campo `id`.
+
+| Columna | Tipo | Puede ser Null |
+|---|---|---|
+| caso_id  | bigint | No |
+| presponsable_id | bigint | No |
+
+Esto puede ser suficiente si en la vista se diligencia con un formulario de selección múltiple, digamos que desde el formulario de caso se eligieran varios presuntos responsables.  
+
+Con la desventaja que en la base de datos podrían crearse registros duplicados --por ejemplo si se hace el mismo INSERT varías veces digamos restaurando información varías veces.
 
 # 1. Contexto y modelos
 
@@ -155,7 +182,7 @@ Comparando ambas posibilidades (ver comparación de los repositorios en
 <https://github.com/vtamara/cocoon-caso-presponsable/compare/sin-indice> )
  notará las siguientes diferencias:
 
-* En <db/schema.rb> (o cuando fuere el caso en la migración) debe agregar el parámetro `id: false` cuando se crea la tabla `caso_presponsable` y por lo mismo no debe crearse índice.  Esto ocurre  por defecto cuando genera la migración como se explica en la documentación oficial (ver {3}), e.g: `rails g migration !CreateJoinTableCasoPresponsable` 
+* En `db/schema.rb` (o cuando fuere el caso en la migración) debe agregar el parámetro `id: false` cuando se crea la tabla `caso_presponsable` y por lo mismo no debe crearse índice.  Esto ocurre  por defecto cuando genera la migración como se explica en la documentación oficial (ver {3}), e.g: `rails g migration !CreateJoinTableCasoPresponsable` 
 * Entre los parametros por definir en el controlador ya no se requiere `id` en `caso_parametro_attributes` en el método `caso_params` de `app/controllers/casos_controllers.rb`.
 * Al actualizar o eliminar un caso es necesario eliminar todas las entradas de la tabla `caso_presponsable` relacionadas (con `@caso.caso_presponsable.clear`) en los métodos `update` y `destroy` de `app/controllers/casos_controllers.rb`.
 * En la vista parcial `app/views/casos/_caso_presponsable_fields.html.erb` tampoco se requiere el campo `id`
