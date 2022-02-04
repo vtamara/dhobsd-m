@@ -1,12 +1,12 @@
 ---
 
-title: Corregir Let's Encrypt vencidos el 30/Sep/2021
+title: Solucionar Let's Encrypt vencidos el 30/Sep/2021
 date: 2021-11-27 16:18 UTC
 tags: 
 
 ---
 
-# Corregir Let's Encrypt vencidos el 30/Sep/2021
+# Solucionar Let's Encrypt vencidos el 30/Sep/2021
 
 Una solución rápida y en español simple, junto con una explicación del 
 problema de los certificados raíces de Autoridad Certificadora que 
@@ -19,15 +19,15 @@ Esta es adaptación a español del artículo de Eric Fossas
 
 ![Foto de una cadena](https://miro.medium.com/max/700/1*2oxB8aEbJgcYaCF_JcwJjQ.jpeg)
 
-## Introduccción
+## 1. Introduccción
 
 Aquí está la cuestión, Let's Encrypt como Autoridad Certificadora (CA)
 usa un certificado raíz con "firma-cruzada". Es como si tuviera dos 
-certificados raiz de Autoridad Certificadora, pero tu dispositivo sólo 
+certificados raíz de Autoridad Certificadora, pero tu dispositivo sólo 
 necesita confiar en uno de ellos, no en ambos.
 
 Esto fue de ayuda para Let's Encrypt cuando comenzó porque el 
-certificado raiz `DST Root CA X3` era más antiguo y ya era de confianza
+certificado raíz `DST Root CA X3` era más antiguo y ya era de confianza
 para muchos dispositivos y así pudieron esperar mientras su nuevo certificado
 raíz `ISRG Root X1` era añadido a la mayoría de dispositivos.
 
@@ -39,22 +39,22 @@ es por una de dos razones:
 2. Una falla con OpenSSL que no le permite ignorar el certificado antiguo 
    `DST Root CA X3.`
 
-## Corregir el problema
+## 2. Corregir el problema
 
-### Posibilidad 1. Certificado Raíz de Autoridad Certificadora faltante
+### 2.1 Posibilidad 1. Certificado Raíz de Autoridad Certificadora faltante
 
 Bien, esto no es lo mejor.  Puede que tu dispositivo no tenga el certificado
-raiz `ISRG Root X1`. Ponerlo en tu computador puede o no ser simple.
+raíz `ISRG Root X1`. Ponerlo en tu computador puede o no ser simple.
 
-#### Windows
+#### 2.1.1 Windows
 
-Los computadores Windows mantienen los certificaodos de Autoridades
-Certificadoras al día.  Asegurate de estar ejecuntando actualizaciones
+Los computadores Windows mantienen los certificados de Autoridades
+Certificadoras al día.  Asegurate de estar ejecutando actualizaciones
 de seguridad.
 
-#### MacOS
+#### 2.1.2 MacOS
 
-Para dispositivos que no mantienen al día sus certificados raices de
+Para dispositivos que no mantienen al día sus certificados raíces de
 Autoridades Certificadoras, como MacOS, la solución "fácil" es
 actualizar el sistema operativo.
 
@@ -87,24 +87,24 @@ pulsa el desplegable y selecciona “Always Trust”.
 
 ![Elegir Always Trust](https://miro.medium.com/max/700/1*hv8GwHHSbM-RAtx5SgIVsQ.jpeg)
 
-Así añades el certificado a tu lista de certificados raiz de 
+Así añades el certificado a tu lista de certificados raíz de 
 Autoridades Certificadoras.
 
 Es la misma idea con cualquier dispositivo: descarga el certificado y 
 añadelo a la lista de certificados de confianza.
 
-#### iPhone
+#### 2.1.3. iPhone
 
 Lo descargas, haces doble click y eso te permitirá instalarlo.  
 Después le das confianza desde 
 `Settings > General > About > Certificate Trust Settings`.
 
-#### Android
+#### 2.1.4. Android
 
 lo descargas, después lo instalas en 
 `Settings > Security > Encryption & Credentials > Install A Certificate > CA Certificate`.
 
-#### OpenBSD
+#### 2.1.5. OpenBSD
 
 El archivo con certificados de Autoridades Certificadoras está en
 `/etc/ssl/certs.pem`, allí se mantienen precedidos, cada uno de
@@ -217,36 +217,44 @@ emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
 Emplea un editor de texto para agregarlo al archivo `/etc/ssl/certs.pem,`
 se recomienda agregarlo en orden alfabético.
 
-### Posibilidad 2: falla de OpenSSL
+#### 2.1.6. Linux Amazon
+
+En Linux Amazon, los certificados raíz de Autoridades Certificadoras pueden
+encontrarse en dos archivos:
+`/etc/pki/tls/certs/ca-bundle.crt` y `/etc/pki/tls/certs/ca-bundle.trust.crt`
+
+Se almacenan en ambos.  Revisa el formato y con un editor agrega
+el nuevo de una forma similar a la presentada en la sección 2.1.5.
+
+#### 2.1.7 Linux Ubuntu
+
+En Ubuntu, los certificados raíces de Autoridades Certificadoras pueden 
+encontrarse en: `/etc/ssl/certs`
+Se almacenan individualmente. 
+Por ejemplo para eliminar los certificados vencidos ejecuta 
+`ls -l | grep DST` y elimina el archivo resultante.
+
+
+### 2.2. Posibilidad 2: falla de OpenSSL
 
 Si tu computador corre una versión antigua de OpenSSL, tiene una falla. 
 Se supone que debería ignorar el certificado expirado
 `DST Root CA X3` dado que el certificado `ISRG Root X1` es aún válido,
-pero infortunadmanete no lo hace.
+pero infortunadamente no lo hace.
 
-La forma dificil de resolverlo es actualizando tu OpenSSL. La forma fácil de
+La forma difícil de resolverlo es actualizando tu OpenSSL. La forma fácil de
 arreglarlo es eliminando ese certificado antiguo de la lista de 
 Autoridades Certificadoras en tu dispositivo.
 
-En Linux Amazon, los certificados raiz de Autoridades Certificadoras pueden
-encontrarse en dos archivos en:
-`/etc/pki/tls/certs/ca-bundle.crt` y `/etc/pki/tls/certs/ca-bundle.trust.crt`
-
-Se almacenan juntos. Busca `DST Root CA X3` en ambos y eliminalos.
-
-En Ubuntu, los certificados raices de Autoridades Certificadoras pueden 
-encontrarse en: `/etc/ssl/certs`
-Se almacenan individualmente.  Ejecuta `ls -l | grep DST` para encontrar 
-el certificado vencido y elimina esos archivos.
-
-Independiente del sistema operativo, basta encontrar los certificados raices
+Independiente del sistema operativo, basta encontrar los certificados raíces
 de Autoridades Certificadoras y eliminar el
 `DST Root CA X3` de allí (mira en la sección anterior donde puedes
-encontrarlos en MacOS, iPhone & Android).
+consultar donde ver los certificados raíces en diversos sistemas
+operativos).
 
 
 
-## Resumiendo
+## 3. Resumen
 
 Así que en resumen, lo recomendable es actualizar el sistema operativo si
 ves errores de certificados vencidos. 
