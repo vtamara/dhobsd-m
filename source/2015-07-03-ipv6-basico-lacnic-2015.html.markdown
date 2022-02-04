@@ -94,8 +94,8 @@ con `ifconfig re0` se ve:
     inte6 fd4d:da20:9e55::1 prefixlen 64
 
 La primera IPv6 corresponde a una dirección de enlace local (link local) 
-que incluye la MAC de la tarjeta de red --y se usaría para auto-configuración 
-como se vio en el curso.
+que se deduce de la MAC de la tarjeta de red --y se usaría para 
+auto-configuración como se vio en el curso.
 
 La segunda IPv6 es la que asigné.
 
@@ -238,7 +238,7 @@ También me operó resolución de nombres a direcciones sólo IPv6 como:
     round-trip min/avg/max/std-dev = 140.694/140.817/140.940/0.123 ms
 
 La navegación con chromium operó bien por ejemplo con una dirección como 
-<http://[2a02:3b8:0:ace5::4]/> y tabién me operó con resolución de nombres 
+<http://[2a02:3b8:0:ace5::4]/> y también me operó con resolución de nombres 
 con direcciones sólo IPv6 como <http://ipv6.test-ipv6.com>
 
 De hecho esa última página me confirmó las buenas posibilidades de la 
@@ -300,6 +300,46 @@ rtsol
 
 Al examinar con ipv6.test-ipv6.como se verá algo como:
 ![Prueba de conectividad con pila doble](https://raw.githubusercontent.com/vtamara/dhobsd-m/master/source/img/ipv6-doblepila.png)
+
+## Ejercicio 9:  Dirección de enlace local
+
+Notamos que al empezar a usar IPv6 en una interfaz de red
+se creará en esta una dirección IPv6 asignada automáticamente, 
+se trata de una dirección de enlace local (link-local address) que es 
+útil en el proceso de auto-configuración de red IPv6.  
+Esta dirección de enlace local IPv6 se deduce de la dirección MAC de la 
+interfaz de red como se explica a continuación --traducido y adaptado 
+de <https://ben.akrin.com/?p=1347>
+
+1. Tome la dirección mac. Por ejemplo `52:74:f2:b1:a8:7f`
+2. Ponga un `ff:fe` en la mitad: `52:74:f2:ff:fe:b1:a8:7f`
+3. Reformatee en notación IPv6 `5274:f2ff:feb1:a87f`
+4. Convierta e primero octeto de hexadecimal a binario: 52 -> 01010010
+5. Invierta el bit en el índice 7: 01010010 -> 01010000
+6. Convierta el octeto de vuelta a hexadecimal: 01010000 -> 50
+7. Remplace el primer octeto con el que calculó: `5074:f2ff:feb1:a87f`
+8. Ponga antes `fe80::` que es el prefijo de enlace local: `fe80::5074:f2ff:feb1:a87f`
+9. !Listo!
+
+Esta dirección de enlace local quedará asignada además de la que 
+se le asigne de manera estática o dinámica.
+
+
+## Ejercicio 10:  Protocolo de descubrimiento de red (Network Discovery Protocol)
+
+Con IPv6 no se usa el protocolo arp, pero su equivalente ndp.  
+
+    ndp -a
+    Presenta las direcciones IPv6 conocidas con la respectiva dirección MAC.
+
+
+## Ejercicio 11:  Ruta por omisión
+
+Para configurar una ruta por omisión IPv6 usar algo como:
+
+    doas route -n add -inet6 default 2601:988:C202:B290:4A4E:FCFF:FEE7:7477
+
+
 
 
 # Recursos para migración
