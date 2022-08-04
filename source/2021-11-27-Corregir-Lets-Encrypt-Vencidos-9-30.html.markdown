@@ -154,8 +154,9 @@ Certificate:
          9d:7e:62:22:da:de:18:27
 </pre>
 
-Elimina las secciones `Signature Algorithm` y agrega a continuación 
-el certificaod en formato PEM, puedes precederlo con un comentario:
+Elimina la sección "Subject Public Key Info" y la segunda sección `Signature Algorithm` y agrega a continuación 
+el certificaod en formato PEM, puedes preceder todo con un comentario.
+O más simple copia y pega el siguiente:
 
 <pre>
 ### Internet Security Research Group
@@ -214,8 +215,10 @@ emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
 
 </pre>
 
-Emplea un editor de texto para agregarlo al archivo `/etc/ssl/certs.pem,`
+Emplea un editor de texto para agregarlo al archivo `/etc/ssl/certs.pem`,
 se recomienda agregarlo en orden alfabético.
+
+Asegurate también de eliminar el certificado antiguo "DST Root CA X3"
 
 #### 2.1.6. Linux Amazon
 
