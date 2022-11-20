@@ -30,5 +30,5 @@ scp /root/.ssh/id_rsa.pub rsyncer@192.168.1.2:.ssh/authorized_keys
 ```
 Para enviar la copia, ejecute en el servidor origen:
 ```
-/usr/local/bin/rsync --delete  --rsh=ssh -rauvz  -e "ssh" --rsync-path="doas /usr/local/bin/rsync" "/home/" rsyncer@192.168.1.2:/home/"
+/usr/local/bin/rsync --delete  --rsh=ssh -rauvz  -e "ssh" --rsync-path="doas /usr/local/bin/rsync" "/home/" "rsyncer@192.168.1.2:/home/"
 ```
