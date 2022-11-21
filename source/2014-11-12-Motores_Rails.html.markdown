@@ -1,6 +1,6 @@
 ---
 title: Motores_Rails
-date: 2014-11-12
+date: 2014-11-12 12:00 UTC
 tags:
 ---
 Es posible separar en motores una aplicación y reusar cada motor en diversas aplicaciones.  Presentamos a continuación algunas ejemplos empleando Rails 4.2.0.beta4 sobre adJ 5.5 (puede ver una introducción al uso de Ruby on Rails sobre la plataforma adJ en {3}).

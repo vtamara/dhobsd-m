@@ -1,6 +1,6 @@
 ---
 title: Producci_n_de_un_informe_en_Linux
-date: 2006-08-20
+date: 2006-08-20 12:00 UTC
 tags:
 ---
 Texto inicial de ELIAS SIERA ABRIL defensorito@yahoo.es

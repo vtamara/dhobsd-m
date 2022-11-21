@@ -1,6 +1,6 @@
 ---
 title: freecodecamp
-date: 2016-03-18
+date: 2016-03-18 12:00 UTC
 tags:
 ---
 

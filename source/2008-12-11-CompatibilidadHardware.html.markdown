@@ -1,6 +1,6 @@
 ---
 title: CompatibilidadHardware
-date: 2008-12-11
+date: 2008-12-11 12:00 UTC
 tags:
 ---
 ##TARJETAS ETHERNET

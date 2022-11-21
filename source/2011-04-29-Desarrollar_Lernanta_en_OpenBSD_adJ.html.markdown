@@ -1,6 +1,6 @@
 ---
 title: Desarrollar_Lernanta_en_OpenBSD_adJ
-date: 2011-04-29
+date: 2011-04-29 12:00 UTC
 tags:
 ---
 ''Lernanta'' es una plataforma para educación virtual, con triple licencia MPL/GPL/LGPL, pero desarrollada en un ambiente de alta solidaridad y fraternidad. Está escrita en ```python``` con el ambiente de desarrollo ```django```, migraciones con ```south``` y otras facilidades de ese lenguaje.   La labor de localización y en particular a español, así como la posibilidad de migraciones fue especialmente contribuida por el autor de este escrito.

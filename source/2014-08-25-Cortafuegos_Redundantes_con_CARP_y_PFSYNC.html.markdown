@@ -1,6 +1,6 @@
 ---
 title: Cortafuegos_Redundantes_con_CARP_y_PFSYNC
-date: 2014-08-25
+date: 2014-08-25 12:00 UTC
 tags:
 ---
 Suponemos:

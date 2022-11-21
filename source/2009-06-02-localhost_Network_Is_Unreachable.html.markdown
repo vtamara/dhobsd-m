@@ -1,6 +1,6 @@
 ---
 title: localhost_Network_Is_Unreachable
-date: 2009-06-02
+date: 2009-06-02 12:00 UTC
 tags:
 ---
 ¿ En OpenBSD Alguna vez le ha fallado ```ping 127.0.0.1``` ?

@@ -1,6 +1,6 @@
 ---
 title: Administraci_n_de_usuarios
-date: 2006-08-20
+date: 2006-08-20 12:00 UTC
 tags:
 ---
 Desde otra máquina ingresamos a la máquina que tiene OpenBSD cuya IP es 192.168.3.6 utilizando ssh:

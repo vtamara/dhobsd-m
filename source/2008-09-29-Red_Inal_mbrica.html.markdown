@@ -1,6 +1,6 @@
 ---
 title: Red_Inal_mbrica
-date: 2008-09-29
+date: 2008-09-29 12:00 UTC
 tags:
 ---
 Se describe como configurar una red con WEP, usando adJ 4.2p1 y una tarjeta Intel PRO/Wireless 3945ABG.

@@ -1,6 +1,6 @@
 ---
 title: ownCloud
-date: 2015-02-03
+date: 2015-02-03 12:00 UTC
 tags:
 ---
 ownCloud permite administrar archivos e incluso editar documentos simples en formato ODT desde un navegador.  Busca ser como drive.google.com, pero en lugar de que Google controle sus datos es usted como administrador quien los debe administrar.

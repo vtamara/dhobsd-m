@@ -1,6 +1,6 @@
 ---
 title: ComparacionSeguridadPrecio
-date: 2009-04-08
+date: 2009-04-08 12:00 UTC
 tags:
 ---
 Comparamos seguridad y precio de varios programas, empleando datos

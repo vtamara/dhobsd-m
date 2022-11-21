@@ -1,17 +1,27 @@
 ---
 title: Instalaci_n_del_sistema_base_OpenBSD
-date: 2006-08-20
+date: 2006-08-20 12:00 UTC
 tags:
 ---
+
 El OpenBSD debe ser instalado en una particion primaria del Disco Duro
 
-Nos aseguramos que arranque por el CD o el disquete y se dijo que  que para incidir  el arranque habia que oprimir F8 o Del (dependiendo del BIOS) y así obteniamos la posibilidad de arrancar por un CD o un disquete, prestablecido para el arranque. Obviamente antes de arrancar la instalación fuimos advertidos sobre la necesidad de salvar la información que estaba en la partición donde instalaríamos el programa.
+Nos aseguramos que arranque por el CD o el disquete y se dijo que  que para 
+incidir  el arranque había que oprimir F8 o Del (dependiendo del BIOS) y así 
+obteníamos la posibilidad de arrancar por un CD o un disquete, 
+pre-establecido para el arranque. Obviamente antes de arrancar la instalación 
+fuimos advertidos sobre la necesidad de salvar la información que estaba en la 
+partición donde instalaríamos el programa.
 Para cambiar el tamaño de un sistema de archivos (y una partición) puede
-usarse el programa ```parted``` que corre sólo en Linux, por lo que es necesario iniciar el computador con un LiveCD (como Ubuntu) o con un disquette de arranque de Linux que incluya ```parted```.
+usarse el programa ```parted``` que corre sólo en Linux, por lo que es 
+necesario iniciar el computador con un LiveCD (como Ubuntu) o con un 
+disquette de arranque de Linux que incluya ```parted```.
 
-Seguidamente recordamos que para crear un diskette de arranque teniamos que utilizar el siguiente procedimietno,
-# Descargar la imagen, por ejemplo de http://paud.sf.net
-# Para copiar la imagen en un disquete desde un sistema OpenBSD 
+Seguidamente recordamos que para crear un diskette de arranque teniamos que 
+utilizar el siguiente procedimiento,
+
+1. Descargar la imagen, por ejemplo de http://paud.sf.net
+2. Para copiar la imagen en un disquete desde un sistema OpenBSD 
 <pre>
 dd if=paud-2.0.3.img of=/dev/fd0a
 </pre>

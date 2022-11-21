@@ -1,6 +1,6 @@
 ---
 title: Firefox
-date: 2010-08-25
+date: 2010-08-25 12:00 UTC
 tags:
 ---
 Es un buen navegador, que viene por defecto en Ubuntu, para instalarlo en Windows descargarlo de  http://www.mozilla.com 

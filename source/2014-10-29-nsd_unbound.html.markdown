@@ -1,6 +1,6 @@
 ---
 title: nsd_unbound
-date: 2014-10-29
+date: 2014-10-29 12:00 UTC
 tags:
 ---
 OpenBSD 5.7 eliminó BIND (binario ```named```) que puede realizar 

@@ -1,6 +1,6 @@
 ---
 title: LibreOffice
-date: 2011-02-11
+date: 2011-02-11 12:00 UTC
 tags:
 ---
 Aplicaciones de Ofitmática descendientes de OpenOffice. Su primera versión es la 3.3.0 liberada el 25.Ene.2011

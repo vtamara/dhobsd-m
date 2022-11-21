@@ -1,6 +1,6 @@
 ---
 title: ProtocoloEmergencias
-date: 2008-10-31
+date: 2008-10-31 12:00 UTC
 tags:
 ---
 ## CASO: Falla de suministro electríco.

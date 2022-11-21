@@ -1,6 +1,6 @@
 ---
 title: SpamAssassin
-date: 2010-03-08
+date: 2010-03-08 12:00 UTC
 tags:
 ---
  !SpamAssassin es un filtro de correo que suele emplearse en OpenBSD adJ con procmail y con correos en formato Maildir.   

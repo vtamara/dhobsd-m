@@ -1,6 +1,6 @@
 ---
 title: Recuperar_Subparticiones_con_scan_ffs
-date: 2009-10-21
+date: 2009-10-21 12:00 UTC
 tags:
 ---
 Si algún programa borra la lista de subparticiones (o labels) de una partición de OpenBSD, pero no sobreescribe toda la partición del BIOS, existe la posibilidad de reconstruirla.

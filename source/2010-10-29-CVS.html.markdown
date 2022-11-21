@@ -1,6 +1,6 @@
 ---
 title: CVS
-date: 2010-10-29
+date: 2010-10-29 12:00 UTC
 tags:
 ---
 

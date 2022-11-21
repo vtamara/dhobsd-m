@@ -1,6 +1,6 @@
 ---
 title: man_5_ipsec.conf
-date: 2011-01-06
+date: 2011-01-06 12:00 UTC
 tags:
 ---
 

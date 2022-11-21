@@ -1,6 +1,6 @@
 ---
 title: Utilizaci_n_de_IPsec
-date: 2010-12-22
+date: 2010-12-22 12:00 UTC
 tags:
 ---
 IPsec es un protocolo seguro que hace parte de IPv6. Ha sido portado a IPv4 y a diferencia de otros sistemas operativos, es fácil de usar y configurar en OpenBSD. La descripción presentada a continuación se ha probado en OpenBSD 4.2 y se basa en {1}.

@@ -1,6 +1,6 @@
 ---
 title: amd64
-date: 2010-10-04
+date: 2010-10-04 12:00 UTC
 tags:
 ---
 # Arquitectura del AMD64

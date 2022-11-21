@@ -1,6 +1,6 @@
 ---
 title: squid_y_Dansguardian
-date: 2011-05-05
+date: 2011-05-05 12:00 UTC
 tags:
 ---
 Dansguardian con squid permiten filtar Internet de contenidos no apropiados.

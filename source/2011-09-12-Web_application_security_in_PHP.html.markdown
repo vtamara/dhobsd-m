@@ -1,6 +1,6 @@
 ---
 title: Web_application_security_in_PHP
-date: 2011-09-12
+date: 2011-09-12 12:00 UTC
 tags:
 ---
 ##HTTP Response Header Splitting

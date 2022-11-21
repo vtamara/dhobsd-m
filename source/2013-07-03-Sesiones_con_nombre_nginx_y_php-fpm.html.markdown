@@ -1,6 +1,6 @@
 ---
 title: Sesiones_con_nombre_nginx_y_php-fpm
-date: 2013-07-03
+date: 2013-07-03 12:00 UTC
 tags:
 ---
 En OpenBSD 5.3 con nginx 1.2.6 y php-fpm 3.2.1 no operan bien sesiones con algunos nombre cuando no se configura bien nginx.

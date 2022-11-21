@@ -1,6 +1,6 @@
 ---
 title: Juegos
-date: 2009-11-14
+date: 2009-11-14 12:00 UTC
 tags:
 ---
 Entre los portes de OpenBSD 4.6 hay diversos juegos, aunque bastantes son violentos, también hay bastantes no violentos, ni ofensivos contra cristianos, que funcionan y pueden ser aptos para niñ@s. A continuación se describen algunos.

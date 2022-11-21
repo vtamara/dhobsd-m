@@ -1,6 +1,6 @@
 ---
 title: Compilacion_OpenOffice
-date: 2011-07-07
+date: 2011-07-07 12:00 UTC
 tags:
 ---
 Mientras se completa traspaso a Apache, siguiendo las instrucciones de:

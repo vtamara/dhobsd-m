@@ -1,6 +1,6 @@
 ---
 title: Linea_de_comandos_OpenBSD
-date: 2010-02-25
+date: 2010-02-25 12:00 UTC
 tags:
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: man_glosario
-date: 2011-02-02
+date: 2011-02-02 12:00 UTC
 tags:
 ---
 Glosario para traducción de páginas man de OpenBSD

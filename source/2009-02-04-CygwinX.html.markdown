@@ -1,6 +1,6 @@
 ---
 title: CygwinX
-date: 2009-02-04
+date: 2009-02-04 12:00 UTC
 tags:
 ---
 El sistema de ventanas X-Window permite abrir aplicaciones gráficas en otro computador donde corra un servidor de X-Window.

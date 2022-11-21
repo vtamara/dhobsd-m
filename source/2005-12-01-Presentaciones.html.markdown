@@ -1,6 +1,6 @@
 ---
 title: Presentaciones
-date: 2005-12-01
+date: 2005-12-01 12:00 UTC
 tags:
 ---
 * [Una Peregrinación por la Vida] del 1 al 6 de Oct.

@@ -1,6 +1,6 @@
 ---
 title: TriggerPostgreSQL
-date: 2009-02-18
+date: 2009-02-18 12:00 UTC
 tags:
 ---
 

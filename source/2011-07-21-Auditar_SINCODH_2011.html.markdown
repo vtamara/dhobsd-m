@@ -1,6 +1,6 @@
 ---
 title: Auditar_SINCODH_2011
-date: 2011-07-21
+date: 2011-07-21 12:00 UTC
 tags:
 ---
 [http://www.pasosdeJesus.org/ofertas/agosto2011.png]

@@ -1,6 +1,6 @@
 ---
 title: Autenticar_con_LDAP_desde_Ubuntu
-date: 2013-10-27
+date: 2013-10-27 12:00 UTC
 tags:
 ---
 Tenemos un servidor **LDAP** corriendo en OpenBSD. Queremos autenticar ''clientes'' que tienen  **Ubuntu/PEAR OS/Xubuntu/Linux**.

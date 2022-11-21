@@ -1,8 +1,11 @@
 ---
-title: ClamAV_como_milter_de_Sendmail
-date: 2005-12-20
+
+title: ClamAV como milter de Sendmail
+date: 2005-12-20 13:18 UTC
 tags:
+
 ---
+
 En este artículo describimos como configurar el antivirus de correos clamav con 
 clamav-milter en un OpenBSD 3.7 con sendmail.
 

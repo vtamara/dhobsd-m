@@ -1,6 +1,6 @@
 ---
 title: Portes_y_paquetes_diversos_sistemas
-date: 2014-10-12
+date: 2014-10-12 12:00 UTC
 tags:
 ---
 Sólo por comparar:

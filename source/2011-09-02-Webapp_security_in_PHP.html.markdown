@@ -1,6 +1,6 @@
 ---
 title: Webapp_security_in_PHP
-date: 2011-09-02
+date: 2011-09-02 12:00 UTC
 tags:
 ---
 ##SQL Injection

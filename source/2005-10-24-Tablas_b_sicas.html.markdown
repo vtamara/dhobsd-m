@@ -1,6 +1,6 @@
 ---
 title: Tablas_b_sicas
-date: 2005-10-24
+date: 2005-10-24 12:00 UTC
 tags:
 ---
 

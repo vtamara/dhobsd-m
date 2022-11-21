@@ -1,6 +1,6 @@
 ---
 title: man_4_ipsec
-date: 2010-12-27
+date: 2010-12-27 12:00 UTC
 tags:
 ---
 ##NOMBRE

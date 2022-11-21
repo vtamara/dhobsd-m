@@ -1,6 +1,6 @@
 ---
 title: Ubuntu-1404
-date: 2014-07-08
+date: 2014-07-08 12:00 UTC
 tags:
 ---
 Tras actualizar e instalar chrome, para instalar también flash:

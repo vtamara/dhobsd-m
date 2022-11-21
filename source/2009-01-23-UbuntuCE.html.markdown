@@ -1,6 +1,6 @@
 ---
 title: UbuntuCE
-date: 2009-01-23
+date: 2009-01-23 12:00 UTC
 tags:
 ---
 ## CONFIGURACIÓN DE UBUNTU CHRISTIAN EDITION 10.04

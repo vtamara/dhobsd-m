@@ -1,6 +1,6 @@
 ---
 title: VideoCapturas
-date: 2011-11-15
+date: 2011-11-15 12:00 UTC
 tags:
 ---
 Sugerencias para realizar Video Capturas

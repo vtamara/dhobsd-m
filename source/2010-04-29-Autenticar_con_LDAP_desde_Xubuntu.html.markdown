@@ -1,6 +1,6 @@
 ---
 title: Autenticar_con_LDAP_desde_Xubuntu
-date: 2010-04-29
+date: 2010-04-29 12:00 UTC
 tags:
 ---
 Tenemos un servidor **LDAP** corriendo en **OpenBSD**. Queremos **autenticar** ''clientes'' que tienen  **Xubuntu/Linux CE**.

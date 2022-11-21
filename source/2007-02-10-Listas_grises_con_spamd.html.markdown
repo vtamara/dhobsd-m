@@ -1,6 +1,6 @@
 ---
 title: Listas_grises_con_spamd
-date: 2007-02-10
+date: 2007-02-10 12:00 UTC
 tags:
 ---
 ```spamd``` es un servicio particular de OpenBSD que funciona en llave con ```pf``` para bloquear correos provenientes de IPs listadas en índices actualizados vía Internet.   Puede operar en 3 modos:

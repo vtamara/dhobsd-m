@@ -1,6 +1,6 @@
 ---
 title: bitacoras
-date: 2011-08-06
+date: 2011-08-06 12:00 UTC
 tags:
 ---
 logger permite ingresar eventos en una bitácora del sistema por ejemplo

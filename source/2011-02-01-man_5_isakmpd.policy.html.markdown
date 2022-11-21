@@ -1,6 +1,6 @@
 ---
 title: man_5_isakmpd.policy
-date: 2011-02-01
+date: 2011-02-01 12:00 UTC
 tags:
 ---
 ISAKMPD.POLICY(5)         OpenBSD Programmer's Manual        ISAKMPD.POLICY(5)

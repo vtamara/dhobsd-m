@@ -1,6 +1,6 @@
 ---
 title: Depurar_PostgreSQL_9.1
-date: 2013-01-21
+date: 2013-01-21 12:00 UTC
 tags:
 ---
 En general en adJ (OpenBSD) 6.1, no es fácil depurar aplicaciones que manejan múltiples  procesos.   A continuación presentamos como hacerlo en el caso de PostgreSQL.

@@ -1,6 +1,6 @@
 ---
 title: Restringir_Acceso_a_Directorios_en_Web
-date: 2012-02-20
+date: 2012-02-20 12:00 UTC
 tags:
 ---
 ##1. La situación

@@ -1,6 +1,6 @@
 ---
 title: WxorX
-date: 2010-10-28
+date: 2010-10-28 12:00 UTC
 tags:
 ---
 Se refiere a una política en los permisos de las secciones de un programa en OpenBSD.  Una sección ejecutable no puede ser escribible, y una sección escribible no puede ser ejecutable.

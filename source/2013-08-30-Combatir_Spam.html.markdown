@@ -1,6 +1,6 @@
 ---
 title: Combatir_Spam
-date: 2013-08-30
+date: 2013-08-30 12:00 UTC
 tags:
 ---
 En un sistema de correo debe combatirse el spam en dos frentes:

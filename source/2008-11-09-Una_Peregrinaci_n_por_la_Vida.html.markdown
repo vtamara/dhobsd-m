@@ -1,6 +1,6 @@
 ---
 title: Una_Peregrinaci_n_por_la_Vida
-date: 2008-11-09
+date: 2008-11-09 12:00 UTC
 tags:
 ---
 La comunidad de Paz de San José de Apartado hizo una invitación pública a una peregrinación del 1 al 6 de Octubre de 2008: http://cdpsanjose.org/?q=node/82

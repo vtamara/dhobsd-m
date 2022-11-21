@@ -1,6 +1,6 @@
 ---
 title: Ambiente_CSS_y_Autenticacion_y_Autorizacion_con_Ruby_on_Rails
-date: 2013-09-29
+date: 2013-09-29 12:00 UTC
 tags:
 ---
 Continuando {1}, presentamos como emplear en una aplicación Ruby on Rails 4.0 sobre adJ 5.4:

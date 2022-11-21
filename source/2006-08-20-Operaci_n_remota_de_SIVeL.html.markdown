@@ -1,6 +1,6 @@
 ---
 title: Operaci_n_remota_de_SIVeL
-date: 2006-08-20
+date: 2006-08-20 12:00 UTC
 tags:
 ---
 Para iniciar la operación remota de Sivel se ingresa al cortafuegos,  en éste caso el de Compromiso, a través de dos formas de conexión:

@@ -1,6 +1,6 @@
 ---
 title: IPsec_en_OpenBSD
-date: 2010-12-22
+date: 2010-12-22 12:00 UTC
 tags:
 ---
 ##IPsec

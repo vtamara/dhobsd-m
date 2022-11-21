@@ -1,6 +1,6 @@
 ---
 title: IdeaYGnuPG
-date: 2009-03-02
+date: 2009-03-02 12:00 UTC
 tags:
 ---
 ## PLUGIN PARA GNUPG QUE SOPORTA ALGORITMO IDEA

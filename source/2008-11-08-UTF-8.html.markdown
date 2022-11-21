@@ -1,6 +1,6 @@
 ---
 title: UTF-8
-date: 2008-11-08
+date: 2008-11-08 12:00 UTC
 tags:
 ---
 Unicode es una tabla estándar que asocia números con caracteres, donde están los caracteres de prácticamente todos los lenguajes que la humanidad ha conocido.

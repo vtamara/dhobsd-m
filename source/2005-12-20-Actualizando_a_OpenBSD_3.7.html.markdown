@@ -1,6 +1,6 @@
 ---
 title: Actualizando_a_OpenBSD_3.7
-date: 2005-12-20
+date: 2005-12-20 12:00 UTC
 tags:
 ---
 ##Actualizando a OpenBSD 3.7

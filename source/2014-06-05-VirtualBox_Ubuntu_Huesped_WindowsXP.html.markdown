@@ -1,6 +1,6 @@
 ---
 title: VirtualBox_Ubuntu_Huesped_WindowsXP
-date: 2014-06-05
+date: 2014-06-05 12:00 UTC
 tags:
 ---
 

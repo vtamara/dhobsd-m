@@ -1,6 +1,6 @@
 ---
 title: POP3S_e_IMAPS_en_OpenBSD_LDAP_Sendmail
-date: 2005-12-20
+date: 2005-12-20 12:00 UTC
 tags:
 ---
 Este artículo describe como configurar un servidor de correo OpenBSD para

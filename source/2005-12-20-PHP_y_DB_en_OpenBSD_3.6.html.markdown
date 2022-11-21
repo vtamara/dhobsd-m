@@ -1,6 +1,6 @@
 ---
 title: PHP_y_DB_en_OpenBSD_3.6
-date: 2005-12-20
+date: 2005-12-20 12:00 UTC
 tags:
 ---
 May.18.2005 vtamara@pasosdeJesus.org

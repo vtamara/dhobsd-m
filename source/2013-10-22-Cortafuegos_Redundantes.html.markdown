@@ -1,6 +1,6 @@
 ---
 title: Cortafuegos_Redundantes
-date: 2013-10-22
+date: 2013-10-22 12:00 UTC
 tags:
 ---
 # 1. CONFIGURACIÓN

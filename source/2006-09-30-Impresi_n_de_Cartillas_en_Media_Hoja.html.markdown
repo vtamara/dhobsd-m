@@ -1,6 +1,6 @@
 ---
 title: Impresi_n_de_Cartillas_en_Media_Hoja
-date: 2006-09-30
+date: 2006-09-30 12:00 UTC
 tags:
 ---
 ¿Alguna vez ha necesitado generar con OpenBSD una cartilla para imprimir y distribuir?  Un formato apropiado para cartillas es media hoja oficio, por ejemplo puede formarse una con una pila de 3 o 4 hojas tamaño oficios doblando la pila por la mitad.

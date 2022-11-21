@@ -1,6 +1,6 @@
 ---
 title: Bitacora_SIVeL_2006
-date: 2006-08-19
+date: 2006-08-19 12:00 UTC
 tags:
 ---
 

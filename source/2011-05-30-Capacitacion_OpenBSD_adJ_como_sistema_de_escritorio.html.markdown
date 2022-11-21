@@ -1,6 +1,6 @@
 ---
 title: Capacitacion_OpenBSD_adJ_como_sistema_de_escritorio
-date: 2011-05-30
+date: 2011-05-30 12:00 UTC
 tags:
 ---
 Desde la perspectiva de usuarios de escritorio, estudiamos el sistema operativo seguro para servidores Aprendiendo de Jesús (también conocido como OpenBSD adJ o solamente adJ). 

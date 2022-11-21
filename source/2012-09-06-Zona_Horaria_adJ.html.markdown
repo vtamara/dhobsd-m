@@ -1,6 +1,6 @@
 ---
 title: Zona_Horaria_adJ
-date: 2012-09-06
+date: 2012-09-06 12:00 UTC
 tags:
 ---
 Para hacer cambios a la zona horaria

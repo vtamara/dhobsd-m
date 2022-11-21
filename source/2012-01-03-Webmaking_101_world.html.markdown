@@ -1,6 +1,6 @@
 ---
 title: Webmaking_101_world
-date: 2012-01-03
+date: 2012-01-03 12:00 UTC
 tags:
 ---
 [http://fe.pasosdejesus.org/sites/FE.PASOSDEJESUS.ORG/spages/Organeta.jpg]

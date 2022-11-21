@@ -1,6 +1,6 @@
 ---
 title: Quemar_DVD
-date: 2009-09-03
+date: 2009-09-03 12:00 UTC
 tags:
 ---
 Para quemar un DVD que tenga  los archivos ```/home/copia/a``` y ```/home/copia/b```

@@ -1,6 +1,6 @@
 ---
 title: Webmaking_101_hosting
-date: 2012-01-11
+date: 2012-01-11 12:00 UTC
 tags:
 ---
 Thanks to God I have my own web servers as well as name servers that I use for hosting webpages.  They run OpenBSD adJ, so the following example to setup  http://ejemplohtml.pasosdeJesus.org is for that distribution:

@@ -1,6 +1,6 @@
 ---
 title: LibreOffice2011
-date: 2011-03-25
+date: 2011-03-25 12:00 UTC
 tags:
 ---
 Capacitación virtual y presencial en LibreOffice, la aplicación ofimática con procesador de texto, hoja de &#263;alculo, gestor de presentaciones y motor de base de datos.   La parte virtual es gratuita, la parte presencial es retribuida (con donación o trueque).  Ver detalles en:

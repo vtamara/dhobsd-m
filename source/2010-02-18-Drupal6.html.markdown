@@ -1,6 +1,6 @@
 ---
 title: Drupal6
-date: 2010-02-18
+date: 2010-02-18 12:00 UTC
 tags:
 ---
 Drupal 6 es un manejador de contenidos (CMS) muy popular, para el cual hay un paquete para OpenBSD.  Este artículo describe la instalación multisitio con posibilidad de un administrador general y un administrador por cada sitio suponiendo una instalación estándar de adJ (con Apache corriendo chroot, y PostgreSQL con socket en /var/www/tmp).

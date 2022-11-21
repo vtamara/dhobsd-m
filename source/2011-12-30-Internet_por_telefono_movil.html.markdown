@@ -1,6 +1,6 @@
 ---
 title: Internet_por_telefono_movil
-date: 2011-12-30
+date: 2011-12-30 12:00 UTC
 tags:
 ---
 Es posible conectarse a Internet mediantun teléfono movil con plan de datos.

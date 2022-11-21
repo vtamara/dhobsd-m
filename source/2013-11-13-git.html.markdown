@@ -1,6 +1,6 @@
 ---
 title: git
-date: 2013-11-13
+date: 2013-11-13 12:00 UTC
 tags:
 ---
 Una rama es como un repositorio alternativo, una etiqueta es una marca a un punto en el desarrollo de alguna rama.

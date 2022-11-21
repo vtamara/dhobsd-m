@@ -1,6 +1,6 @@
 ---
 title: Webmaking_101_hand
-date: 2011-11-04
+date: 2011-11-04 12:00 UTC
 tags:
 ---
 Hand written HTML

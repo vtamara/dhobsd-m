@@ -1,6 +1,6 @@
 ---
 title: Instalacion_de_Metasploit
-date: 2011-11-12
+date: 2011-11-12 12:00 UTC
 tags:
 ---
 Metasploit Framework es un ambiente para realizar auditorias de seguridad. Puede instalarse en OpenBSD adJ 4.9 (con PostgreSQL preinstalado) para realizar auditorias en las organizaciones donde tenga autorización.

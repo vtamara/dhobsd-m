@@ -1,6 +1,6 @@
 ---
 title: Mofrapaz30Ago2010
-date: 2010-08-30
+date: 2010-08-30 12:00 UTC
 tags:
 ---
 ##Capacitación en correo y servidor de datos

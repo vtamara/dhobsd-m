@@ -1,6 +1,6 @@
 ---
 title: Manejador_de_listas_mlmmj
-date: 2007-01-26
+date: 2007-01-26 12:00 UTC
 tags:
 ---
 A diferencia de mailman, mlmmj puede emplearse en un OpenBSD que tenga un servidor web con chroot, pues se administra desde la línea de comandos.  

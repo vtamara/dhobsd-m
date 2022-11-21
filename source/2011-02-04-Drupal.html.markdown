@@ -1,6 +1,6 @@
 ---
 title: Drupal7
-date: 2011-02-04
+date: 2011-02-04 12:00 UTC
 tags:
 ---
 Drupal es un manejador de contenidos (CMS) muy popular.  Este artículo describe la instalación multisitio con posibilidad de un administrador general y un administrador por cada sitio suponiendo una instalación estándar de adJ (con nginx corriendo chroot, y PostgreSQL con socket en /var/www/tmp).

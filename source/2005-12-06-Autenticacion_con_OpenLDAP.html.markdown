@@ -1,6 +1,6 @@
 ---
 title: Autenticacion_con_OpenLDAP
-date: 2005-12-06
+date: 2005-12-06 12:00 UTC
 tags:
 ---
 En este artículo describimos como autenticar usuarios en OpenBSD 3.8 empleando ```login_ldap``` y un directorio manejado por OpenLDAP.
@@ -23,7 +23,7 @@ La instalación de todos los paquetes es directa:
 # pkg_add $PKG_PATH/login_ldap-3.3.tgz
 </pre>
 
-También se requiere el esquema ```authldap.schema``` que puede descargar de Internet (http://cvs.sourceforge.net/viewcvs.py/*checkout*/courier/libs/authlib/authldap.schema) o que está incluido en el paquete ```courier-authlib-ldap``` (disponible desde
+También se requiere el esquema ```authldap.schema``` que puede descargar de Internet (<http://cvs.sourceforge.net/viewcvs.py/*checkout*/courier/libs/authlib/authldap.schema>) o que está incluido en el paquete ```courier-authlib-ldap``` (disponible desde
 OpenBSD 4.1).
 
 ### OpenLDAP
@@ -68,12 +68,18 @@ rootpw secret
 </pre>
 
 Note que: 
+
 * se permite LDAPv2 porque es el empleado por ```login_ldap```
-* se emplea Berkely DB para mantener la información del directorio (como se explica en ```man slapd.conf``` las posibilidades son ```bdb, dnssrv, ldap, ldbm, meta, monitor, null, passwd, perl, shell, sql```, o ```tclse```) y que la clave del directorio debe ser mejor que la presentada (i.e remplace ```secret``` por una buena clave). En lugar de poner la clave plana también es posible poner la cadena generada con:
+* se emplea Berkely DB para mantener la información del directorio (como 
+  se explica en ```man slapd.conf``` las posibilidades son ```bdb, dnssrv, 
+  ldap, ldbm, meta, monitor, null, passwd, perl, shell, sql```, o ```tclse```) 
+  y que la clave del directorio debe ser mejor que la presentada 
+  (i.e remplace ```secret``` por una buena clave). En lugar de poner la 
+  clave plana también es posible poner la cadena generada con:
 <pre>
 # slappasswd -v -u -h {CRYPT} -s secret
 </pre>
-que en el caso de la clave '```secret```' es '```{CRYPT}uPUCy906TIu/k```'
+  que en el caso de la clave '```secret```' es '```{CRYPT}uPUCy906TIu/k```'
 
 La configuración por defecto emplea ```/var/openldap-data``` como directorio para mantener las bases de datos, así que ejecute:
 <pre>
@@ -282,15 +288,16 @@ y después reiniciar ```slapd```
 ## SEGURIDAD
 
 Es recomendable emplear SSL para encriptar las conexiones que consultan a ```slapd```.  Para esto es indispensable tener un certificado para el servidor firmado por una autoridad certificadora (CA), así que tiene tres opciones para obtener tal certificado:
+
 * Usar una autoridad certificadora oficial/comercial
 * Usar una autoridad certificadora no-oficial/no-comercial
-** http://www.cacert.org --no verifica identidad de quienes solicitan el certificado
-** http://www.pasosdeJesus.org --exige conocer a la persona que hace la solicitud
+** <http://www.cacert.org> --no verifica identidad de quienes solicitan el certificado
+** <http://www.pasosdeJesus.org> --exige conocer a la persona que hace la solicitud
 * Crear y usar su propia autoridad certificadora (ver Howto de LDAP con SSL/TLS) (ver sección de referencias)
 
 En todos los casos tendrá que crear un certificado para su servidor y una 
 solicitud para que sea firmado por su autoridad certificadora, 
-ver http://structio.sourceforge.net/guias/servidor_OpenBSD/apache.html#ssl
+ver <http://structio.sourceforge.net/guias/servidor_OpenBSD/apache.html#ssl>
 
 Además de su certificado firmado (digamos ```/etc/ssl/server.crt```), la llave del mismo (digamos ```/etc/ssl/private/server.key```), necesita la llave pública de la autoridad certificadora (por ejemplo en ```/etc/ssl/cacert.pem```).
 
@@ -350,24 +357,25 @@ Aunque el esquema de autenticación de OpenBSD requiera crear una cuenta del sis
 
 * Mantener de manera uniforme tanta información de cada usuario del sistema como lo requiera una organización (la que puede mantenerse en ```/etc/passwd``` es mínima y no es apropiada para toda organización).
 * Facilitar la consulta de información de usuarios.
-* Puede hacerse más pública la información que se desee empleando el OpenLDAP LDAP Root Service (ver http://www.openldap.org/faq/data/cache/393.html )
+* Puede hacerse más pública la información que se desee empleando el OpenLDAP LDAP Root Service (ver <http://www.openldap.org/faq/data/cache/393.html> )
 * Permitir autenticación tanto con el mecanismos estándar de OpenBSD como con el servidor LDAP (por ejemplo Courier-POP3D puede autenticar directamente con el servidor LDAP).
 
 ## BIBLIOGRAFÍA
 
 * Páginas ```man slapd```, ```slapd.conf```, ```login_ldap```
-* http://www.openldap.org/doc/admin22/quickstart.html
-* http://www.thenewpush.com/jahia/Jahia/cache/offonce/pid/46#10
-* http://www.os3.nl/~hjblok/practical/LIA/ldap.html
+* <http://www.openldap.org/doc/admin22/quickstart.html>
+* <http://www.thenewpush.com/jahia/Jahia/cache/offonce/pid/46#10>
+* <http://www.os3.nl/~hjblok/practical/LIA/ldap.html>
 
 Inconveniente con ```/etc/login.conf```:
 
-* http://monkey.org/openbsd/archive/misc/0212/msg00773.html
-* http://www.pantek.com/library/general/lists/openbsd.org/misc/msg02844.html
+* <http://monkey.org/openbsd/archive/misc/0212/msg00773.html>
+* <http://www.pantek.com/library/general/lists/openbsd.org/misc/msg02844.html>
 
 La necesidad de permitir LDAPv2 se vió en un correo, disponible hasta hace poco en el cache de google.
 
 Seguridad y autoridad certificadora:
-* http://www.openldap.org/pub/ksoper/OpenLDAP_TLS_howto.html#2.1
+
+* <http://www.openldap.org/pub/ksoper/OpenLDAP_TLS_howto.html#2.1>
 
 Información dedicada al Padre protector y liberada al dominio público. 2005. vtamara@pasosdeJesus.org

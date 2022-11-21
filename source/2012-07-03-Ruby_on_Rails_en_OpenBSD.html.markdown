@@ -1,6 +1,6 @@
 ---
 title: Ruby_on_Rails_en_OpenBSD
-date: 2012-07-03
+date: 2012-07-03 12:00 UTC
 tags:
 ---
 

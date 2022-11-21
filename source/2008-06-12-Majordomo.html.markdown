@@ -1,6 +1,6 @@
 ---
 title: Majordomo
-date: 2008-06-12
+date: 2008-06-12 12:00 UTC
 tags:
 ---
 

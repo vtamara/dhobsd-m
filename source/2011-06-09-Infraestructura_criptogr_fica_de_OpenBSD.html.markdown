@@ -1,6 +1,6 @@
 ---
 title: Infraestructura_criptogr_fica_de_OpenBSD
-date: 2011-06-09
+date: 2011-06-09 12:00 UTC
 tags:
 ---
 El OCF (OpenBSD cryptographic Framework) como se describe en {7} es una capa de rutinas criptográficas implementada en el kernel que provee acceso uniforme a tarjetas criptográficas aceleradoras por medio de un API bien diseñado.   Puede ser usada por otras partes del kernel y a nivel de usuario con algoritmos simétricos y asimétricos.  Ofrece balanceo de carga, migración de sesión y encadenamiento de algoritmos.   Puede emplear hasta el 95% del desempeño máximo de tarjetas aceleradoras.

@@ -1,6 +1,6 @@
 ---
 title: Ganglia
-date: 2013-04-04
+date: 2013-04-04 12:00 UTC
 tags:
 ---
 Es una aplicación para monitorear servidores.   A continuación presentamos como puede utilizarse Ganglia 3.5.0 con adJ 5.2

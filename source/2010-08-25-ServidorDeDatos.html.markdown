@@ -1,6 +1,6 @@
 ---
 title: ServidorDeDatos
-date: 2010-08-25
+date: 2010-08-25 12:00 UTC
 tags:
 ---
 Se trata de un servidor conectado a Internet donde puede almacenar su información para revisarla dentro y fuera de la organización.  Muy apropiado para usar con dispositivos móviles (netbooks, celulares, iPhone, Black Berry) que tienen poco espacio para almacenar datos pero conectividad a Internet.

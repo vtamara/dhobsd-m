@@ -1,6 +1,6 @@
 ---
 title: man_8_iked
-date: 2011-02-01
+date: 2011-02-01 12:00 UTC
 tags:
 ---
 IKED(8)                 OpenBSD System Manager's Manual                IKED(8)

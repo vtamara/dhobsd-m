@@ -1,6 +1,6 @@
 ---
 title: Enlaces
-date: 2006-01-08
+date: 2006-01-08 12:00 UTC
 tags:
 ---
 Dignidad Humana:

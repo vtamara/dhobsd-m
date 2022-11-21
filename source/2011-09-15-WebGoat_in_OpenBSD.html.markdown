@@ -1,6 +1,6 @@
 ---
 title: WebGoat_in_OpenBSD
-date: 2011-09-15
+date: 2011-09-15 12:00 UTC
 tags:
 ---
  !WebGoat is a J2EE application to learn about web application security.    Some of its exercises require modifications of its sources in Java and recompiling and deploying.   The process seems to be simple with the heavy Eclipse, but with some configuration it can be done from the command line in OpenBSD adJ 4.9.

@@ -1,6 +1,6 @@
 ---
 title: man_5_isakmpd.conf
-date: 2011-02-01
+date: 2011-02-01 12:00 UTC
 tags:
 ---
 ISAKMPD.CONF(5)           OpenBSD Programmer's Manual          ISAKMPD.CONF(5)

@@ -1,6 +1,6 @@
 ---
 title: Instalaci_n_de_OpenBSD_en_computador_Simply_RI80
-date: 2008-04-14
+date: 2008-04-14 12:00 UTC
 tags:
 ---
 Hasta donde entiendo Simply es una empresa que ensambla portátiles en Colombia. (Felicitaciones!)

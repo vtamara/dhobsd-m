@@ -1,6 +1,6 @@
 ---
 title: Sacar_de_Contexto
-date: 2011-08-29
+date: 2011-08-29 12:00 UTC
 tags:
 ---
 En un trino del 17 de Agosto de  2011 del ex-presidente Uribe https://twitter.com/#!/AlvaroUribeVel/status/103998716976955392 dice:

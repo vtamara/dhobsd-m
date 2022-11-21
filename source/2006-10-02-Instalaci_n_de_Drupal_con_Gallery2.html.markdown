@@ -1,6 +1,6 @@
 ---
 title: Instalaci_n_de_Drupal_con_Gallery2
-date: 2006-10-02
+date: 2006-10-02 12:00 UTC
 tags:
 ---
 Drupal es un manejador de contenidos bastante popular; Gallery2 permite mantener albums de fotos.  Aunque la licencia de estos programas es GPL, ambos pueden usarse en un sistema OpenBSD para complementar una plataforma de comunicaciones como en:

@@ -1,6 +1,6 @@
 ---
 title: DN.sh
-date: 2006-02-07
+date: 2006-02-07 12:00 UTC
 tags:
 ---
 <pre>

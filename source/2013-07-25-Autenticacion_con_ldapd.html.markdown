@@ -1,6 +1,6 @@
 ---
 title: Autenticacion_con_ldapd
-date: 2013-07-25
+date: 2013-07-25 12:00 UTC
 tags:
 ---
 Empleando el servicio ```ldpad``` describimos como autenticar usuarios en OpenBSD 5.3 empleando ```ypldap```. Seguimos la estructura de un artículo anterior [Autenticacion con OpenLDAP].

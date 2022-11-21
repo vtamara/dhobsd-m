@@ -1,6 +1,6 @@
 ---
 title: apache_openbsd_5.6_y_5.7
-date: 2015-04-21
+date: 2015-04-21 12:00 UTC
 tags:
 ---
 Dado que algunas instalaciones de adJ y OpenBSD 5.6 y 5.7, pueden requerir 

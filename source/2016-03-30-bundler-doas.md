@@ -1,6 +1,6 @@
 ---
 title: bundler doas
-date: 2016-03-30
+date: 2016-03-30 12:00 UTC
 tags:
 ---
 

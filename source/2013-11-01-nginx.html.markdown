@@ -1,6 +1,6 @@
 ---
 title: nginx
-date: 2013-11-01
+date: 2013-11-01 12:00 UTC
 tags:
 ---
 Para usar nginx:

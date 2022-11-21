@@ -1,6 +1,6 @@
 ---
 title: man_4_crypto
-date: 2011-02-28
+date: 2011-02-28 12:00 UTC
 tags:
 ---
 ##NOMBRE 

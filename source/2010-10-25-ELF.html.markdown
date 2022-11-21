@@ -1,6 +1,6 @@
 ---
 title: ELF
-date: 2010-10-25
+date: 2010-10-25 12:00 UTC
 tags:
 ---
 Desde OpenBSD 3.4 se emplea ELF como formato de binarios.

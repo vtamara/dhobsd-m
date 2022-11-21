@@ -1,6 +1,6 @@
 ---
 title: apt-cacher-ng
-date: 2015-05-08
+date: 2015-05-08 12:00 UTC
 tags:
 ---
 # Cache de paquetes Ubuntu en una red local con ```apt-cacher-ng```

@@ -1,6 +1,6 @@
 ---
 title: Webmaking_101_Final
-date: 2012-01-11
+date: 2012-01-11 12:00 UTC
 tags:
 ---
 I want to thank and congratulate specially Zuzel for improving Lernanta to allow challenges and badges. Also to John for designing this interesting challenge, it has some poetry and also technical aspects that IMHO are well suited for beginners.

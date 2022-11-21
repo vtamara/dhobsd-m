@@ -1,6 +1,6 @@
 ---
 title: SoporteServidorCorreo
-date: 2010-08-25
+date: 2010-08-25 12:00 UTC
 tags:
 ---
 Las siguientes operaciones se hacen para administrar un servidor de correo.  Hay otras operaciones que se hacen con el [Cliente de Correo].

@@ -1,6 +1,6 @@
 ---
 title: PHP_Ruby_Python_en_OpenBSD_5
-date: 2012-01-23
+date: 2012-01-23 12:00 UTC
 tags:
 ---
 El desarrollo de PHP no ha sido continuo, las fechas de publicación de algunas versiones mayores (con cambios grandes) recientes son:

@@ -1,6 +1,6 @@
 ---
 title: Webmaking_101_editor
-date: 2011-12-05
+date: 2011-12-05 12:00 UTC
 tags:
 ---
 The editor I prefer is vim, I have used it in OpenBSD adJ (my prefered OS), Linux and even Windows.  

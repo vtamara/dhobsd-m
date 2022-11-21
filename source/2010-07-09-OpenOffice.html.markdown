@@ -1,6 +1,6 @@
 ---
 title: OpenOffice
-date: 2010-07-09
+date: 2010-07-09 12:00 UTC
 tags:
 ---
 Además de ser de fuentes abiertas (aunque con licencia GPL), hay varias razones que hacen a OpenOffice preferible a Microsoft Office.

@@ -1,6 +1,6 @@
 ---
 title: Seguridad_de_aplicaciones_web_en_PHP
-date: 2011-09-03
+date: 2011-09-03 12:00 UTC
 tags:
 ---
 ##Inyección SQL

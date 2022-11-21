@@ -1,6 +1,6 @@
 ---
 title: ldapd
-date: 2013-07-25
+date: 2013-07-25 12:00 UTC
 tags:
 ---
 

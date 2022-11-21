@@ -1,6 +1,6 @@
 ---
 title: man_8_ipsecctl
-date: 2010-12-29
+date: 2010-12-29 12:00 UTC
 tags:
 ---
 ##NOMBRE 

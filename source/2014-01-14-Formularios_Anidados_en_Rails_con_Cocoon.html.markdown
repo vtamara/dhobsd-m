@@ -1,6 +1,6 @@
 ---
 title: Formularios_Anidados_en_Rails_con_Cocoon
-date: 2014-01-14
+date: 2014-01-14 12:00 UTC
 tags:
 ---
 

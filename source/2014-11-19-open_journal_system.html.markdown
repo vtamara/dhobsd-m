@@ -1,6 +1,6 @@
 ---
 title: open_journal_system
-date: 2014-11-19
+date: 2014-11-19 12:00 UTC
 tags:
 ---
 Como se describe en {2}, en un OJS operando hay los siguientes roles:

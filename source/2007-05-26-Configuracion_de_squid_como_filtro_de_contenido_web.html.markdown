@@ -1,6 +1,6 @@
 ---
 title: Configuracion_de_squid_como_filtro_de_contenido_web
-date: 2007-05-26
+date: 2007-05-26 12:00 UTC
 tags:
 ---
 [Aprendieno de Jesus 3.9 | http://aprendiendo.pasosdeJesus.org] (adJ 3.9) incluye paquetes de ```squid``` en modo transparente y ```squidguard``` con una configuración sencilla,  que pueden emplearse para filtrar contenidos no deseados del web.  Esto es particularmente útil en colegios donde deben filtrarse por ejemplo páginas pornográficas como medida de responsabilidad frente a niñ@s del colegio.

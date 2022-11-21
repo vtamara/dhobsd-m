@@ -1,6 +1,6 @@
 ---
 title: Ruby
-date: 2013-10-17
+date: 2013-10-17 12:00 UTC
 tags:
 ---
 Describimos detalles del lenguaje Ruby 1.9 en su instalación por defecto en adJ 5.3

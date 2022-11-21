@@ -1,6 +1,6 @@
 ---
 title: Explotar-SIVeL-1.1cp2
-date: 2011-05-22
+date: 2011-05-22 12:00 UTC
 tags:
 ---
 Acabamos de liberar el segundo candidato a publicación de SIVeL 1.1 en:

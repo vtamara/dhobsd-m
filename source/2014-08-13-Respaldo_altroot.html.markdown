@@ -1,6 +1,6 @@
 ---
 title: Respaldo_altroot
-date: 2014-08-13
+date: 2014-08-13 12:00 UTC
 tags:
 ---
 Para respaldar un disco de un sistema OpenBSD adJ, puede conectarse 
