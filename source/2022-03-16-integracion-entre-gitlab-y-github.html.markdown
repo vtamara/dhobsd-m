@@ -6,12 +6,11 @@ tags:
 
 ---
 
+Es posible tener un repositorio principal en gitlab y que mantenga copia 
+sincronizada automáticamente en github, o viceversa.
 
-# 1. Mantener repositorio principal en gitlab
-
-En github cree un nuevo repositorio en blanco que recibirá la copia
-
-## 1.1 Cree un testigo de acceso personal en github
+Ambas posibildades requieren que primero cree un testigo de acceso personal
+en github con el siguiente procedimiento:
 
 * Diríjase a <https://github.com/settings/apps>
 * Elija `Personal access tokens -> Tokens (classic)`
@@ -21,7 +20,12 @@ En github cree un nuevo repositorio en blanco que recibirá la copia
 * Cuando vea el testigo guárdelo pues no volverá a verlo y lo requerirá con
   cada repositorio que quiera replicar con este token.
 
-## 1.2 Configure el repositorio de gitlab para empujar hacía github
+
+# 1. Mantener repositorio principal en gitlab
+
+En github cree un nuevo repositorio en blanco que recibirá la copia.
+
+Configure el repositorio de gitlab para empujar hacía github así:
 
 * Diríjase al repositorio de gitlab que va a replicar
 * Elija `Configuración -> Repositorio`
@@ -36,11 +40,7 @@ En github cree un nuevo repositorio en blanco que recibirá la copia
 
 # 2. Mantener repositorio principal en github
 
-## 2.1 Cree un testigo de acceso personal en github
-
-Siga las mismas instrucciones de la sección 1.1.
-
-## 2.2 En gitlab
+En gitlab:
 
 * Cree un nuevo repositorio donde recibirá la copia de github, elija 
   `Ejecutar CI/CD para un repositorio externo`

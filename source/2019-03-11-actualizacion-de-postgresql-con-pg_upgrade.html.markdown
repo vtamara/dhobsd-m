@@ -6,7 +6,11 @@ tags:
 
 ---
 
-# Actualización de PostgreSQL con `pg_upgrade` en adJ
+
+>> Atención: Este artículo se ha promovido a sección en la documentación
+>> de adJ que puede consultar actualizada en 
+>> <https://pasosdejesus.org/doc/servidor_adJ/otros_servicios_que_puede_prestar_el_servidor.html#pg-upgrade>
+
 
 Documento actualizado: 2023-01-03
 

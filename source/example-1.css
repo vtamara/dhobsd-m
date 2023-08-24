@@ -1,12 +1,4 @@
 
-/*
-   This stylesheet for the yellow example-1 contains some unnecessary
-   instructions, because it was taken from another project.
-   Please look into 'wiki.css' and the README on how to style ewiki pages.
-*/
-
-
-
 /* everywhere */
 body, .body, td, form, input, select {
   font-size: 13px;
@@ -73,7 +65,7 @@ h1.site-title {
   font-size: 64px;
   letter-spacing: -4px;
   line-height: 70px;
-  font-family: "Skaterdudes","You are what you eat","I hate Comic Sans","Comic Sans MS",fantasy;
+  font-family: serif;
   font-weight: 200;
 }
 h1.site-title a {
