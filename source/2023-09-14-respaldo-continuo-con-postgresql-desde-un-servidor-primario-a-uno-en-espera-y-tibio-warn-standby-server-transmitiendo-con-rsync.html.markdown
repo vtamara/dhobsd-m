@@ -5,6 +5,7 @@ date: 2023-09-14 19:04 UTC
 tags: 
 
 ---
+# Respaldo continuo con PostgreSQL desde un servidor primario a uno en-espera y tibio (warn standby server) transmitiendo con rsync
 
 Cómo se explica en 
 <https://www.postgresql.org/docs/15/different-replication-solutions.html> 
