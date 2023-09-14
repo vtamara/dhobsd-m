@@ -7,6 +7,8 @@ tags:
 ---
 # Respaldo continuo con PostgreSQL desde un servidor primario a uno en-espera y tibio (warn standby server) transmitiendo con rsync
 
+# 1. Introducción
+
 Cómo se explica en 
 <https://www.postgresql.org/docs/15/different-replication-solutions.html> 
 hay diferentes mecanismos para hacer copias de respaldo que 
@@ -24,13 +26,13 @@ la base destino puede tener una versión diferente a la de la base origen e
 incluso una estructura diferente), pero también más involucrada la aplicación 
 (por ejemplo el último se hace con ordenes de PostgreSQL).
 
-Suponiendo que tiene un servidor primario y quiere mantener una copia 
-actualizada de la base de datos completa en un servidor en-espera 
-puede usar el envió de registros de escritura anticipada.  En este escrito 
-presentamos tal configuración suponiendo que los servidores operan
-adJ.
+Suponiendo que tiene un servidor primario y quiere mantener una copia
+bastante actualizada de solo lectura de la base de datos completa en un
+servidor en-espera puede usar el envió de registros de escritura anticipada.
+En este escrito presentamos tal configuración suponiendo que los servidores
+operan adJ.
 
-# 1. Envío de registros de escritura anticipada con rsync
+# 2. Envío de registros de escritura anticipada con rsync
 
 Como se explica en <https://www.postgresql.org/docs/15/warm-standby.html>
 el primario se configura en modo de archivado continuo y el servidor en 
@@ -142,7 +144,7 @@ Configura `postgresql.conf` con:
 
         archive_cleanup_command = 'pg_archivecleanup /var/www/resbase/archivo_wal %r'
 
-Para indicar que tu servidor operará como en-espera tibio:
+Para indicar que tu servidor operará en-espera y tibio:
 
         touch standby.signal
         chown _postgresql:_postgresql standby.signal
@@ -169,7 +171,7 @@ servidor en-espera la información más reciente que vaya cambiando en
 el servidor primario.
 
 
-# Conclusión
+# 3. Conclusión
 
 Es una configuración relativamente fácil de implementar que dejará una copia
 continuamente actualizada y de sólo lectura de la base de datos del servidor
