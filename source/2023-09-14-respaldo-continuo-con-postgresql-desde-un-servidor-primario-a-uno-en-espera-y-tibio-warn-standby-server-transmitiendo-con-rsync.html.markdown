@@ -14,9 +14,9 @@ Cómo se explica en
 hay diferentes mecanismos para hacer copias de respaldo que 
 progresivamente van facilitando operación casi continua y alta disponibilidad:
 
-* A nivel de hardware  y/o sistema operativo: Disco compartido (e.g NAS)
-* A nivel de sistema operativo: Replicación de sistema de archivos
-* A nivel de PostgreSQL y sistema operativo:
+1. A nivel de hardware  y/o sistema operativo: Disco compartido (e.g NAS)
+2. A nivel de sistema operativo: Replicación de sistema de archivos
+3. A nivel de PostgreSQL y sistema operativo:
     * Envío de registros de escritura anticipada
     * Replicación lógica
 
@@ -26,9 +26,9 @@ la base destino puede tener una versión diferente a la de la base origen e
 incluso una estructura diferente), pero también más involucrada la aplicación 
 (por ejemplo el último se hace con ordenes de PostgreSQL).
 
-Suponiendo que tiene un servidor primario y quiere mantener una copia
+Suponiendo que tienes un servidor primario y quieres mantener una copia
 bastante actualizada de solo lectura de la base de datos completa en un
-servidor en-espera puede usar el envió de registros de escritura anticipada.
+servidor en-espera puedes usar el envió de registros de escritura anticipada (WAL).
 En este escrito presentamos tal configuración suponiendo que los servidores
 operan adJ.
 
@@ -134,11 +134,12 @@ Desde el servidor en-espera descomprime la copia con permisos precisos
         cd data
         tar xvfp ../respaldo.tar
         rm pg_wal/*
+        cd ..
 
 
 ## 1.4 Configuración de servidor en-espera y arranque
 
-Configura `postgresql.conf` con:
+Configura `data/postgresql.conf` con:
 
         restore_command = 'cp /var/www/resbase/archivo_wal/%f %p'
 
@@ -146,8 +147,8 @@ Configura `postgresql.conf` con:
 
 Para indicar que tu servidor operará en-espera y tibio:
 
-        touch standby.signal
-        chown _postgresql:_postgresql standby.signal
+        touch data/standby.signal
+        chown _postgresql:_postgresql data/standby.signal
 
 
 Inicia la base de datos
