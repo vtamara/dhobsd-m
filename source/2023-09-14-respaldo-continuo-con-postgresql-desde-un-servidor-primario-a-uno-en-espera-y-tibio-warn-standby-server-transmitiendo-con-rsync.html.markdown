@@ -176,5 +176,5 @@ el servidor primario.
 
 Es una configuración relativamente fácil de implementar que dejará una copia
 continuamente actualizada y de sólo lectura de la base de datos del servidor
-primario en un servidor en-espera, tibio, es tibio porque la copia queda un poco
-retrasada respecto al original.
+primario en un servidor en-espera, tibio. Es tibio porque la copia queda un poco
+retrasada respecto al original (en bases de datos con uso continuo queda retrasada unos segundos).
