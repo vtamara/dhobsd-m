@@ -33,40 +33,40 @@ Descripción resumida de {2}
 | ```R12-R15``` | |Sin usos implícitos. | ```R12D-R15D, R12W-R15W, R12L-R15L``` |
 
 * Instrucciones. De propósito general. Multimedia de 128bits. multimedia de 64bits. De punto flotante.
-** Movimiento: ```MOV, MOVSX, MOVZX, MOVD, MOVNTI```
-** Movimientos condicionales: ```CMOV```cc dependiendo del valor de las banderas
-** Operaciones de pila: ```POP, POPA, POPAD, PUSH, PUSHA, PUSHAD, ENTER, LEAVE```
-** Conversión de datos: ```CBW, CWDE, CDQE, CWD, CDQ, CQO, MOVMSKPS, MOVMSKPD, XLAT, AAA, AAD, AAM, AAS, DAA, DAS, BSWAP```
-** Cargar registros de segmento: ```LDS, LES, LFS, LGS, LSS, MOV regSeg, POP regSeg```
-** Cargar dirección efectiva: ```LEA```
-** Aritmética: ```ADC, ADD, SUB, SBB, NEG, MUL, IMUL, DIV, IDIV, DEC, INC```
-** Rotación y corrimiento de bits en registros: ```RCL, RCR, ROL, ROR, SAL, SAR, SHL, SHR, SHLD, SRDH``` 
-** Comparacinoes y pruebas: ```CMP, TEST, BSF, BSR, POPCNT, LZCNT, BT, BTC, BTR, BTS, SETcc, BOUND```
-** Lógicas: ```AND, OR, XOR, NOT```
-** Cádenas: ```CMPS,CMPSB, CMPSW, CMPSD, CMPSQ, SCAS, SCASB, SCASW, SCASD, SCASQ, STOS, STOSB, STOSW, STOSD, STOSQ```.   Suelen usarse con el prefijo ```REP``` que repite la instrucción decrementando CX hasta que llegue a 0. ```CMPS``` y ```SCAS``` se usan con  prefijo ```REPE/REPZ``` o ```REPNE/REPNZ``` que además de detener cuando ```CX``` llega a cero se detienen dependiendo de ```ZF```.
-*** ```MOVS, MOVSB, MOVSW, MOVSD, MOVSQ```: Copian un operando desde seg```:![rSI]``` a ```ES:![rDI]```. Tras copiar, tanto ```rSI``` como ```rDI``` son autoincrementados (si la bandera ```DF``` es 0) o autodecrementados (si ```DF``` es 1).  La cantidad de bytes copiados se especifica en ```CX```
-** Transferencia de control: ```JMP```, ```J```cc, ```LOOP```cc, ```CALL, RET, INT, INTO, IRET, IRETD, IRETQ```
-** Banderas: ```POPF, POPFD, POPFQ, PUSHF, PUSHFD, PUSHFQ, CLC, CMC, STC, CLD, STD, CLI, STI, LAHF, SAHF```
-** Entrada/Salida: ```IN, OUT``` y otras que pueden usarse con prefijo ```REP```: ```INS, INSB, INSW, INSD, OUTS, OUTSB, OUTSW, OUTSD```
-** Semáforos: ```CMPXCHG, CMPXCHG8B, CMPXCHG16B, XADD, XCHG```
-** Información del procesador: ```CPUID```
-** Manejo del cache y memoria: ```LFENCE, SFENCE, MFENCE, PREFETCH, PREFETCHW, CLFLUSH```
-** No opera: ```NOP```
-** Llamadas al sistema: ```SYSENTER, SYSEXIT, SYSCALL, SYSRET```
+   * Movimiento: ```MOV, MOVSX, MOVZX, MOVD, MOVNTI```
+   * Movimientos condicionales: ```CMOV```cc dependiendo del valor de las banderas
+   * Operaciones de pila: ```POP, POPA, POPAD, PUSH, PUSHA, PUSHAD, ENTER, LEAVE```
+   * Conversión de datos: ```CBW, CWDE, CDQE, CWD, CDQ, CQO, MOVMSKPS, MOVMSKPD, XLAT, AAA, AAD, AAM, AAS, DAA, DAS, BSWAP```
+   * Cargar registros de segmento: ```LDS, LES, LFS, LGS, LSS, MOV regSeg, POP regSeg```
+   * Cargar dirección efectiva: ```LEA```
+   * Aritmética: ```ADC, ADD, SUB, SBB, NEG, MUL, IMUL, DIV, IDIV, DEC, INC```
+   * Rotación y corrimiento de bits en registros: ```RCL, RCR, ROL, ROR, SAL, SAR, SHL, SHR, SHLD, SRDH``` 
+   * Comparacinoes y pruebas: ```CMP, TEST, BSF, BSR, POPCNT, LZCNT, BT, BTC, BTR, BTS, SETcc, BOUND```
+   * Lógicas: ```AND, OR, XOR, NOT```
+   * Cádenas: ```CMPS,CMPSB, CMPSW, CMPSD, CMPSQ, SCAS, SCASB, SCASW, SCASD, SCASQ, STOS, STOSB, STOSW, STOSD, STOSQ```.   Suelen usarse con el prefijo ```REP``` que repite la instrucción decrementando CX hasta que llegue a 0. ```CMPS``` y ```SCAS``` se usan con  prefijo ```REPE/REPZ``` o ```REPNE/REPNZ``` que además de detener cuando ```CX``` llega a cero se detienen dependiendo de ```ZF```.
+   * ```MOVS, MOVSB, MOVSW, MOVSD, MOVSQ```: Copian un operando desde seg```:![rSI]``` a ```ES:![rDI]```. Tras copiar, tanto ```rSI``` como ```rDI``` son autoincrementados (si la bandera ```DF``` es 0) o autodecrementados (si ```DF``` es 1).  La cantidad de bytes copiados se especifica en ```CX```
+   * Transferencia de control: ```JMP```, ```J```cc, ```LOOP```cc, ```CALL, RET, INT, INTO, IRET, IRETD, IRETQ```
+   * Banderas: ```POPF, POPFD, POPFQ, PUSHF, PUSHFD, PUSHFQ, CLC, CMC, STC, CLD, STD, CLI, STI, LAHF, SAHF```
+   * Entrada/Salida: ```IN, OUT``` y otras que pueden usarse con prefijo ```REP```: ```INS, INSB, INSW, INSD, OUTS, OUTSB, OUTSW, OUTSD```
+   * Semáforos: ```CMPXCHG, CMPXCHG8B, CMPXCHG16B, XADD, XCHG```
+   * Información del procesador: ```CPUID```
+   * Manejo del cache y memoria: ```LFENCE, SFENCE, MFENCE, PREFETCH, PREFETCHW, CLFLUSH```
+   * No opera: ```NOP```
+   * Llamadas al sistema: ```SYSENTER, SYSEXIT, SYSCALL, SYSRET```
 * Modos de operación.  
-** Modo largo: requiere sistemas operativos de 64 bits. A su vez puede ser modo 64 bits, o modo de compatibilidad
-** Modo legado: compatible con aplicaciones y sistemas operativos de 16 y 32 bits. Puede ser modo protegido, modo virtual 8086, modo real.
+  * Modo largo: requiere sistemas operativos de 64 bits. A su vez puede ser modo 64 bits, o modo de compatibilidad
+  * Modo legado: compatible con aplicaciones y sistemas operativos de 16 y 32 bits. Puede ser modo protegido, modo virtual 8086, modo real.
 * Memoria virtual:
-** En modo 64 bits, la memoria virtual no es segmentada es un espacio plano numerado de 0 a  2 ^ 64 - 1. Pueden usarse para establecer atributos los registros de segmentos ```CS``` (código) y como bases en direccionamientos ```FS``` y ```GS```.
-** En modo legado y de compatibilidad la memoria es segmentada con los registros de segmento ```DS``` (datos), ```CS``` (código), ```ES``` (extendido), ```FS```, ```GS``` y ```SS``` (pila).
+  * En modo 64 bits, la memoria virtual no es segmentada es un espacio plano numerado de 0 a  2 ^ 64 - 1. Pueden usarse para establecer atributos los registros de segmentos ```CS``` (código) y como bases en direccionamientos ```FS``` y ```GS```.
+  * En modo legado y de compatibilidad la memoria es segmentada con los registros de segmento ```DS``` (datos), ```CS``` (código), ```ES``` (extendido), ```FS```, ```GS``` y ```SS``` (pila).
 * Memoria física:
-** Se mapea la virtual a la física mediante segmentación o paginación.  En paginación las direcciones lineales de la memoria virtual se traducen a bloques de tamaño fijo llamados páginas, que el sistema operativo puede mover según necesidad entre memoria y disco. Estos mecanismos son invisibles  para la aplicación.
+  * Se mapea la virtual a la física mediante segmentación o paginación.  En paginación las direcciones lineales de la memoria virtual se traducen a bloques de tamaño fijo llamados páginas, que el sistema operativo puede mover según necesidad entre memoria y disco. Estos mecanismos son invisibles  para la aplicación.
 * Direccionamiento. Recordando que es una arquitectura little-endian, puede ser:
-** Absoluto: las direcciones son absolutas con respecto a comienzo de memoria virtual o segmento de datos si se usa segmentación.
-** Relativo a instrucción: desplazamiento con respecto al registro de instrucción ```RIP```
-** ModR/M: Base+(Indice*Escala)+Desplazamiento
-** En pila: es especial, se modifica con las instrucciones ```PUSH, POP, CALL, RET, IRET``` e ```INT```.
-** Cadenas: con los registros ```RSI``` y ```RDI```.
+  * Absoluto: las direcciones son absolutas con respecto a comienzo de memoria virtual o segmento de datos si se usa segmentación.
+  * Relativo a instrucción: desplazamiento con respecto al registro de instrucción ```RIP```
+  * ModR/M: Base+(Indice*Escala)+Desplazamiento
+  * En pila: es especial, se modifica con las instrucciones ```PUSH, POP, CALL, RET, IRET``` e ```INT```.
+  * Cadenas: con los registros ```RSI``` y ```RDI```.
 * Privilegios. Actual nivel de privilegio (CPL - Current Privilege Level). 0 para kernel manejo de memoria, localización de archivos, manejo de interrupciones. 1. para controladores y librerías. 3 para aplicaciones.  Al cambiar de nivel se guardan banderas y dirección donde estaba en la pila.
 
 
