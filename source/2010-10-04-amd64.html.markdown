@@ -173,18 +173,19 @@ En 2024 en OpenBSD/adJ 7.4 las herramientas de compilación estándar son del pr
       Thread model: posix
       InstalledDir: /usr/bin
   
-* ```gcc```  para compilar fuentes en C y C++
-* ```as```   para compilar fuentes en assembler
-* ```ld```   para encadenar
+* `clang`  para compilar fuentes en C (llamado por `cc`)
+* `clang++` para compilar fuentes en C++ (llamado por `c++`)
+* `as`   para compilar fuentes en assembler (es GNU assembler)
+* `ld.ldd`   para encadenar (del proyecto LLVM, llamado por `ld`)
 
-Por el licenciamiento de estas herramientas, hay proyectos que buscan remplazarlas. En OpenBSD busca remplazarse ```gcc``` con ```pcc``` (ver {6}), en FreeBSD se ha avanzado en remplazar toda la cadena con herramientas con LLVM: ```cpp``` y ```gcc``` con ```clang```, ```as``` y ```ld``` con ```llvm``` (ver {7})
+En cuanto a librerías (como indica `man 3 intro`)  libc es del proyecto OpenBSD y para C++ libc++ es la de LLVM.
 
 A continuación presentamos un programa en ensamblador que emplea las herramientas estándar y hace llamadas al sistema operativo para imprimir "Hola Mundo":
 
 <pre>
 # Basado en http://thebrownnotebook.wordpress.com/2009/10/27/native-64-bit-hello-world-with-nasm-on-freebsd/ y http://www.phiral.net/openbsdasm.htm
 
-# Sintaxis para gas que es el ensamblador estándar en OpenBSD, oramos.
+# Sintaxis par  a gas que es el ensamblador estándar en OpenBSD, oramos.
 # El enlazador ld convertirá a formato ejecutable ELF
 
 # Tiene una sección con los datos y otra con el código ejecutable
@@ -249,7 +250,7 @@ La sintaxis AT&T busca ser más portable ```inusual prioridad para un ensamblado
 
 Es política de OpenBSD que los segmentos de datos (.data) no pueden tener información ejecutable y los segmentos de código (.text) y otros que sean ejecutables no pueden escribirse.  A esta política se le llama  W^X (W xor X) que busca evitar ataques por ejemplo por desbordamiento de colchones (buffer overloading), ver {4} o un experimento en [WxorX]
 
-!3.2 Arranque
+### 3.2 Arranque
 
 Se explica a partir de fuentes de 4.8 y particularmente sys/arch/amd64/stand/biosboot/biosboot.S stand/Makefile.inc stand/biosboot/Makefile include/specialreg.h así como las páginas biosboot, boot boot_amd64
 
@@ -257,21 +258,21 @@ Se explica a partir de fuentes de 4.8 y particularmente sys/arch/amd64/stand/bio
 * Después carga el Registro Maestro de Arranque (MBR - Master Boot Record) de la pista 0, cabeza 0 y sector 1 del disco a la dirección 0x7C00, verifica que sus dos últimos bytes sean 0xAA55 y pasa el control a este.
 * El MBR de su tabla de particiones embebida, carga también en la dirección 0x7C00 el primer sector de la partición marcada como partición de arranque y pasa el control allí.  En el caso del MBR de OpenBSD presenta el mensaje Using drive X, partition Y. para indicar la partición que carga y a la cual pasa el control.  Puede operar en modo CHS (para discos de máximo 8GB o LBA), el usuario puede forzar modo CHS presionando Shift.
 * En el primer sector de una partición OpenBSD está ```biosboot.S``` que es un programa que cabe en un sector (512 bytes) y emplea registros de 16 bits y los servicios de la BIOS para:
-** Verificar si se está presionando la tecla Shift para cargar en modo CHS (cilindro - cabeza - sector) en lugar de LBA, pero esto requiere que boot esté en los primeros 8GB del disco.  Si carga en modo LBA sale mensaje Loading, si es en modo CHS sale !Loading.  Tras intentar si debe cargar en modo CHS aparece ; tras Loading.
-** Cargar el programa /boot en 0x40000 
-*** Carga nodo-i de /boot
-*** Emplea la información de ese nodo-i para cargar bloques directos y primer bloque indirecto si lo hay.  Muestra un punto . en pantalla por cada bloque leido. Cuando termina la carga envia un fin de linea.   El programa /boot si está sólo en bloques directos puede ser de tamaño 192KB.
-*** Verifica haber cargado un programa ELF 
+  * Verificar si se está presionando la tecla Shift para cargar en modo CHS (cilindro - cabeza - sector) en lugar de LBA, pero esto requiere que boot esté en los primeros 8GB del disco.  Si carga en modo LBA sale mensaje Loading, si es en modo CHS sale !Loading.  Tras intentar si debe cargar en modo CHS aparece ; tras Loading.
+  * Cargar el programa /boot en 0x40000 
+    * Carga nodo-i de /boot
+    * Emplea la información de ese nodo-i para cargar bloques directos y primer bloque indirecto si lo hay.  Muestra un punto . en pantalla por cada bloque leido. Cuando termina la carga envia un fin de linea.   El programa /boot si está sólo en bloques directos puede ser de tamaño 192KB.
+    * Verifica haber cargado un programa ELF 
 La secuencia de arranque desde los 8086 una vez el BIOS tiene el control es cargando el registro maestro de arranque (MBR - Master Boot Record) en un área de memoria (
-** Pasar el control a /boot en dirección 0x40120
-* El programa boot por su parte emplea los registros de 32 bits y:
-** Activa modo protegido
-** Prueba dispositivos para una consola básica y puertos seriales 
-** Detecta memoria 
-** Prueba APM 
-** Reconocer archivo de configuracion ```etc/boot.conf```, excepto si el usuario presiona la tecla Control 
-** Presenta el mensaje ```>> OpenBSD/amd64 BOOT [x.xx]``` y a continuación el indicador ```boot> ``` en el que pueden darse comandos.
-** Intenta cargar el kernel ```/bsd``` que típicamente está comprimido y lo descomprime.  
+  * Pasar el control a /boot en dirección 0x40120
+  * El programa boot por su parte emplea los registros de 32 bits y:
+    * Activa modo protegido
+    * Prueba dispositivos para una consola básica y puertos seriales 
+    * Detecta memoria 
+    * Prueba APM 
+    * Reconocer archivo de configuracion ```etc/boot.conf```, excepto si el usuario presiona la tecla Control 
+    * Presenta el mensaje ```>> OpenBSD/amd64 BOOT [x.xx]``` y a continuación el indicador ```boot> ``` en el que pueden darse comandos.
+    * Intenta cargar el kernel ```/bsd``` que típicamente está comprimido y lo descomprime.  
 
 Esta secuencia de arranque puede "verse" en operación con el emulador ```bochs```, para esto:
 * Instale bochs con soporte para depuración --o configure las fuentes con las opciones --enable-debugger como dice en {9}
