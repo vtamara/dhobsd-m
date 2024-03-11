@@ -180,59 +180,72 @@ En 2024 en OpenBSD/adJ 7.4 las herramientas de compilación estándar son del pr
 
 En cuanto a librerías (como indica `man 3 intro`)  libc es del proyecto OpenBSD y para C++ libc++ es la de LLVM.
 
-A continuación presentamos un programa en ensamblador que emplea las herramientas estándar y hace llamadas al sistema operativo para imprimir "Hola Mundo":
+Las características de seguridad de OpenBSD requieren que los binarios sean independientes de posición, por eso no se pueden hacer en ensamblador referencias a direcciones absolutas por ejemplo de zonas de memoria (e.g `mov rdi, hola`) sino indirectas mediante la posición del código (e.g `lea rdi, [rip + hola]`).  De hacer referencias absolutas a zonas de memoria se producen errores del estilo `ld: error: relocation R_X86_64_32S cannot be used against local symbol; recompile with -fPIC`
+
+También se ha vuelto más complejo hacer llamadas al sistema directamente con `syscall`, por eso el siguiente programa emplea libc para imprimir "Hola mundo":
 
 <pre>
-# Basado en http://thebrownnotebook.wordpress.com/2009/10/27/native-64-bit-hello-world-with-nasm-on-freebsd/ y http://www.phiral.net/openbsdasm.htm
+ .intel_syntax noprefix
+ # Basado en https://astharoshe.net/2020-06-28-Hello_assembler.html
+ # El enlazador ld convertirá a formato ejecutable ELF
+ # Tiene una sección con los datos y otra con el código ejecutable
 
-# Sintaxis par  a gas que es el ensamblador estándar en OpenBSD, oramos.
-# El enlazador ld convertirá a formato ejecutable ELF
+.section ".note.openbsd.ident", "a"
+        .p2align   2
+        .long      8,4,1
+        .ascii      "OpenBSD\0"
+        .long      0
 
-# Tiene una sección con los datos y otra con el código ejecutable
+.global _start
 
-.section .data
-hola:
-   .ascii "Hola, Mundo!\n\0"
+.global puts
+.global exit
 
-
-.section .text
-.globl _start
-
-# La ejecución comienza en símbolo _start
+.text
+ # La ejecución comienza en símbolo _start
 _start:
+   lea rdi, [rip + hola]
+   # Puts requiere la dirección de la cadena en rdi
+   call puts@plt
+   xor rdi, rdi
+   call exit@plt
 
-# Para hacer llamado al sistema, empleamos la instrucción syscall de AMD64 
-# y empleamos ABI amd64 para para pasar parámetros:
-# enteros o apuntadores en los registros RDI, RSI, RDX, RCX, R8 y R9
-# parámetros de punto flotante en los registros XMM0 a XMM7.
-
-   movq $4, %rax     # en RAX número de llamada al sistema, 4 es write
-   movq $1, %rdi     # En RDI descritpor de salida estándar (stdout)
-   movq $hola, %rsi  # En RSI dirección de cadena por mostrar
-   movq $13, %rdx    # En RDX tamaño de cadena por mostrar
-   syscall
-
-   movq $1, %rax     # Preparamos llamada al sistema, función 1 que es exit
-   movq $0, %rdi     # Retornaremos 0 al SO
-   syscall
+.data
+hola:
+    .asciz "Hola, Mundo!\n\0"
 </pre>
 
-Si lo almacenamos en ```ex.s``` puede compilarse con:
+Si lo almacenamos en ```h.s``` puede compilarse con:
 <pre>
-$ as ex.s -o ex.o
-$ ld ex.o -o ex
+$ as -g -o h.o h.s
+$ ld -o h --dynamic-linker=/usr/libexec/ld.so -pie -L/usr/lib -lc h.o
 </pre>
 
 Puede ejecutarse directamente:
 <pre>
-$ ./ex3
+$ ./h
 Hola, Mundo!
+ 
 </pre>
 o mejor habilitando rastreo de las llamadas al sistema:
 <pre>
-$ ktrace ./ex3
+$ ktrace ./h
 Hola, Mundo!
+ 
 $ kdump
+ ....
+ 35130 h CALL  write(1,0xc2c983d1000,0xc)                               
+ 35130 h GIO   fd 1 wrote 12 bytes                                      
+       "Hola mundo!                                                            
+       "                                                                       
+ 35130 h RET   write 12/0xc                                             
+ 35130 h CALL  write(1,0xc2c983d1000,0x1)                               
+ 35130 h GIO   fd 1 wrote 1 bytes                                       
+       "                                                                       
+       "                                                                       
+ 35130 h RET   write 1
+ ...
+ 35130 h CALL  exit(0)  
   2733 ktrace   RET   ktrace 0
   2733 ktrace   CALL  execve(!0x7f7ffffcdf4f,!0x7f7ffffcde00,!0x7f7ffffcde10)
   2733 ktrace   NAMI  "./ex3"
@@ -246,7 +259,7 @@ $ kdump
   2733 ex3      CALL  exit(0)
 </pre>
 
-La sintaxis AT&T busca ser más portable ```inusual prioridad para un ensamblador```, puede consultarse una introducción a las diferencias en {8}.
+El ejemplo usa sintaxis Intel, aunque es más comun emplear sintaxis AT&T que busca ser más portable, puede consultarse una introducción a las diferencias en {8}.
 
 Es política de OpenBSD que los segmentos de datos (.data) no pueden tener información ejecutable y los segmentos de código (.text) y otros que sean ejecutables no pueden escribirse.  A esta política se le llama  W^X (W xor X) que busca evitar ataques por ejemplo por desbordamiento de colchones (buffer overloading), ver {4} o un experimento en [WxorX]
 
