@@ -31,6 +31,7 @@ Una tabla de símbolos consta de nombres y datos asociados como: valor, tamaño,
 Algunos programas que operan con ejecutables (o librerías) ELF (ver {2}, {3}, {4}) son:
 
 | __Forma de uso__ | __Descripción__ |
+|---|---|
 | ```size binario``` | Para ver tamaños de algunos segmentos |
 | ```strings binario``` | extrae cadenas de un archivo |
 | ```strip binario``` | elimina símbolos de un binario |
