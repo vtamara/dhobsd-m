@@ -91,7 +91,7 @@ Un proceso tiene (ver `struct proc` en `/usr/include/sys.h`):
 * usuario efectivo, grupo efectivo
 * usuario salvado, grupo salvado
 
-Ver man 2 intro
+Ver `man 2 intro`
 
 
 ## 2.2 Carga y ejecución del binario
