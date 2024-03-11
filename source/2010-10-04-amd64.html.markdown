@@ -167,11 +167,11 @@ La sintaxis de los programas en assembler dependen del ensablador que se use par
 En 2024 en OpenBSD/adJ 7.4 las herramientas de compilación estándar son del proyecto LLVM:
 * `clang-cpp`  como preprocesador (llamado por `cpp`)
 
-            % clang-cpp --version
-            OpenBSD clang version 13.0.0
-            Target: amd64-unknown-openbsd7.4
-            Thread model: posix
-             InstalledDir: /usr/bin
+        % clang-cpp --version
+        OpenBSD clang version 13.0.0
+        Target: amd64-unknown-openbsd7.4
+        Thread model: posix
+        InstalledDir: /usr/bin
   
 * ```gcc```  para compilar fuentes en C y C++
 * ```as```   para compilar fuentes en assembler
