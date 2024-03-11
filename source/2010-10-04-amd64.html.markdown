@@ -11,14 +11,15 @@ Descripción resumida de {2}
 
 * Registros.
   * 16 de propósito general: ```RAX, RBX, RCX, RDX, RBP, RSI, RDI, RSP, R8-R15```. Pueden seguirse usando las partes de estos registros de 32, 16 y 8 bits legados de las arquitecturas i386 y 8086 (e.g por ejemplo los correspondientes a ```RAX``` son ```EAX```, ```AX```, ```AH```, ```AL```).
-
   * 16 registros multimedia de 128 bits: ```XMM0-XMM15```.
-  ** 8 registros multimedia de 64 bits: MMX0-MMX7.
-  ** 8 registros de punto flotante de 80 bits: ```FPR0-FPR7``` (los registros de multimedia de 64 bits se mapean sobre los de punto flotante).
-  ** Puntero de instrucción de 64 bits: ```RIP```.
-  ** Banderas de 64 bits: ```RFLAGS```.   Entre los 16 bits bajos de ```RFLAGS``` están los utilizables por aplicaciones:
-    *** ```CF``` - Lleva. ```PF``` - Paridad. ```AF``` - Auxiliar. ```ZF``` - Cero. ```SF``` - Signo. ```DF``` - Dirección. ```OF``` - Desbordamiento.  Entre los bits 16 y 32 están banderas reservadas para el sistema operativo. Algunas banderas tiene efecto sobre instrucciones (como ```CMOV```, saltos condicionales, ```Jcc```, ```SETcc```), y algunas instrucciones modifican las banderas (por ejemplo las sumas pueden modificar CF).
+  * 8 registros multimedia de 64 bits: MMX0-MMX7.
+  * 8 registros de punto flotante de 80 bits: ```FPR0-FPR7``` (los registros de multimedia de 64 bits se mapean sobre los de punto flotante).
+  * Puntero de instrucción de 64 bits: ```RIP```.
+  * Banderas de 64 bits: ```RFLAGS```.   Entre los 16 bits bajos de ```RFLAGS``` están los utilizables por aplicaciones:
+    * ```CF``` - Lleva. ```PF``` - Paridad. ```AF``` - Auxiliar. ```ZF``` - Cero. ```SF``` - Signo. ```DF``` - Dirección. ```OF``` - Desbordamiento.  Entre los bits 16 y 32 están banderas reservadas para el sistema operativo. Algunas banderas tiene efecto sobre instrucciones (como ```CMOV```, saltos condicionales, ```JC```, ```SETC```), y algunas instrucciones modifican las banderas (por ejemplo las sumas pueden modificar CF).
+
 | __Registro__ | __Uso__ | __Detalle__ | __Partes__ |
+|---|---|---|---|
 | ```RAX``` | Acumulador | Operando en sumas, multiplicaciones, divisiones cadenas, comparaciones e intercambios, traducción en tablas y operaciones de E/S.  Con ```RDX``` mantiene operandos de doble precisión. | ```EAX```, ```AX```, ```AL``` |
 | ```RBX``` | Base | Generación de direcciones en modo 16 bits | ```EBX, BX, BL``` |
 | ```RCX``` | Contador | Indice de bit en operaciones de rotación y cambio. Contador de iteraciones en ciclos. Saltos condicionales si es zero | ```ECX, CX, CL``` |
@@ -30,6 +31,7 @@ Descripción resumida de {2}
 | ```R8-R10``` | | Sin usos implícitos | ```R8D-R10D, R8W-R10W, R8L-R10L``` |
 | ```R11``` | | Mantiene valor de banderas en ```SYSCALL``` y ```SYSRET``` | ```R11D, R11W, R11L``` |
 | ```R12-R15``` | |Sin usos implícitos. | ```R12D-R15D, R12W-R15W, R12L-R15L``` |
+
 * Instrucciones. De propósito general. Multimedia de 128bits. multimedia de 64bits. De punto flotante.
 ** Movimiento: ```MOV, MOVSX, MOVZX, MOVD, MOVNTI```
 ** Movimientos condicionales: ```CMOV```cc dependiendo del valor de las banderas
