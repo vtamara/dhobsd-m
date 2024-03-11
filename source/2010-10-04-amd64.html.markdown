@@ -1,5 +1,5 @@
 ---
-title: amd64
+title: Arquitectura del AMD64
 date: 2010-10-04 12:00 UTC
 tags:
 ---
@@ -74,28 +74,37 @@ Descripción resumida de {2}
 
 Además de lo visible para las aplicaciones, resumimos de {5}:
 
-* Registros del sistema: Son de 64 bits. Control ```CR0, CR2, CR3, CR4``` y ```CR8```. Banderas ```RFLAGS```. Descriptores de Tablas: ```GDTR, IDTR, LDTR```. Tareas:  ```TR```. Depuración: ```DR0, DR1, DR2, DR3, DR6, DR7```.   También; ```EFER, SYSCFG```, Registros para encadenamiento ```STAR, LSTAR, CSTAR, SFMASK, FS.base, GS.base, !KernelGSbase, SYSENTER_CS, SYSENTER_ESP, SYSENTER_EIP```. Registros para tipado de memoria ```MTRRcap, !MTRRdefType, !MTRRphysBasen,!MTRRphysMaskn, MTRRfixn, PAT, TOP_MEM, TOP_MEM2```. Relacionados con desempeño ```TSC, !PerfEvtSeln, !PerfCtrn```. Chequeo de máquina ```MCG_CAP, MCG_STAT, MCG_CTL, MCi_CTL, MCi_STATUS, MCi_ADDR, MCi_MISC```
-* Un sistema operativo que opere en modo largo debe inicializar modo real mínimo, después inicializar modo protegido, a continuación debe inicializar modo largo y poner EFER.LMA en 1.
+* Registros del sistema: Son de 64 bits.
+  * Control ```CR0, CR2, CR3, CR4``` y ```CR8```.
+  * Banderas ```RFLAGS```.
+  * Descriptores de Tablas: ```GDTR, IDTR, LDTR```.
+  * Tareas:  ```TR```.
+  * Depuración: ```DR0, DR1, DR2, DR3, DR6, DR7```.   También; ```EFER, SYSCFG```,
+  * Registros para encadenamiento ```STAR, LSTAR, CSTAR, SFMASK, FS.base, GS.base, !KernelGSbase, SYSENTER_CS, SYSENTER_ESP, SYSENTER_EIP```.
+  * Registros para tipado de memoria ```MTRRcap, !MTRRdefType, !MTRRphysBasen,!MTRRphysMaskn, MTRRfixn, PAT, TOP_MEM, TOP_MEM2```.
+  * Relacionados con desempeño ```TSC, !PerfEvtSeln, !PerfCtrn```.
+  * Chequeo de máquina ```MCG_CAP, MCG_STAT, MCG_CTL, MCi_CTL, MCi_STATUS, MCi_ADDR, MCi_MISC```
+* Un sistema operativo que opere en modo largo debe inicializar modo real mínimo, después inicializar modo protegido, a continuación debe inicializar modo largo y poner `EFER.LMA` en 1.
 * Modo de Administración del Sistema. System Management Mode. SMM: Modo de operación diseñado para controlar actividades típicas del BIOS como administración de potencia. 
 * Administración de tareas. TSS: útil en modo legado para implementar procesos mapeando memoria independiente para cada proceso y cambios de tareas. No está disponible en modo largo, en el que es el sistema operativo quien debe implementar operación multitarea por completo. Consta de un segmento TSS, descriptor TSS, selector TSS, registros TSS.
-* Depuración y desempeño. Pueden ponerse puntos de ruptura (breakpoints) en los registros de desempeño, para que se produzca la excepción #DB cuando el control llegue a estas. La excepción #BP ocurre ante la interrupción 3.  Los registros de depuración solo pueden ponerse en CPL 0. Los contadores de desempeño se leen con la instrucción RDPMC.
+* Depuración y desempeño. Pueden ponerse puntos de ruptura (breakpoints) en los registros de desempeño, para que se produzca la excepción #BP cuando el control llegue a estas. La excepción #BP ocurre ante la interrupción 3.  Los registros de depuración solo pueden ponerse en `CPL 0`. Los contadores de desempeño se leen con la instrucción `RDPMC`.
 * Máquina Virtual Segura. Se refiere al soporte de virtualización que da este procesador, es decir para ejecutar un sistema operativo dentro de otro.
 * Controlador de interrupciones programable y avanzado. APIC. Acepta interrupciones del sistema y las envía al manejador de interrupciones de la CPU.
 * Memoria.  en modo largo debe estar activa la traducción de páginas. Cada dirección virtual consta de partes, por ejemplo puede ser: 
-** desplazamiento en tabla 1 (apuntada por dirección base de tabla de páginas), 
-** desplazamiento en tabla 2 (su base es apuntada en el desplazamiento de la tabla 1 anterior).
-** desplazamiento en tabla 3
-** dirección física dentro de la página referenciada por la tercera
+  * desplazamiento en tabla 1 (apuntada por dirección base de tabla de páginas), 
+  * desplazamiento en tabla 2 (su base es apuntada en el desplazamiento de la tabla 1 anterior).
+  * desplazamiento en tabla 3
+  * dirección física dentro de la página referenciada por la tercera
 * Máquinas virtuales: 
-** Un monitor de máquina virtual (VMM - Virtual Machine Monitor) es un programa que ejecuta diversos sistemas operativos huesped.  Una VMCB es una estructura en memoria con registros (como ```FS, GS, TR, LDTR, !KernelGsBase, STAR, LSTAR, CSTAR, SFMASK, SYSENTER_CS, SYSENTER_ESP, SYSENTER_EIP```) que permite recuperar el estado de un sistema operativo huesped (o del sistema operativo anfitrion).
+  * Un monitor de máquina virtual (VMM - Virtual Machine Monitor) es un programa que ejecuta diversos sistemas operativos huesped.  Una VMCB es una estructura en memoria con registros (como ```FS, GS, TR, LDTR, !KernelGsBase, STAR, LSTAR, CSTAR, SFMASK, SYSENTER_CS, SYSENTER_ESP, SYSENTER_EIP```) que permite recuperar el estado de un sistema operativo huesped (o del sistema operativo anfitrion).
 
-! 2.1 Modo largo
+### 2.1 Modo largo
 Dado que las estructuras de datos e instrucciones dependen del modo, y que los sistemas operativos de 64 bits deberían operar en modo largo, destacamos algunas características de este modo:
 
 * El puntero de instrucción (```RIP```) es de 64 bits, 
 * Las instrucciones usan el prefijo ```REX``` para especificar operandos de 64 bits.
 * No soporta modos 8086-virtual ni real. No soporta cambio de tarea por hardware. 
-* Se deshabilita segmentación. El espacio de direcciones es un sólo segmento plano para código, datos y pila. Se ignoran segmentos y prefijos ```CS, DS, SS, ES```.  Se ignoran límites de segmentos ```CS, DS, SS, ES, GS``` y ```FS```. Se ignoran atributos de ```DS, ES, FS``` y ```GS```. Los registros ```FS``` y ```GS``` se usan en cálculos de direcciones efectivas. Mapeado a registros específicos de módelo (MSR - Model Specific Registers) sólo pueden cargarse con la instrucción ```WRMSR```
+* Se deshabilita segmentación. El espacio de direcciones es un sólo segmento plano para código, datos y pila. Se ignoran segmentos y prefijos ```CS, DS, SS, ES```.  Se ignoran límites de segmentos ```CS, DS, SS, ES, GS``` y ```FS```. Se ignoran atributos de ```DS, ES, FS``` y ```GS```. Los registros ```FS``` y ```GS``` se usan en cálculos de direcciones efectivas. Mapeado a registros específicos de módelo (MSR - Model Specific Registers) sólo pueden cargarse con la instrucción `WRMSR`
 * Las direcciones virtuales son de 64 bits. Teóricamente las direcciones físicas podrían ser máximo de 52 bits. Los registros de descriptores de tabla que manejan la memoria virtual (```GDTR, IDTR, LDTR``` y ```TR```) pueden cargarse usando las instrucciones ```LGDT, LIDT, LLDT y LTR```.
 * Se habilita la extensión de direcciones físicas (PAE - Physical Address Extension) identificado con el registro ```CR4.PAE``` en ```1```. Con esta extensión, las estructuras de datos de paginación son de 64 bits y permiten referenciar todo el espacio físico de direcciones que es de 52 bits.  Se habilitan 4 niveles de estructuras de paginación, es decir se habilita el nivel de mapeo de páginas 4 (PML4 - Page Map Level 4). El registro ```CR3``` referencia dirección base de la tabla ```PML4```.  El tope de la jerarquía de traducción de páginas y referencia el apuntar a directorio de páginas ```PDP``` que tiene entre 4 y 512 entradas.  Entrada al apuntador a directorio de páginas. ```PDPE```. 
 * Se habilita extensiones para tamaño de página. (PSE - Paging size extension), que permite soportar páginas de tamaños 4K y 2MB.
@@ -104,43 +113,42 @@ Dado que las estructuras de datos e instrucciones dependen del modo, y que los s
 * ```GDT, IDT, LDT``` y ```TR``` son de 64 bits. ```LGDT, LIDT``` usan seudo-descriptores expandidos de 10 bytes.  ```LLDT``` y ```LTR``` usan entradas de tabla expandidas a 16 bytes. 
 
 
-! 2.2 Instrucciones exclusivas o relacionadas con el sistema operativo: 
+### 2.2 Instrucciones exclusivas o relacionadas con el sistema operativo: 
 
-
-* Nivel de privilegio: ```ARPL, LAR, LSL, VERR, VERW```.  ```VERR reg/mem``` verifica si un segmente de datos o códigos es leible en el actual nivel de privilegio. ```VERW``` verifica posibilidad de escribir. ```LAR``` carga byte de acceso a registros-
+* Nivel de privilegio: ```ARPL, LAR, LSL, VERR, VERW```.  ```VERR reg/mem``` verifica si un segmento de datos o códigos es leible en el actual nivel de privilegio. ```VERW``` verifica posibilidad de escribir. ```LAR``` carga byte de acceso a registros-
 * Operación con registros privilegiados
-** ```SWAPGS``` usado al ingresar al kernel para obtener un apuntador a las estructuras de datos del kernel y al tiempo salvar la base ```GS```, a la salida se usa para restablecer ```GS```
-** ```SMSW reg/mem``` copia la palabra de estado de la máquina en un registro o en memoria. ```LMSW``` carga palabra de estado de la máquina de un registro o memoria. 
-** ```WRMSR``` Escribe datos en los registros de 64 bits (MSR).  ```RDMSR``` copia MSR especificado por ```ECX``` en ```EDX:EAX```
-** ```MOV CRn``` modifica registros de control.  ```CR0``` mantiene estado de bits de control. ```CR2``` y ```CR3``` se usan para traducción de página. ```CR4``` mantiene bits para habiltiar características. ```CR8``` para priorizar interrupciones externas. ```CR1, CR5, CR6, CR7``` y ```CR9-CR15``` son reservados.
+  * ```SWAPGS``` usado al ingresar al kernel para obtener un apuntador a las estructuras de datos del kernel y al tiempo salvar la base ```GS```, a la salida se usa para restablecer ```GS```
+  * ```SMSW reg/mem``` copia la palabra de estado de la máquina en un registro o en memoria. ```LMSW``` carga palabra de estado de la máquina de un registro o memoria. 
+  * ```WRMSR``` Escribe datos en los registros de 64 bits (MSR).  ```RDMSR``` copia MSR especificado por ```ECX``` en ```EDX:EAX```
+  * ```MOV CRn``` modifica registros de control.  ```CR0``` mantiene estado de bits de control. ```CR2``` y ```CR3``` se usan para traducción de página. ```CR4``` mantiene bits para habiltiar características. ```CR8``` para priorizar interrupciones externas. ```CR1, CR5, CR6, CR7``` y ```CR9-CR15``` son reservados.
 * Tareas (no usables en modo largo): 
-** ```CLTS``` Limpia bandera de tarea cambiada (```TS``` Task Switch), ```LMSW```, ```MOV Crn```
-** ```STR reg/mem```. Almacena el registro selector de tareas (```TR```) en memoria o registro.  ```LTR``` lo carga de memoria o registro.
+  * ```CLTS``` Limpia bandera de tarea cambiada (```TS``` Task Switch), ```LMSW```, ```MOV Crn```
+  * ```STR reg/mem```. Almacena el registro selector de tareas (```TR```) en memoria o registro.  ```LTR``` lo carga de memoria o registro.
 * Interrupciones:
-** ```HLT``` detiene ejecución de instrucciones hasta que ocurra interrupción 
-** ```IRET, IRETD, IRETQ``` Retorno de interrupción restaurando registros
-** ```SIDT mem```, guarda en memoria el registro ```IDTR``` con tabla de descriptores de interrupciones,  ```LIDT mem```, carga el registro ```IDTR``` con una tabla que está en memoria. 
-** ```CLI``` deshabilita interrupciones, ```STI``` las habilita. 
+  * ```HLT``` detiene ejecución de instrucciones hasta que ocurra interrupción 
+  * ```IRET, IRETD, IRETQ``` Retorno de interrupción restaurando registros
+  * ```SIDT mem```, guarda en memoria el registro ```IDTR``` con tabla de descriptores de interrupciones,  ```LIDT mem```, carga el registro ```IDTR``` con una tabla que está en memoria. 
+  * ```CLI``` deshabilita interrupciones, ```STI``` las habilita. 
 * Caches de memoria internos. ```INVD``` invalida. ```WBINDVD``` escribe líneas del cache modificadas e invalida. ```CLFLUSH```. ```INVLPG``` Invalida entrada TLB. ```INVLPGA``` invalida entrada TBL en un ASID especificado. ```MOV CR3, MOV CR4```
 * Memoria Virtual
-** ```SGDT mem```, copia el registro ```GDTR``` con la tabla global de descritpores en memoria.  ```LGDT mem```, carga el registro ```GDTR``` con la tabla que está en memoria. 
-** ```SLDT mem```, copia el registro ```LDT``` con tabla local de descriptores a memoria.  ```LLDT mem```, carga el registro ```LDT``` con una tabla en memoria.
+  * ```SGDT mem```, copia el registro ```GDTR``` con la tabla global de descritpores en memoria.  ```LGDT mem```, carga el registro ```GDTR``` con la tabla que está en memoria. 
+  * ```SLDT mem```, copia el registro ```LDT``` con tabla local de descriptores a memoria.  ```LLDT mem```, carga el registro ```LDT``` con una tabla en memoria.
 * Modo de Administración del Sistema SMM. ```RSM```: resume al salir de este modo.
 * Operación de varios procesadores:
-** ```MONITOR``` y ```MWAIT``` hacen que un procesador se detenga hasta que se almacene un dato en un rango de direcciones. 
+  * ```MONITOR``` y ```MWAIT``` hacen que un procesador se detenga hasta que se almacene un dato en un rango de direcciones. 
 * Depuración. 
-** ```INT3``` llama manejador de excepción de depuración.
-** ```MOV DRn``` modifica registros de depuración. ```DR0``` a ```DR3``` son direcciones de ruptura. ```DR6``` es registro de estado de depuración. ```DR7``` es registro de control de depuración. ```DR8``` a ```DR15``` son reservados.
+  * ```INT3``` llama manejador de excepción de depuración.
+  * ```MOV DRn``` modifica registros de depuración. ```DR0``` a ```DR3``` son direcciones de ruptura. ```DR6``` es registro de estado de depuración. ```DR7``` es registro de control de depuración. ```DR8``` a ```DR15``` son reservados.
 * Desempeño: ```RDTSC``` y ```RDTSCP``` copian contador de tiempo en ```EDX:EAX```, ```RDTSCP``` también copia ```TSC_AUX``` en ```ECX```.  ```RDPMC``` copia el contador monitor de desempeño especificado por ```ECX``` en ```EDX:EAX``` (solo hay 4 contadores !PerfCtr0 a !PerfCtr3)
 * Llamadas al sistema:
-** ```SYSCALL``` y ```SYSEXIT```, para hacer llamadas al sistema y retornos cuando opera en modo largo. Emplean registros MSR para su operación. ```SYSCALL``` guarda ```RIP``` en un registro y carga nuevo ```RIP``` del ```LSTAR``` (registro específico C000_0082). Prepara otros registros dejando ```CPL``` en 0. Su operación depende de los registros MSR: ```STAR, LSTAR, CSTAR``` y ```!SYSCALL_FLAG_MASK```
-** ```SYSENTER``` y ```SYSRET``` solo se usan en modo legado para hacer llamados al sistema empleado registros MSR (```!MSR_SYSENTER_CS, !MS_SYSENTER_ESP, !MS_SYSENTER_EIP```)
+  * ```SYSCALL``` y ```SYSEXIT```, para hacer llamadas al sistema y retornos cuando opera en modo largo. Emplean registros MSR para su operación. ```SYSCALL``` guarda ```RIP``` en un registro y carga nuevo ```RIP``` del ```LSTAR``` (registro específico C000_0082). Prepara otros registros dejando ```CPL``` en 0. Su operación depende de los registros MSR: ```STAR, LSTAR, CSTAR``` y ```!SYSCALL_FLAG_MASK```
+  * ```SYSENTER``` y ```SYSRET``` solo se usan en modo legado para hacer llamados al sistema empleado registros MSR (```!MSR_SYSENTER_CS, !MS_SYSENTER_ESP, !MS_SYSENTER_EIP```)
 * Máquinas virtuales:  
-** La instrucción ```VMSAVE RAX``` salva el estado del estado del procesador en un área de memoria VMCB apuntada por ```RAX```.  ```VMLOAD RAX``` carga parte del estado del procesador del VMCB especificado en ```RAX```.  Junto con ```VMSAVE``` complementan habilidades de ```VMRUN``` y ```#VMEXIT```.
-** ```VMCALL``` es usada por el sistema huesped para comunicarse con el VMM generando excepción ```#VMEXIT```.
-** ```VMRUN RAX```, inicia ejecución de una secuencia de instrucciones de huesped descrito por el VMCB apuntado por ```RAX```
-** ```SKINIT``` reinicia la máquina de forma segura para iniciar en un VMM
-** ```CLGI``` deshabilita interrupciones globales (GIF). ```STGI``` las habilita
+  * La instrucción ```VMSAVE RAX``` salva el estado del estado del procesador en un área de memoria VMCB apuntada por ```RAX```.  ```VMLOAD RAX``` carga parte del estado del procesador del VMCB especificado en ```RAX```.  Junto con ```VMSAVE``` complementan habilidades de ```VMRUN``` y ```#VMEXIT```.
+  * ```VMCALL``` es usada por el sistema huesped para comunicarse con el VMM generando excepción ```#VMEXIT```.
+  * ```VMRUN RAX```, inicia ejecución de una secuencia de instrucciones de huesped descrito por el VMCB apuntado por ```RAX```
+  * ```SKINIT``` reinicia la máquina de forma segura para iniciar en un VMM
+  * ```CLGI``` deshabilita interrupciones globales (GIF). ```STGI``` las habilita
 
 
 ## 3. Vista por el sistema operativo OpenBSD
