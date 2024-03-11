@@ -157,15 +157,22 @@ Dado que las estructuras de datos e instrucciones dependen del modo, y que los s
 * El formato de ejecutables es ```ELF```
 * Los programas pueden hacer llamadas al sistema operativo
 
-! 3.1 Llamadas al sistema
+### 3.1 Llamadas al sistema
 
 * El sistema está compilado para emplear el ABI de AMD64: Se usan los registros ```RDI```, ```RSI```, ```RDX```, ```RCX```, ```R8``` y ```R9``` como argumentos enteros y de apuntadores, se usan ```XMM0``` a ```XMM7``` para argumentos de punto flotante {3}.  
 * En este ABI las llamadas al sistema se hacen mediante ```SYSCALL```
 
 La sintaxis de los programas en assembler dependen del ensablador que se use para compilarlos, ```nasm``` soporta la sintaxis original del Intel y AMD64.  ```as``` soporta la sintaxis AT&T.  
 
-En el momento de este escrito, en OpenBSD las herramientas de compilación estándar son del proyecto GNU (por el cual oramos):
-* ```cpp```  como preprocesador
+En 2024 en OpenBSD/adJ 7.4 las herramientas de compilación estándar son del proyecto LLVM:
+* `clang-cpp`  como preprocesador (llamado por `cpp`)
+
+            % clang-cpp --version
+            OpenBSD clang version 13.0.0
+            Target: amd64-unknown-openbsd7.4
+            Thread model: posix
+             InstalledDir: /usr/bin
+  
 * ```gcc```  para compilar fuentes en C y C++
 * ```as```   para compilar fuentes en assembler
 * ```ld```   para encadenar
