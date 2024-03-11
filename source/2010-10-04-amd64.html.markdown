@@ -10,8 +10,9 @@ tags:
 Descripción resumida de {2}
 
 * Registros.
-  ** 16 de propósito general: ```RAX, RBX, RCX, RDX, RBP, RSI, RDI, RSP, R8-R15```. Pueden seguirse usando las partes de estos registros de 32, 16 y 8 bits legados de las arquitecturas i386 y 8086 (e.g por ejemplo los correspondientes a ```RAX``` son ```EAX```, ```AX```, ```AH```, ```AL```).
-  ** 16 registros multimedia de 128 bits: ```XMM0-XMM15```.
+  * 16 de propósito general: ```RAX, RBX, RCX, RDX, RBP, RSI, RDI, RSP, R8-R15```. Pueden seguirse usando las partes de estos registros de 32, 16 y 8 bits legados de las arquitecturas i386 y 8086 (e.g por ejemplo los correspondientes a ```RAX``` son ```EAX```, ```AX```, ```AH```, ```AL```).
+
+  * 16 registros multimedia de 128 bits: ```XMM0-XMM15```.
   ** 8 registros multimedia de 64 bits: MMX0-MMX7.
   ** 8 registros de punto flotante de 80 bits: ```FPR0-FPR7``` (los registros de multimedia de 64 bits se mapean sobre los de punto flotante).
   ** Puntero de instrucción de 64 bits: ```RIP```.
