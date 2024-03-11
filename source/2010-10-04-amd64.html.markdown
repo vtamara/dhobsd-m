@@ -162,7 +162,7 @@ Dado que las estructuras de datos e instrucciones dependen del modo, y que los s
 * El sistema está compilado para emplear el ABI de AMD64: Se usan los registros ```RDI```, ```RSI```, ```RDX```, ```RCX```, ```R8``` y ```R9``` como argumentos enteros y de apuntadores, se usan ```XMM0``` a ```XMM7``` para argumentos de punto flotante {3}.  
 * En este ABI las llamadas al sistema se hacen mediante ```SYSCALL```
 
-La sintaxis de los programas en assembler dependen del ensablador que se use para compilarlos, ```nasm``` soporta la sintaxis original del Intel y AMD64.  ```as``` soporta la sintaxis AT&T.  
+La sintaxis de los programas en assembler dependen del ensablador que se use para compilarlos, ```nasm``` soporta la sintaxis original del Intel y AMD64.  ```as``` soporta la sintaxis AT&T y opcionalmente sintaxis Intel.  
 
 En 2024 en OpenBSD/adJ 7.4 las herramientas de compilación estándar son del proyecto LLVM:
 * `clang-cpp`  como preprocesador (llamado por `cpp`)
