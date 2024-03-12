@@ -83,86 +83,90 @@ zsh: segmentation fault (core dumped)
 ## Programa que pretende ejecutar código entre sus datos
 
 <pre>
+ .intel_syntax noprefix
+
 .section ".note.openbsd.ident", "a"
-        .p2align 2
-        .long   0x8
-        .long   0x4
-        .long   0x1
-        .ascii "OpenBSD\0"
-        .long   0x
-        .p2align 2
+        .p2align   2
+        .long      8,4,1
+        .ascii      "OpenBSD\0"
+        .long      0
 
-.section .data
-prop:
-   .ascii "Sobreescribe estos datos con instrucciones e intenta ejecutarlas\n"
-.equ tprop, . - prop
-finl:
-   .ascii "\nhola\n"
-.equ tfinl, . - finl
+.global _start
 
-.section .text
-.globl _start
+.global puts
+.global exit
+
+.text
 _start:
-inicio:
-   # Mensaje con propósito
-   movq $prop, %rsi
-   movq $4, %rax  
-   movq $1, %rdi
-   movq $tprop, %rdx
-llamado:
-   syscall
 
-   # Copiamos código para imprimir hola mundo y terminar en pormod
-   movq $_imprime, %rsi
-   movq $prop, %rdi
-   movq $timprime, %rcx
-   rep
-   movsb
+  # Lo siguiente usaría libc para mostrar prop
+  lea rdi, [rip + prop]
+  push rdi
+  mov rsi, rdi
+  call puts@plt
 
-   # Intentamos saltar al código copiado
-   jmp prop
+  # Copiamos de _start a prop
+  pop rdi
+  push rdi
+  lea rsi, [rip - 25]  # 25 calculado experimentado con egdb
+  mov rcx, 10
+  rep
+  movsb
 
-_imprime:
-   # Mostrar cadena haciendo llamada al sistema número 4 al descriptor 1 (stdout)
-   movq $finl, %rsi
-   movq $4, %rax  
-   movq $1, %rdi
-   movq $tfinl, %rdx
-   syscall
+  # Imprimimos tras copiar
+  pop rdi
+  push rdi
+  call puts@plt
 
-   # Terminar
-   movq $1, %rax #xorq %rax, %rax  # set eax to 0
-   movq $1, %rdi
-   syscall
+  pop rdi
+  jmp [rdi]  # Producirá un SIGSEGV
 
-.equ timprime, . - _imprime
+  # Terminar
+  xor rdi, rdi
+  call exit@plt
+
+.data
+prop:
+    .asciz "Por sobreescribir con código binario que imprime\n\0"
+hola:
+    .asciz "Hola mundo!\n\0"
 </pre>
 
 Si llamamos ```xdat.s``` a este programa, podemos compilarlo con:
 <pre>
-export N=xdat; as -gstabs+ $N.s -o $N.o; ld $N.o -o $N; 
+export N=xdat; as -gstabs+ $N.s -o $N.o; ld  --dynamic-linker=/usr/libexec/ld.so -pie -L/usr/lib -lc $N.o -o $N; 
 </pre>
 y ejecutarlo con ktrace con:
 <pre>
 ktrace ./xdat; kdump
 </pre>
 que produce
-<pre>Sobreescribe estos datos con instrucciones e intenta ejecutarlas
-Segmentation fault (core dumped) 
-  8704 ktrace   RET   ktrace 0
-  8704 ktrace   CALL  execve(!0x7f7ffffc941f,!0x7f7ffffc92c8,!0x7f7ffffc92d8)
-  8704 ktrace   NAMI  "./xdat"
-  8704 xdat     EMUL  "native"
-  8704 xdat     RET   execve 0
-  8704 xdat     CALL  write(0x1,0x600280,0x41)
-  8704 xdat     GIO   fd 1 wrote 65 bytes
-       "Sobreescribe estos datos con instrucciones e intenta ejecutarlas
+<pre>
+  Por sobreescribir con código binario que imprime
+  H=!                                          
+  zsh: segmentation fault (core dumped)  ktrace ./xdat
+  ...
+  9755 xdat     CALL  fcntl(1,F_ISATTY)
+  9755 xdat     RET   fcntl 1
+  9755 xdat     CALL  write(1,0x3e9ef3d4000,0x32)
+  9755 xdat     GIO   fd 1 wrote 50 bytes
+       "Por sobreescribir con c\M-C\M-3digo binario que imprime
        "
-  8704 xdat     RET   write 65/0x41
-  8704 xdat     PSIG  SIGSEGV SIG_DFL code 1 addr=0x600280 trapno=6
-  8704 xdat     NAMI  "xdat.core"
+  9755 xdat     RET   write 50/0x32
+  9755 xdat     CALL  write(1,0x3e9ef3d4000,0x1)
+  9755 xdat     GIO   fd 1 wrote 1 bytes
+       "
+       "
+  9755 xdat     RET   write 1
+  9755 xdat     CALL  write(1,0x3e9ef3d4000,0x6)
+  9755 xdat     GIO   fd 1 wrote 6 bytes
+       "H\M^M=\M-)!
+       "
+  9755 xdat     RET   write 6
+  9755 xdat     PSIG  SIGSEGV SIG_DFL code=SEGV_MAPERR addr=0x3e705a153c2 trapno=4
+  9755 xdat     NAMI  "xdat.core"
 </pre>
-que muestra como se detuvo la ejecución en la dirección 0x600280, examinando el ejecutable con:
+que muestra como se detuvo la ejecución en la dirección 0x3e705a153c2, examinando el ejecutable con:
 <pre>
 readelf -all xdat
 </pre>
