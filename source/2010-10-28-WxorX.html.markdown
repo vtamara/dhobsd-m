@@ -9,66 +9,56 @@ Esto descarta programas que intentan automodificarse y programas que pretendan e
 
 A continuación se presentan 2 programas que ponen a prueba esta política.
 
-##Programa que se modifica
+## Programa que intenta modificarse
 
 <pre>
+ .intel_syntax noprefix
+
 .section ".note.openbsd.ident", "a"
-        .p2align 2
-        .long   0x8
-        .long   0x4
-        .long   0x1
-        .ascii "OpenBSD\0"
-        .long   0x
-        .p2align 2
+        .p2align   2
+        .long      8,4,1
+        .ascii      "OpenBSD\0"
+        .long      0
 
-.section .data
-hola:
-   .ascii "Hola Mundo!\n\0"
-.equ tola, . - hola
+.global _start
 
-.section .text
-.globl _start
+.global puts
+.global exit
+
+.text
 _start:
-   # Mostrar cadena haciendo llamada al sistema número 4 al descriptor 1 (stdout)
-   movq $hola, %rsi
-   movq $4, %rax  
-   movq $1, %rdi
-   movq $thola, %rdx
-   syscall
 
-   # Modificamos cadena por imprimir e imprimimos
-   movq $hola, %rsi
-   movb $65, (%rsi)
-   movq $4, %rax
-   movq $1, %rdi
-   movq $thola, %rdx
-   syscall
+  # Lo siguiente usaría libc
+  lea rdi, [rip + hola]
+  mov rsi, rdi
+  call puts@plt
 
-   # Mostramos 7 primeros bytes del programa
-   movq $_start, %rsi
-   movq $4, %rax
-   movq $1, %rdi
-   movq $7, %rdx
-   syscall
+  # Modificamos cadena por imprimir e imprimimos
+  mov rdi,rsi 
+  movb [rdi], 65
+  call puts@plt
+
+  # Mostramos algunos bytes del programa (usando gdb determinamos el 28 del inicio al call
+  lea rdi, [rip - 33]
+  call puts@plt
 
    # Intentamos modificar primer byte del programa y mostrar
-   movq $_start, %rsi
-   movb $65, (%rsi)  # En esta instrucción se produce un SIGSEGV
-   movq $4, %rax
-   movq $1, %rdi
-   movq $7, %rdx
-   syscall
+  lea rdi, [rip - 45]
+  movb [rdi], 66  # En esta instrucción se produce un SIGSEGV
+  call puts@plt
 
-   # Terminar
-   movq $1, %rax #xorq %rax, %rax  # set eax to 0
-   movq $1, %rdi
-   syscall
+  # Terminar
+  xor rdi, rdi
+  call exit@plt
 
+.data
+hola:
+    .asciz "Hola mundo!\n\0"
 </pre>
 
 Si llamamos automod.s a este programa, podemos compilarlo con:
 <pre>
-export N=automod; as -gstabs+ $N.s -o $N.o; ld $N.o -o $N; 
+export N=automod; as -gstabs+ $N.s -o $N.o; ld  --dynamic-linker=/usr/libexec/ld.so -pie -L/usr/lib -lc $N.o -o $N; 
 </pre>
 
 y su ejecución detallando llamados al sistema puede verse con:
@@ -79,29 +69,14 @@ ktrace ./$N; kdump
 Que generará:
 <pre>
 Hola Mundo!
+        
 Aola Mundo!
-H???`Segmentation fault (core dumped) 
- 25689 ktrace   RET   ktrace 0
- 25689 ktrace   CALL  execve(!0x7f7ffffc7167,!0x7f7ffffc7010,!0x7f7ffffc7020)
- 25689 ktrace   NAMI  "./automod"
- 25689 automod  EMUL  "native"
- 25689 automod  RET   execve 0
- 25689 automod  CALL  write(0x1,!0x6002a8,0xd)
- 25689 automod  GIO   fd 1 wrote 13 bytes
-       "Hola Mundo!
-        \0"
- 25689 automod  RET   write 13/0xd
- 25689 automod  CALL  write(0x1,!0x6002a8,0xd)
- 25689 automod  GIO   fd 1 wrote 13 bytes
-       "Aola Mundo!
-        \0"
- 25689 automod  RET   write 13/0xd
- 25689 automod  CALL  write(0x1,0x400218,0x7)
- 25689 automod  GIO   fd 1 wrote 7 bytes
-       "H\M-G\M-F\M-(\^B`\0"
- 25689 automod  RET   write 7
- 25689 automod  PSIG  SIGSEGV SIG_DFL code 1 addr=0x400218 trapno=6
- 25689 automod  NAMI  "automod.core"
+        
+H=!
+zsh: segmentation fault (core dumped) 
+...
+ 19739 automod  CALL  fcntl(1,F_ISATTY)                                                                                 19739 automod  RET   fcntl 1                                                                                           19739 automod  CALL  write(1,0x942be953000,0xc)                                                                        19739 automod  GIO   fd 1 wrote 12 bytes                                                                                     "Hola mundo!                                                                                                           "                                                                                                                19739 automod  RET   write 12/0xc                                                                                      19739 automod  CALL  write(1,0x942be953000,0x1)                                                                        19739 automod  GIO   fd 1 wrote 1 bytes                                                                                      "                                                                                                                      "                                                                                                                19739 automod  RET   write 1                                                                                           19739 automod  CALL  write(1,0x942be953000,0xc)                                                                        19739 automod  GIO   fd 1 wrote 12 bytes                                                                                     "Aola mundo!                                                                                                           "                                                                                                                19739 automod  RET   write 12/0xc                                                                                      19739 automod  CALL  write(1,0x942be953000,0x1)                                                                        19739 automod  GIO   fd 1 wrote 1 bytes                                                                                      "                                                                                                                      "                                                                                                                19739 automod  RET   write 1                                                                                           19739 automod  CALL  write(1,0x942be953000,0x6)                                                                        19739 automod  GIO   fd 1 wrote 6 bytes                                                                                      "H\M^M=\M-9!                                                                                                           "                                                                        
+ 19739 automod  RET   write 6                                                                                           19739 automod  PSIG  SIGSEGV SIG_DFL code=SEGV_ACCERR addr=0x940ab6bf398 trapno=6                                      19739 automod  NAMI  "automod.core"
 </pre>
 
 
