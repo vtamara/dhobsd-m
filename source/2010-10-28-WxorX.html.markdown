@@ -75,8 +75,34 @@ Aola Mundo!
 H=!
 zsh: segmentation fault (core dumped) 
 ...
- 19739 automod  CALL  fcntl(1,F_ISATTY)                                                                                 19739 automod  RET   fcntl 1                                                                                           19739 automod  CALL  write(1,0x942be953000,0xc)                                                                        19739 automod  GIO   fd 1 wrote 12 bytes                                                                                     "Hola mundo!                                                                                                           "                                                                                                                19739 automod  RET   write 12/0xc                                                                                      19739 automod  CALL  write(1,0x942be953000,0x1)                                                                        19739 automod  GIO   fd 1 wrote 1 bytes                                                                                      "                                                                                                                      "                                                                                                                19739 automod  RET   write 1                                                                                           19739 automod  CALL  write(1,0x942be953000,0xc)                                                                        19739 automod  GIO   fd 1 wrote 12 bytes                                                                                     "Aola mundo!                                                                                                           "                                                                                                                19739 automod  RET   write 12/0xc                                                                                      19739 automod  CALL  write(1,0x942be953000,0x1)                                                                        19739 automod  GIO   fd 1 wrote 1 bytes                                                                                      "                                                                                                                      "                                                                                                                19739 automod  RET   write 1                                                                                           19739 automod  CALL  write(1,0x942be953000,0x6)                                                                        19739 automod  GIO   fd 1 wrote 6 bytes                                                                                      "H\M^M=\M-9!                                                                                                           "                                                                        
- 19739 automod  RET   write 6                                                                                           19739 automod  PSIG  SIGSEGV SIG_DFL code=SEGV_ACCERR addr=0x940ab6bf398 trapno=6                                      19739 automod  NAMI  "automod.core"
+ 19739 automod  CALL  fcntl(1,F_ISATTY)
+ 19739 automod  RET   fcntl 1
+ 19739 automod  CALL  write(1,0x942be953000,0xc)
+ 19739 automod  GIO   fd 1 wrote 12 bytes
+ "Hola mundo!
+ "
+ 19739 automod  RET   write 12/0xc
+ 19739 automod  CALL  write(1,0x942be953000,0x1)
+ 19739 automod  GIO   fd 1 wrote 1 bytes
+ "
+ "
+ 19739 automod  RET   write 1
+ 19739 automod  CALL  write(1,0x942be953000,0xc)
+ 19739 automod  GIO   fd 1 wrote 12 bytes
+ "Aola mundo!
+ 19739 automod  RET   write 12/0xc
+ 19739 automod  CALL  write(1,0x942be953000,0x1)
+ 19739 automod  GIO   fd 1 wrote 1 bytes
+ "
+ "
+ 19739 automod  RET   write 1
+ 19739 automod  CALL  write(1,0x942be953000,0x6)
+ 19739 automod  GIO   fd 1 wrote 6 bytes
+ "H\M^M=\M-9!
+ "
+ 19739 automod  RET   write 6
+ 19739 automod  PSIG  SIGSEGV SIG_DFL code=SEGV_ACCERR addr=0x940ab6bf398 trapno=6
+ 19739 automod  NAMI  "automod.core"
 </pre>
 
 
@@ -166,18 +192,27 @@ que produce
   9755 xdat     PSIG  SIGSEGV SIG_DFL code=SEGV_MAPERR addr=0x3e705a153c2 trapno=4
   9755 xdat     NAMI  "xdat.core"
 </pre>
-que muestra como se detuvo la ejecución en la dirección 0x3e705a153c2, examinando el ejecutable con:
+Al ejecutar
 <pre>
-readelf -all xdat
+readelf -t xdat
 </pre>
-Se encuentra en la tabla de símbolos:
+Vemos que la sección `text` permite ejecución pero no escritura mientras que la sección `data` no permite ejecución pero si escritura:
 <pre>
-    12: 0000000000600280     0 NOTYPE  LOCAL  DEFAULT    2 prop
+ ...
+ [ 8] .text
+       PROGBITS         0000000000001398  0000000000000398  0
+       0000000000000034 0000000000000000  0                 4
+       [0000000000000006]: ALLOC, EXEC
+ ...
+ 
+  [12] .data
+       PROGBITS         0000000000003548  0000000000000548  0
+       0000000000000042 0000000000000000  0                 4
+       [0000000000000003]: WRITE, ALLOC
 </pre>
 
-Es decir el fallo se produjó justamente al comienzo de los datos que se modificaron y antes de ejecutarlos.
 
 
 ## Conclusión
 
-Los binarios ELF producidos en OpenBSD con sus herramientas estándar (experimentado con 4.8 sobre amd64) implementan la política W^X en sus secciones.
+Los binarios ELF producidos en OpenBSD con sus herramientas estándar (experimentado con 7.4 sobre amd64) implementan la política W^X en sus secciones.
